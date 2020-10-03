@@ -31,7 +31,8 @@ void CSprite::AddAction(std::string action_name,std::vector<int> frames){
 int CSprite::PlayAction(std::string action_name,int step){
 
    std::vector<int> frames= m_action_map[action_name];
-   int frameidx=frames[step%2];
+   uint32_t frames_cnt=frames.size();
+   int frameidx=frames[step%frames_cnt];
 
    return frameidx;
 }
