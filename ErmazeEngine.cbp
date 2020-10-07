@@ -57,32 +57,38 @@
 		<Unit filename="include/CGameContext.h" />
 		<Unit filename="include/CGameData.h" />
 		<Unit filename="include/CGameEngine.h" />
+		<Unit filename="include/CGameScene.h" />
 		<Unit filename="include/CGameSettings.h" />
 		<Unit filename="include/CGameState.h" />
 		<Unit filename="include/CMenuState.h" />
 		<Unit filename="include/COrthoTileState.h" />
 		<Unit filename="include/CRPGGameData.h" />
+		<Unit filename="include/CSDLRenderService.h" />
 		<Unit filename="include/CSdlGameContext.h" />
 		<Unit filename="include/CSprite.h" />
 		<Unit filename="include/CSpriteSheet.h" />
 		<Unit filename="include/Render_Util.h" />
 		<Unit filename="include/SDL_Utilities.h" />
+		<Unit filename="include/XML_Utilities.h" />
 		<Unit filename="include/common_struct.h" />
 		<Unit filename="src/CGame.cpp" />
 		<Unit filename="src/CGameContext.cpp" />
 		<Unit filename="src/CGameData.cpp" />
 		<Unit filename="src/CGameEngine.cpp" />
+		<Unit filename="src/CGameScene.cpp" />
 		<Unit filename="src/CGameSettings.cpp" />
 		<Unit filename="src/CGameState.cpp" />
 		<Unit filename="src/CMenuState.cpp" />
 		<Unit filename="src/COrthoTileState.cpp" />
 		<Unit filename="src/CRPGGameData.cpp" />
+		<Unit filename="src/CSDLRenderService.cpp" />
 		<Unit filename="src/CSdlGameContext.cpp" />
 		<Unit filename="src/CSprite.cpp" />
 		<Unit filename="src/CSpriteSheet.cpp" />
 		<Unit filename="src/Main.cpp" />
 		<Unit filename="src/Render_Util.cpp" />
 		<Unit filename="src/SDL_Utilities.cpp" />
+		<Unit filename="src/XML_Utilities.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

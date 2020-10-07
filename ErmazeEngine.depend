@@ -10,12 +10,12 @@
 1592551478 source:c:\work\cplusworkspace\ermazeengine\src\cgamesettings.cpp
 	"CGameSettings.h"
 
-1592554942 c:\work\cplusworkspace\ermazeengine\include\cgamesettings.h
+1602069157 c:\work\cplusworkspace\ermazeengine\include\cgamesettings.h
 
 1592730556 source:c:\work\cplusworkspace\ermazeengine\src\cgamestate.cpp
 	"CGameState.h"
 
-1592889890 c:\work\cplusworkspace\ermazeengine\include\cgamestate.h
+1602069157 c:\work\cplusworkspace\ermazeengine\include\cgamestate.h
 	<string>
 	"CGameContext.h"
 	"common_struct.h"
@@ -28,7 +28,7 @@
 1592728836 c:\work\cplusworkspace\ermazeengine\include\cgame.h
 	"CGameEngine.h"
 
-1592820462 c:\work\cplusworkspace\ermazeengine\include\cgameengine.h
+1602069157 c:\work\cplusworkspace\ermazeengine\include\cgameengine.h
 	<string>
 	<vector>
 	<map>
@@ -40,7 +40,7 @@
 	"CSdlGameContext.h"
 	"CRPGGameData.h"
 
-1592889811 c:\work\cplusworkspace\ermazeengine\include\cmenustate.h
+1602069157 c:\work\cplusworkspace\ermazeengine\include\cmenustate.h
 	<CGameState.h>
 	<string>
 
@@ -421,18 +421,18 @@
 	<SDL_image.h>
 	<CGameContext.h>
 
-1592899068 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
+1602069157 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
 	<CGameState.h>
 	"CSdlGameContext.h"
 	"CRPGGameData.h"
 
-1592822131 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
+1602069157 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
 	"CGameEngine.h"
 
 1592891680 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
 	"CMenuState.h"
 
-1592899178 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
+1602069157 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
 	"COrthoTileState.h"
 
 1592889366 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
@@ -441,7 +441,7 @@
 1592734246 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
 	"SDL_Utilities.h"
 
-1592800064 source:c:\work\cplusworkspace\ermazeengine\src\main.cpp
+1602069157 source:c:\work\cplusworkspace\ermazeengine\src\main.cpp
 	<exception>
 	<string>
 	<iostream>
@@ -450,12 +450,12 @@
 1592800293 source:c:\work\cplusworkspace\ermazeengine\src\cgamedata.cpp
 	"CGameData.h"
 
-1592820349 c:\work\cplusworkspace\ermazeengine\include\cgamedata.h
+1602069157 c:\work\cplusworkspace\ermazeengine\include\cgamedata.h
 
-1592821559 c:\work\cplusworkspace\ermazeengine\include\crpggamedata.h
+1602069157 c:\work\cplusworkspace\ermazeengine\include\crpggamedata.h
 	<CGameData.h>
 
-1592820401 source:c:\work\cplusworkspace\ermazeengine\src\crpggamedata.cpp
+1602069157 source:c:\work\cplusworkspace\ermazeengine\src\crpggamedata.cpp
 	"CRPGGameData.h"
 
 1592899577 c:\work\cplusworkspace\ermazeengine\include\csprite.h
@@ -486,6 +486,45 @@
 	<map>
 	"common_struct.h"
 
-1592884851 source:c:\work\cplusworkspace\ermazeengine\src\cspritesheet.cpp
+1601657932 source:c:\work\cplusworkspace\ermazeengine\src\cspritesheet.cpp
 	"CSpriteSheet.h"
+
+1602062679 source:c:\work\cplusworkspace\ermazeengine\src\xml_utilities.cpp
+	"XML_Utilities.h"
+
+1602070318 c:\work\cplusworkspace\ermazeengine\include\xml_utilities.h
+	"../libs/pugixml/pugixml.hpp"
+	<string>
+
+1568209862 c:\work\cplusworkspace\ermazeengine\libs\pugixml\pugixml.hpp
+	"pugiconfig.hpp"
+	<stddef.h>
+	<exception>
+	<iterator>
+	<iosfwd>
+	<string>
+
+1568209862 c:\work\cplusworkspace\ermazeengine\libs\pugixml\pugiconfig.hpp
+
+1602064512 source:c:\work\cplusworkspace\ermazeengine\src\cgamescene.cpp
+	"CGameScene.h"
+
+1602064589 c:\work\cplusworkspace\ermazeengine\include\cgamescene.h
+	<string>
+
+1568209862 source:c:\work\cplusworkspace\ermazeengine\libs\pugixml\pugixml.cpp
+	"pugixml.hpp"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<assert.h>
+	<limits.h>
+	<wchar.h>
+	<math.h>
+	<float.h>
+	<istream>
+	<ostream>
+	<string>
+	<new>
+	<stdint.h>
 
