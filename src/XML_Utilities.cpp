@@ -32,7 +32,7 @@ namespace xmlutils{
     }
 
     std::string MyXMLNode::valueStr(){
-        std::string value=m_node.value();
+        std::string value=m_node.text().as_string();
         return value;
     }
 
@@ -43,6 +43,17 @@ namespace xmlutils{
     int MyXMLDoc::GetIntAttribute(std::string xpath){
         int int_att=m_doc.select_node(xpath.c_str()).attribute().as_int();
         return int_att;
+    }
+
+    std::string MyXMLDoc::GetStrAttribute(std::string xpath){
+        std::string str_att=m_doc.select_node(xpath.c_str())
+        .attribute().as_string();
+        return str_att;
+    }
+
+    std::string MyXMLDoc::GetStr(std::string xpath){
+        std::string strvalue=m_doc.select_node(xpath.c_str()).node().text().as_string();
+        return strvalue;
     }
 
     MyXMLNode MyXMLDoc::GetNode(std::string xpath){

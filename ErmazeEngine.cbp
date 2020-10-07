@@ -35,6 +35,7 @@
 			<Add directory="C:/work/LibraryCB/mingw/SDL2-2.0.12/x86_64-w64-mingw32/include" />
 			<Add directory="C:/work/LibraryCB/mingw/SDL2_image-2.0.5/x86_64-w64-mingw32/include/SDL2" />
 			<Add directory="C:/work/LibraryCB/mingw/SDL2_ttf-2.0.15/x86_64-w64-mingw32/include/SDL2" />
+			<Add directory="libs" />
 		</Compiler>
 		<Linker>
 			<Add option="-lSDL2_image" />
@@ -71,6 +72,9 @@
 		<Unit filename="include/SDL_Utilities.h" />
 		<Unit filename="include/XML_Utilities.h" />
 		<Unit filename="include/common_struct.h" />
+		<Unit filename="libs/pugixml/pugiconfig.hpp" />
+		<Unit filename="libs/pugixml/pugixml.cpp" />
+		<Unit filename="libs/pugixml/pugixml.hpp" />
 		<Unit filename="src/CGame.cpp" />
 		<Unit filename="src/CGameContext.cpp" />
 		<Unit filename="src/CGameData.cpp" />

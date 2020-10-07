@@ -4,10 +4,24 @@
 </settings>
 
 <game>
-   <init scene="01"></init>
+  <menustate default="true">
+	<menu background="res/xxx.png">
+		<menuitem type="newgame" sceneid="01">开始游戏</menuitem>
+		<menuitem>载入进度</menuitem>
+		<menuitem>退出游戏</menuitem>
+   </menu>
+  </menustate>
+  <tilemapstate type="orth">
+  
+  </tilemapstate>
    
    <scenes>
-     
+     <scene id="01">
+		<tilemap name="FF3-01"/>
+	 </scene>
+	 <scene id="02">
+		<tilemap name="FF3-01"/>
+	 </scene>
    </scenes>
 </game>
 

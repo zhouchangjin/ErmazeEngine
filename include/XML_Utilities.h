@@ -41,6 +41,8 @@ public:
     MyXMLDoc();
     MyXMLDoc(std::string path);
     int GetIntAttribute(std::string xpath);
+    std::string GetStrAttribute(std::string xpath);
+    std::string GetStr(std::string xpath);
     MyXMLNode GetNode(std::string xpath);
     pugi::xml_document* GetDocument()
     {

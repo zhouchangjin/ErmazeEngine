@@ -26,7 +26,6 @@ void COrthoTileState::Init(){
 
     //因为没有用依赖注入 当不使用SDL时该位置就不得不变
     void* sprite_texture=sdlutil2::LoadPngTexture(path,m_context);
-
     m_sprite_sheet->SetTexture(sprite_texture);
     std::vector<int> sequence={0,1,2,3,4,5,6,7};
     m_protagnist=new CSprite(m_sprite_sheet,sequence);
@@ -104,5 +103,28 @@ void COrthoTileState::PrepareData(){
 void COrthoTileState::LoadScene(){
     CRPGGameData* gamedata=(CRPGGameData*)m_game_data;
     CGameScene scene=gamedata->GetCurrentScene();
-    std::cout<<scene.GetTileMapPath()<<std::endl;
+    std::string scenefile="./scenes/"+scene.GetTileMapPath()+".tmx";
+    xmlutils::MyXMLDoc doc =xmlutils::LoadXML(scenefile);
+    xmlutils::MyXMLNode docmap=doc.GetNode("/map");
+    m_map_cell_width=docmap.IntAttribute("width");
+    m_map_cell_height=docmap.IntAttribute("height");
+    m_tile_width=docmap.IntAttribute("tilewidth");
+    m_tile_height=docmap.IntAttribute("tileheight");
+
+    std::string tileset_file_name=doc.GetStrAttribute("/map/tileset/@source");
+    std::string csvdata=doc.GetStr("/map/layer/data");
+    //std::cout<<"Source File "<<tileset_file_name<<std::endl;
+    //std::cout<<scenefile<<" Tile Width: "<<width<<" "<<height<<" "<<tilewidth<<" "<<tileheight<<std::endl;
+
+    std::string tileset_file_path="./scenes/"+ tileset_file_name;
+
+    xmlutils::MyXMLDoc tilesetdoc=xmlutils::LoadXML(tileset_file_path);
+    std::string tileset_image_file=tilesetdoc.GetStrAttribute("/tileset/image/@source");
+
+    m_current_tileset="./scenes/"+tileset_image_file;
+    std::cout<<"Image File "<<m_current_tileset<<std::endl;
+
+    void* map_texture=sdlutil2::LoadPngTexture(m_current_tileset,m_context);
+
+
 }
