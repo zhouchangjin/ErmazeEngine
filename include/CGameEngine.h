@@ -29,8 +29,11 @@ class CGameEngine
         CGameSettings GetGameSetting(){return m_game_setting;};
         void ChangeState(CGameState* state);
     protected:
+        void LoadSetting();
 
     private:
+            std::string m_setting_file="game.xml";
+            CGameData* m_gamedata;
             int m_fps=24;
             uint32_t m_min_frametime=1000/m_fps; //每帧毫秒数
             bool m_running=true;                 //游戏关闭状态

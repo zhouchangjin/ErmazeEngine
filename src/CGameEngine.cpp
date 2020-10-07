@@ -14,19 +14,24 @@ CGameEngine::~CGameEngine()
 }
 
 void CGameEngine::Init(){
+    LoadSetting();
 
     m_game_context=new CSdlGameContext();
-    m_game_context->Init(1024,768);
+    //m_game_context->Init(1024,768);
+    m_game_context->Init(m_game_setting.GetWindowWidth(),m_game_setting.GetWindowHeight());
 
     m_current_state=new CMenuState(m_game_context);
     m_current_state->Init();
+    m_current_state->PrepareData();
 
     m_states.insert(std::pair<int,CGameState*>(1,m_current_state));
 
     COrthoTileState *ortho_tile_state=new COrthoTileState(m_game_context);
-    CGameData* gamedata=new CRPGGameData();
+
     ortho_tile_state->Init();
-    ortho_tile_state->SetGameData(gamedata);
+    ortho_tile_state->SetGameData(m_gamedata);
+    ortho_tile_state->PrepareData();
+
     m_states.insert(std::pair<int,CGameState*>(2,ortho_tile_state));
 
 
@@ -56,5 +61,17 @@ void CGameEngine::HandleEvent(){
 }
 
 void CGameEngine::Update(){
+
+}
+
+void CGameEngine::LoadSetting(){
+    m_gamedata=new CRPGGameData();
+    xmlutils::MyXMLDoc doc=xmlutils::LoadXML(m_setting_file);
+    int width=doc.GetIntAttribute("/ermaze/settings/window/@width");
+    int height=doc.GetIntAttribute("/ermaze/settings/window/@height");
+    m_game_setting.SetWidthHeight(width,height);
+
+    CRPGGameData* gamedata=(CRPGGameData*)m_gamedata;
+    gamedata->ParseGameDataByXMLDoc(&doc);
 
 }

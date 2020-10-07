@@ -1,5 +1,5 @@
 #include "COrthoTileState.h"
-
+#include <iostream>
 COrthoTileState::COrthoTileState(){
 
 
@@ -93,4 +93,16 @@ void COrthoTileState::Resume(){
 
 void COrthoTileState::Update(){
 
+}
+
+void COrthoTileState::PrepareData(){
+
+    LoadScene();
+
+}
+
+void COrthoTileState::LoadScene(){
+    CRPGGameData* gamedata=(CRPGGameData*)m_game_data;
+    CGameScene scene=gamedata->GetCurrentScene();
+    std::cout<<scene.GetTileMapPath()<<std::endl;
 }

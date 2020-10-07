@@ -1,8 +1,12 @@
 #ifndef CRPGGAMEDATA_H
 #define CRPGGAMEDATA_H
 
-#include <CGameData.h>
+#include <string>
+#include <map>
 
+#include <CGameData.h>
+#include <CGameScene.h>
+#include <XML_Utilities.h>
 
 class CRPGGameData : public CGameData
 {
@@ -10,17 +14,20 @@ class CRPGGameData : public CGameData
         CRPGGameData();
         virtual ~CRPGGameData();
 
-        int GetX(){return m_coor_x;};
-        int GetY(){return m_coor_y;};
-        int GetScene(){return m_scene_id;};
+        void AddGameScene(std::string name,CGameScene scene);
+        CGameScene GetGameScene(std::string name);
+        void SetCurrentScene(std::string current_scene);
+        CGameScene GetCurrentScene();
+        void ParseGameDataByXMLDoc(xmlutils::MyXMLDoc* document);
 
 
     protected:
 
     private:
-        int m_coor_x=0;
-        int m_coor_y=0;
-        int m_scene_id=1;
+        std::string m_current_scene;
+        std::map<std::string,CGameScene> m_scene_list;
+
+
 };
 
 #endif // CRPGGAMEDATA_H

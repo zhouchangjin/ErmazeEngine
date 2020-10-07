@@ -10,12 +10,12 @@
 1592551478 source:c:\work\cplusworkspace\ermazeengine\src\cgamesettings.cpp
 	"CGameSettings.h"
 
-1602069157 c:\work\cplusworkspace\ermazeengine\include\cgamesettings.h
+1602072184 c:\work\cplusworkspace\ermazeengine\include\cgamesettings.h
 
 1592730556 source:c:\work\cplusworkspace\ermazeengine\src\cgamestate.cpp
 	"CGameState.h"
 
-1602069157 c:\work\cplusworkspace\ermazeengine\include\cgamestate.h
+1602070795 c:\work\cplusworkspace\ermazeengine\include\cgamestate.h
 	<string>
 	"CGameContext.h"
 	"common_struct.h"
@@ -28,7 +28,7 @@
 1592728836 c:\work\cplusworkspace\ermazeengine\include\cgame.h
 	"CGameEngine.h"
 
-1602069157 c:\work\cplusworkspace\ermazeengine\include\cgameengine.h
+1602072107 c:\work\cplusworkspace\ermazeengine\include\cgameengine.h
 	<string>
 	<vector>
 	<map>
@@ -40,7 +40,7 @@
 	"CSdlGameContext.h"
 	"CRPGGameData.h"
 
-1602069157 c:\work\cplusworkspace\ermazeengine\include\cmenustate.h
+1602070824 c:\work\cplusworkspace\ermazeengine\include\cmenustate.h
 	<CGameState.h>
 	<string>
 
@@ -421,19 +421,21 @@
 	<SDL_image.h>
 	<CGameContext.h>
 
-1602069157 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
+1602071819 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
 	<CGameState.h>
 	"CSdlGameContext.h"
 	"CRPGGameData.h"
+	"CGameScene.h"
 
-1602069157 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
+1602073006 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
 	"CGameEngine.h"
 
 1592891680 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
 	"CMenuState.h"
 
-1602069157 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
+1602072508 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
 	"COrthoTileState.h"
+	<iostream>
 
 1592889366 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
 	"CSdlGameContext.h"
@@ -452,10 +454,14 @@
 
 1602069157 c:\work\cplusworkspace\ermazeengine\include\cgamedata.h
 
-1602069157 c:\work\cplusworkspace\ermazeengine\include\crpggamedata.h
+1602071991 c:\work\cplusworkspace\ermazeengine\include\crpggamedata.h
+	<string>
+	<map>
 	<CGameData.h>
+	<CGameScene.h>
+	<XML_Utilities.h>
 
-1602069157 source:c:\work\cplusworkspace\ermazeengine\src\crpggamedata.cpp
+1602073043 source:c:\work\cplusworkspace\ermazeengine\src\crpggamedata.cpp
 	"CRPGGameData.h"
 
 1592899577 c:\work\cplusworkspace\ermazeengine\include\csprite.h

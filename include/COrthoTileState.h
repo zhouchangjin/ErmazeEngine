@@ -4,6 +4,7 @@
 #include <CGameState.h>
 #include "CSdlGameContext.h"
 #include "CRPGGameData.h"
+#include "CGameScene.h"
 
 class COrthoTileState : public CGameState
 {
@@ -18,6 +19,7 @@ class COrthoTileState : public CGameState
         void HandleEvent(ge_common_struct::game_event event);
         void Update();
         void Draw();
+        void PrepareData();
         int GetStateValue();
 
     protected:
@@ -28,6 +30,8 @@ class COrthoTileState : public CGameState
         int m_scale=2;
         int m_step=0;
         std::string m_current_action="downward";
+
+        void LoadScene();
 
 };
 

@@ -21,6 +21,7 @@ class CGameState
         virtual void Update()=0;
         virtual void Draw()=0;
         virtual int GetStateValue()=0;
+        virtual void PrepareData()=0;
         void SetGameData(CGameData* gamedata){m_game_data=gamedata;};
     protected:
          CGameContext* m_context;

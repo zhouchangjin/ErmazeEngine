@@ -10,6 +10,7 @@ class CGameSettings
         virtual ~CGameSettings();
         int GetWindowWidth(){return m_window_width;};
         int GetWindowHeight(){return m_window_height;};
+        void SetWidthHeight(int width,int height){m_window_width=width;m_window_height=height;};
     protected:
 
     private:

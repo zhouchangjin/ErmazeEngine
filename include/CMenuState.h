@@ -18,6 +18,7 @@ class CMenuState : public CGameState
         void HandleEvent(ge_common_struct::game_event event);
         void Update();
         void Draw();
+        void PrepareData(){};
         int GetStateValue();
     protected:
 
