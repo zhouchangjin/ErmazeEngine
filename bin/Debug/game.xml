@@ -1,0 +1,14 @@
+<ermaze>
+<settings>
+	<window type="window" width="1024" height="768" />
+</settings>
+
+<game>
+   <init scene="01"></init>
+   
+   <scenes>
+     
+   </scenes>
+</game>
+
+</ermaze>
