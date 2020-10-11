@@ -5,6 +5,7 @@
 #include "CSdlGameContext.h"
 #include "CRPGGameData.h"
 #include "CGameScene.h"
+#include "Str_Utilities.h"
 
 class COrthoTileState : public CGameState
 {
@@ -32,13 +33,13 @@ class COrthoTileState : public CGameState
         std::string m_current_action="downward";
 
         std::string m_current_tileset;
-        int m_map_cell_width;
-        int m_map_cell_height;
+        int m_map_width;
+        int m_map_height;
         int m_tile_width;
         int m_tile_height;
-        int m_map_start_x=0;
-        int m_map_start_y=0;
-        std::vector<int> currentMapData;
+        int m_player_x=512;
+        int m_player_y=384;
+        CGameScene m_game_scene;
         void LoadScene();
 
 };

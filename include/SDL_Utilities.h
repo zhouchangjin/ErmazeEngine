@@ -8,6 +8,8 @@
 
 namespace sdlutil{
 
+    void LoadTextureWidthHeight(SDL_Texture* texture,int* w,int* h);
+
     SDL_Texture* LoadPngTexture(std::string filePath,SDL_Renderer * renderer);
 
     void RenderTexture(int x,int y,SDL_Rect* clip,SDL_Texture* texture,SDL_Renderer* renderer,int scale);

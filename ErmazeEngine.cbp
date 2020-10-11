@@ -70,6 +70,7 @@
 		<Unit filename="include/CSpriteSheet.h" />
 		<Unit filename="include/Render_Util.h" />
 		<Unit filename="include/SDL_Utilities.h" />
+		<Unit filename="include/Str_Utilities.h" />
 		<Unit filename="include/XML_Utilities.h" />
 		<Unit filename="include/common_struct.h" />
 		<Unit filename="libs/pugixml/pugiconfig.hpp" />
@@ -92,6 +93,7 @@
 		<Unit filename="src/Main.cpp" />
 		<Unit filename="src/Render_Util.cpp" />
 		<Unit filename="src/SDL_Utilities.cpp" />
+		<Unit filename="src/Str_Utilities.cpp" />
 		<Unit filename="src/XML_Utilities.cpp" />
 		<Extensions />
 	</Project>

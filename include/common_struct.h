@@ -1,6 +1,8 @@
 #ifndef COMMON_STRUCT_H_INCLUDED
 #define COMMON_STRUCT_H_INCLUDED
 
+#include <vector>
+
 namespace ge_common_struct{
 
   enum game_event{
@@ -28,6 +30,10 @@ namespace ge_common_struct{
     int g;
     int b;
   };
+
+  typedef std::vector<int> ROW_IDX;
+
+  typedef std::vector<ROW_IDX> LAYER_IDX;
 
 }
 

@@ -2,6 +2,10 @@
 
 namespace sdlutil{
 
+ void LoadTextureWidthHeight(SDL_Texture* texture,int* w,int* h){
+    SDL_QueryTexture(texture,NULL,NULL,w,h);
+ }
+
 
  SDL_Texture* LoadPngTexture(std::string path,SDL_Renderer * renderer){
 

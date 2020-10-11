@@ -6,6 +6,7 @@
 #include "SDL_Utilities.h"
 #include "CSDLGameContext.h"
 #include "CSprite.h"
+#include "CGameScene.h"
 
 namespace sdlutil2{
 
@@ -14,6 +15,8 @@ namespace sdlutil2{
     void* LoadPngTexture(std::string path,CGameContext* p_context);
 
     void* LoadFont(std::string path);
+
+    void RenderSceneLayer(CGameContext* p_context,CGameScene& scene,int layer_idx,int centerx,int centery,ge_common_struct::ge_rect window,int scale);
 
     void RenderSprite(CGameContext* p_context,CSprite* sprite,int sprite_idx,int screenx,int screeny,int scale);
 
