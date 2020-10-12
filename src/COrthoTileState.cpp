@@ -54,14 +54,14 @@ void COrthoTileState::Draw()
 
     for(int i=0;i<cnt;i++){
         sdlutil2::RenderSceneLayer(m_context,m_game_scene,i,m_player_x,m_player_y,fullWindow,2);
+        if(i==1){
+           int idx=m_protagnist->PlayAction(m_current_action,m_step);
+           sdlutil2::RenderSprite(m_context,m_protagnist,idx,centerx,centery,2);
+        }
     }
 
-
-
-
-    int idx=m_protagnist->PlayAction(m_current_action,m_step);
-    sdlutil2::RenderSprite(m_context,m_protagnist,idx,centerx,centery,2);
     sdlutil2::RenderPresent(m_context);
+
 
 }
 
@@ -174,6 +174,22 @@ void COrthoTileState::LoadScene()
     std::string tileset_image_file=tilesetdoc.GetStrAttribute("/tileset/image/@source");
 
     m_current_tileset="./scenes/"+tileset_image_file;
+
+    xmlutils::MyXMLNode tilenode=tilesetdoc.GetNode("/tileset/tile");
+
+    for(;tilenode;tilenode=tilenode.NextSlibing("tile")){
+       int id= tilenode.IntAttribute("id");
+       xmlutils::MyXMLNode property=tilenode.Child("properties").Child("property");
+       for(;property;property=property.NextSlibing("property")){
+            if(strcmp(property.StrAttribute("name").c_str()
+                      ,scene.GetTileCollideProp().c_str())==0){
+                std::string value=property.StrAttribute("value");
+                if(strcmp("true",value.c_str())==0){
+                    m_game_scene.AddCollideTile(id);
+                }
+            }
+       }
+    }
 
     void* map_texture=sdlutil2::LoadPngTexture(m_current_tileset,m_context);
     m_game_scene.SetTexture(map_texture);

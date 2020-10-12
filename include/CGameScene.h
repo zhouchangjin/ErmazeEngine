@@ -1,6 +1,7 @@
 #ifndef CGAMESCENE_H
 #define CGAMESCENE_H
 
+#include <map>
 #include <string>
 #include "common_struct.h"
 
@@ -22,10 +23,15 @@ class CGameScene
         int GetTileHeight(){return m_tile_height;};
         int GetMapWidth(){return m_map_width;};
         int GetMapHeight(){return m_map_height;};
+        std::string GetTileCollideProp(){return m_collide_prop;};
+        bool GetTileCollideBool(int tile_id);
         void SetTileWidth(int tile_width){m_tile_width=tile_width;};
         void SetTileHeight(int tile_height){m_tile_height=tile_height;};
         void SetMapWidth(int map_width){m_map_width=map_width;};
         void SetMapHeight(int map_height){m_map_height=map_height;};
+        void SetCollideProp(std::string prop_name){m_collide_prop=prop_name;};
+        void AddCollideTile(int tile_id);
+
     protected:
 
     private:
@@ -36,6 +42,8 @@ class CGameScene
         std::string m_tilemap_path;
         std::vector<ge_common_struct::LAYER_IDX> m_layers;
         void* m_tileset_texture;
+        std::map<int,bool> m_collidable_tiles;
+        std::string m_collide_prop;
 
 };
 

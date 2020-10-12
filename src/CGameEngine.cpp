@@ -5,6 +5,7 @@ CGameEngine::CGameEngine()
 
 CGameEngine::~CGameEngine()
 {
+    //TODO hard coding
     m_game_context->ClearUp();
     delete m_game_context;
     m_game_context=NULL;

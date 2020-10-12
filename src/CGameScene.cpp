@@ -15,6 +15,18 @@ const std::string CGameScene::GetTileMapPath()const{
     return path;
 }
 
+bool CGameScene::GetTileCollideBool(int tile_id){
+   if(m_collidable_tiles.find(tile_id)!=m_collidable_tiles.end()){
+        return true;
+   }else{
+        return false;
+   }
+}
+
+void CGameScene::AddCollideTile(int tile_id){
+    m_collidable_tiles[tile_id]=true;
+}
+
 CGameScene::~CGameScene()
 {
     //dtor
