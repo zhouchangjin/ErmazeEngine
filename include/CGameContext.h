@@ -13,6 +13,8 @@ class CGameContext
         virtual void ClearUp()=0;
         virtual ge_common_struct::game_event EventCatch()=0;
         virtual ge_common_struct::ge_rect GetWindowSize()=0;
+        virtual unsigned int GetTicks()=0;
+        virtual void DelayTime(unsigned int time)=0;
     protected:
 
     private:

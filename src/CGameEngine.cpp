@@ -14,12 +14,10 @@ CGameEngine::~CGameEngine()
 }
 
 void CGameEngine::Init(){
-    LoadSetting();
 
     m_game_context=new CSdlGameContext();
-    //m_game_context->Init(1024,768);
+    LoadSetting();
     m_game_context->Init(m_game_setting.GetWindowWidth(),m_game_setting.GetWindowHeight());
-
     m_current_state=new CMenuState(m_game_context);
     m_current_state->Init();
     m_current_state->PrepareData();
@@ -38,6 +36,7 @@ void CGameEngine::Init(){
 }
 
 void CGameEngine::Draw(){
+    Delay();
     m_current_state->Draw();
     int change_state=m_current_state->GetStateValue();
     if(change_state>0){
@@ -46,10 +45,11 @@ void CGameEngine::Draw(){
     }else if(change_state==-1){
         m_running=false;
     }
-
+    SetFrameTime();
 }
 
 void CGameEngine::HandleEvent(){
+
     ge_common_struct::game_event event=m_game_context->EventCatch();
 
     if(event==ge_common_struct::QUIT){
@@ -62,6 +62,23 @@ void CGameEngine::HandleEvent(){
 
 void CGameEngine::Update(){
 
+}
+
+int CGameEngine::FrameDiff(){
+   return m_game_context->GetTicks()-m_frametime;
+}
+
+void CGameEngine::Delay(){
+
+    int diff=FrameDiff();
+    if(m_cap_frame && diff<(int)m_min_frametime){
+        unsigned int time= m_min_frametime-(unsigned int)diff;
+        m_game_context->DelayTime(time);
+    }
+}
+
+void CGameEngine::SetFrameTime(){
+    m_frametime=m_game_context->GetTicks();
 }
 
 void CGameEngine::LoadSetting(){

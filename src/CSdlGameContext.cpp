@@ -111,7 +111,13 @@ ge_common_struct::ge_rect CSdlGameContext::GetWindowSize(){
     return rect;
 }
 
+void CSdlGameContext::DelayTime(uint32_t time){
+    SDL_Delay(time);
+}
 
+unsigned int CSdlGameContext::GetTicks(){
+    return SDL_GetTicks();
+}
 
 void CSdlGameContext::ClearUp(){
 

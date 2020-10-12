@@ -19,6 +19,8 @@ class CSdlGameContext : public CGameContext
         ge_common_struct::game_event EventCatch();
         SDL_Renderer* GetRenderer();
         ge_common_struct::ge_rect GetWindowSize();
+        unsigned int GetTicks();
+        void DelayTime(uint32_t time);
 
 
     protected:

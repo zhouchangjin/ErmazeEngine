@@ -1,6 +1,6 @@
 #include "Render_Util.h"
 //该工具方法可以被面向对象的Service类取代
-#include <iostream>
+
 namespace sdlutil2
 {
 
@@ -164,13 +164,11 @@ void RenderSceneLayer(CGameContext* p_context,CGameScene& scene,
             SDL_Rect sdlrect=TransformRect(rect);
             int c_screen_x=scale*(start_screen_coorx+(i-min_col)*tilewidth);
             int c_screen_y=scale*(start_screen_coory+(j-min_row)*tileheight);
-            //std::cout<<c_screen_x<<","<<c_screen_y<<" ";
             sdlutil::RenderTexture(c_screen_x,c_screen_y,&sdlrect,sdl_texture,renderer,scale);
 
 
 
         }
-        //std::cout<<std::endl;
     }
 
 

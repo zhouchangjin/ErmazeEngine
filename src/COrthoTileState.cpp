@@ -174,7 +174,6 @@ void COrthoTileState::LoadScene()
     std::string tileset_image_file=tilesetdoc.GetStrAttribute("/tileset/image/@source");
 
     m_current_tileset="./scenes/"+tileset_image_file;
-    //std::cout<<"Image File "<<m_current_tileset<<std::endl;
 
     void* map_texture=sdlutil2::LoadPngTexture(m_current_tileset,m_context);
     m_game_scene.SetTexture(map_texture);
