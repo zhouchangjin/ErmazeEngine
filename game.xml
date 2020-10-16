@@ -17,6 +17,7 @@
    
    <scenes>
      <scene id="01">
+		<spritesheet path="sprites/sprites.png" width="16" height="16" col="8" row="10" />
 		<tilemap collide_prop="collidable" layerswitch_prop="layer_switch" name="FF3-01"/>
 	 </scene>
 	 <scene id="02">
