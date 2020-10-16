@@ -9,11 +9,14 @@ class CSpriteSheet
 {
     public:
         CSpriteSheet();
+        CSpriteSheet(std::string sprite_path,int width,
+                     int height,int col,int row);
         virtual ~CSpriteSheet();
         void* GetTexture(){return m_texture;};
         std::string GetSpritePath(){return m_sprite_path;};
         void SetTexture(void* pointer){m_texture=pointer;};
         ge_common_struct::ge_rect GetRectByIdx(int index);
+
     protected:
 
     private:

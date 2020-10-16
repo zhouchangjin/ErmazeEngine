@@ -435,7 +435,7 @@
 1592891680 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
 	"CMenuState.h"
 
-1602761690 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
+1602825228 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
 	"COrthoTileState.h"
 	<iostream>
 
@@ -489,13 +489,13 @@
 	"CSprite.h"
 	"CGameScene.h"
 
-1592896953 c:\work\cplusworkspace\ermazeengine\include\cspritesheet.h
+1602825180 c:\work\cplusworkspace\ermazeengine\include\cspritesheet.h
 	<string>
 	<vector>
 	<map>
 	"common_struct.h"
 
-1601657932 source:c:\work\cplusworkspace\ermazeengine\src\cspritesheet.cpp
+1602825341 source:c:\work\cplusworkspace\ermazeengine\src\cspritesheet.cpp
 	"CSpriteSheet.h"
 
 1602093784 source:c:\work\cplusworkspace\ermazeengine\src\xml_utilities.cpp
@@ -551,4 +551,16 @@
 
 1602232657 c:\work\cplusworkspace\ermazeengine\include\cscenelayers.h
 	"common_struct.h"
+
+1602824774 source:c:\work\cplusworkspace\ermazeengine\src\cgameobject.cpp
+	"CGameObject.h"
+
+1602824774 c:\work\cplusworkspace\ermazeengine\include\cgameobject.h
+
+1602824878 source:c:\work\cplusworkspace\ermazeengine\src\cspritegameobject.cpp
+	"CSpriteGameObject.h"
+
+1602825003 c:\work\cplusworkspace\ermazeengine\include\cspritegameobject.h
+	<CGameObject.h>
+	<CSprite.h>
 

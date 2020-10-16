@@ -120,12 +120,12 @@ void COrthoTileState::Resume()
 
 void COrthoTileState::Update()
 {
-    /****
+
     /*Update 方法里处理更新数据，一些复杂的事件也在这里进行判断
-    /*放在前面判断会相对不合理。由于是单一引擎，不需要事件注册的机制
-    /*只有游戏的主角对象会监听事件，而且是强制的，
-    /*所以没必要实现专门的事件监听
-    ***/
+    放在前面判断会相对不合理。由于是单一引擎，不需要事件注册的机制
+    只有游戏的主角对象会监听事件，而且是强制的，
+    所以没必要实现专门的事件监听
+    */
     if(m_movex!=0 || m_movey!=0)
     {
         m_player_collide=CheckCollision(m_player_x+m_movex,m_player_y+m_movey

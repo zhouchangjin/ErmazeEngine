@@ -5,6 +5,15 @@ CSpriteSheet::CSpriteSheet()
     //ctor
 }
 
+CSpriteSheet::CSpriteSheet(std::string path,int width,int height
+                           ,int col,int row){
+    m_sprite_path=path;
+    m_sprite_width=width;
+    m_sprite_height=height;
+    m_resource_width=col;
+    m_resource_height=row;
+}
+
 CSpriteSheet::~CSpriteSheet()
 {
     //dtor
