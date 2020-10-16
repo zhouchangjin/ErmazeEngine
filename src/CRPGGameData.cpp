@@ -22,11 +22,12 @@ void CRPGGameData::ParseGameDataByXMLDoc(xmlutils::MyXMLDoc* document){
        xmlutils::MyXMLNode tilemap=node.Child("tilemap");
        std::string tilepath=tilemap.StrAttribute("name");
        std::string collide_prop=tilemap.StrAttribute("collide_prop");
-       //std::cout<<node_id<<"--"<<tilepath<<std::endl;
+       std::string layerswitch_prop=tilemap.StrAttribute("layerswitch_prop");
+
        CGameScene scene;
        scene.SetTileMapPath(tilepath);
        scene.SetCollideProp(collide_prop);
-       //m_scene_list.insert(std::pair<std::string,CGameScene>("",scene));
+       scene.SetLayerSwitchProp(layerswitch_prop);
        m_scene_list[node_id]=scene;
    }
 

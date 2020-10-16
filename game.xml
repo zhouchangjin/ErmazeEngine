@@ -17,10 +17,10 @@
    
    <scenes>
      <scene id="01">
-		<tilemap collide_prop="collidable" name="FF3-01"/>
+		<tilemap collide_prop="collidable" layerswitch_prop="layer_switch" name="FF3-01"/>
 	 </scene>
 	 <scene id="02">
-		<tilemap name="FF3-01"/>
+		<tilemap name="FF3-02"/>
 	 </scene>
    </scenes>
 </game>

@@ -63,6 +63,10 @@ void CGameEngine::HandleEvent(){
 
 void CGameEngine::Update(){
 
+    if(m_running){
+        m_current_state->Update();
+    }
+
 }
 
 int CGameEngine::FrameDiff(){

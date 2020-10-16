@@ -151,7 +151,7 @@ void RenderSceneLayer(CGameContext* p_context,CGameScene& scene,
                 continue;
             }
 
-            int idx=row[i]-1;
+            int idx=row[i]-1; //注意这里是因为原来tmx文件是从1开始的编号的
 
             int tileset_row_num=idx/tileset_cols;
             int tileset_col_num=idx%tileset_cols;

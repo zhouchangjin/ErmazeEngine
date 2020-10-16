@@ -8,6 +8,8 @@ CGameScene::CGameScene()
 
 CGameScene::CGameScene(const CGameScene& gamescene){
     m_tilemap_path=gamescene.GetTileMapPath();
+    m_collide_prop=gamescene.GetTileCollideProp();
+    m_layerswitch_prop=gamescene.GetLayerSwitchProp();
 }
 
 const std::string CGameScene::GetTileMapPath()const{
@@ -23,8 +25,20 @@ bool CGameScene::GetTileCollideBool(int tile_id){
    }
 }
 
+bool CGameScene::GetSwitchTileBool(int tile_id){
+    if(m_layerswitches.find(tile_id)!=m_layerswitches.end()){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 void CGameScene::AddCollideTile(int tile_id){
     m_collidable_tiles[tile_id]=true;
+}
+
+void CGameScene::AddSwitchTile(int tile_id){
+    m_layerswitches[tile_id]=true;
 }
 
 CGameScene::~CGameScene()
