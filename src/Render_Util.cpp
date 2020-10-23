@@ -106,7 +106,7 @@ ge_common_struct::ge_rect LoadWindowRect(CGameContext* p_context)
     return rect;
 }
 
-void RenderSceneLayer(CGameContext* p_context,CGameScene& scene,
+void RenderSceneLayer(CGameContext* p_context,C2DGameScene& scene,
                       int layer_idx,int centerx,int centery,
                       ge_common_struct::ge_rect window,int scale)
 {
@@ -121,7 +121,12 @@ void RenderSceneLayer(CGameContext* p_context,CGameScene& scene,
     //int tileset_rows=height/tileheight;
 
     SDL_Renderer* renderer=GetRenderer(p_context);
-    ge_common_struct::LAYER_IDX layer=scene.GetLayer(layer_idx);
+    CLayer* tlayer=scene.GetLayer(layer_idx);
+    if(tlayer->GetLayerType()==ge_common_struct::layer_type::TILED_LAYER){
+
+    CTileLayer* tilelayer=(CTileLayer*)tlayer;
+    ge_common_struct::LAYER_IDX layer=tilelayer->GetTiles();
+
     int start_screen_x=centerx*scale-window.w/2;
     int start_screen_y=centery*scale-window.h/2;
 
@@ -169,6 +174,9 @@ void RenderSceneLayer(CGameContext* p_context,CGameScene& scene,
 
 
         }
+    }
+
+
     }
 
 

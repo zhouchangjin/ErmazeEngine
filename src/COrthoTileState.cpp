@@ -1,5 +1,5 @@
 #include "COrthoTileState.h"
-#include <iostream>
+
 COrthoTileState::COrthoTileState()
 {
 
@@ -128,6 +128,7 @@ void COrthoTileState::Update()
     */
     if(m_movex!=0 || m_movey!=0)
     {
+        // 第一部 判断精灵所属layer，如果脚下有梯子，则精灵绘制在上一layer，碰撞在下一layer
         m_player_collide=CheckCollision(m_player_x+m_movex,m_player_y+m_movey
                              ,16,16,m_player_layer);
         if(m_player_collide){
@@ -136,7 +137,7 @@ void COrthoTileState::Update()
                     int gridFootY=(m_player_y+16)/m_game_scene.GetTileHeight();
                     int gridX=(m_player_x+8)/m_game_scene.GetTileWidth();
                     int gridHeadY=m_player_y/m_game_scene.GetTileHeight();
-                    ge_common_struct::LAYER_IDX layer=m_game_scene.GetLayer(m_player_layer-1);
+                    ge_common_struct::LAYER_IDX layer=m_game_scene.GetTileLayer(m_player_layer-1)->GetTiles();
                     if(m_player_onstair==false){
                         int id=layer[gridFootY][gridX];
                         bool onstair=m_game_scene.GetSwitchTileBool(id-1);
@@ -156,7 +157,7 @@ void COrthoTileState::Update()
                 int gridFootY=(m_player_y+16)/m_game_scene.GetTileHeight();
                 int gridX=(m_player_x+8)/m_game_scene.GetTileWidth();
                 if(m_player_layer+1<m_game_scene.GetLayerCnt()){
-                    ge_common_struct::LAYER_IDX layer=m_game_scene.GetLayer(m_player_layer);
+                    ge_common_struct::LAYER_IDX layer=m_game_scene.GetTileLayer(m_player_layer)->GetTiles();
                     int id=layer[gridFootY][gridX];
                     bool onstair=m_game_scene.GetSwitchTileBool(id-1);
                     if(onstair){
@@ -207,7 +208,7 @@ void COrthoTileState::PrepareData()
 bool COrthoTileState::CheckCollisionByGrid(int gridx,int gridy,int level)
 {
 
-    ge_common_struct::LAYER_IDX layer=m_game_scene.GetLayer(level);
+    ge_common_struct::LAYER_IDX layer=m_game_scene.GetTileLayer(level)->GetTiles();
     int idx=layer[gridy][gridx];
     if(idx==0)
     {
@@ -225,7 +226,7 @@ bool COrthoTileState::CheckCollisionByGrid(int gridx,int gridy,int level)
             if(level+1==m_game_scene.GetLayerCnt()){
                 return false;
             }
-            ge_common_struct::LAYER_IDX layer_upper=m_game_scene.GetLayer(level+1);
+            ge_common_struct::LAYER_IDX layer_upper=m_game_scene.GetTileLayer(level+1)->GetTiles();
             int idx_upper=layer_upper[gridy][gridx];
             if(idx_upper==0)
             {
@@ -288,7 +289,7 @@ void COrthoTileState::LoadScene()
 {
     m_game_scene.ClearScene();
     CRPGGameData* gamedata=(CRPGGameData*)m_game_data;
-    CGameScene scene=gamedata->GetCurrentScene();
+    C2DGameScene scene=gamedata->GetCurrentScene();
     std::string scenefile="./scenes/"+scene.GetTileMapPath()+".tmx";
     xmlutils::MyXMLDoc doc =xmlutils::LoadXML(scenefile);
     xmlutils::MyXMLNode docmap=doc.GetNode("/map");
@@ -309,20 +310,21 @@ void COrthoTileState::LoadScene()
 
     for(; node; node=node.NextSlibing("layer"))
     {
+        CTileLayer* tiled_layer=new CTileLayer;
         std::string csvdata=node.Child("data").valueStr();
         std::vector<std::string> lines=ge_str_utilities::Splitstr(csvdata,'\n');
-        ge_common_struct::LAYER_IDX layer;
         for(size_t s=0; s<lines.size(); s++)
         {
             std::string l=ge_str_utilities::TrimStr(lines[s]);
             if(l.size()>0)
             {
                 ge_common_struct::ROW_IDX row=ge_str_utilities::SplitStrToIntArray(l,',');
-                layer.push_back(row);
+                tiled_layer->AddRow(row);
             }
 
         }
-        m_game_scene.AddLayer(layer);
+
+        m_game_scene.AddLayer(tiled_layer);
     }
     std::string tileset_file_path="./scenes/"+ tileset_file_name;
 

@@ -10,7 +10,7 @@ CRPGGameData::~CRPGGameData()
     //dtor
 }
 
-CGameScene CRPGGameData::GetCurrentScene(){
+C2DGameScene CRPGGameData::GetCurrentScene(){
     return m_scene_list[m_current_scene];
 }
 
@@ -24,7 +24,7 @@ void CRPGGameData::ParseGameDataByXMLDoc(xmlutils::MyXMLDoc* document){
        std::string collide_prop=tilemap.StrAttribute("collide_prop");
        std::string layerswitch_prop=tilemap.StrAttribute("layerswitch_prop");
 
-       CGameScene scene;
+       C2DGameScene scene;
        scene.SetTileMapPath(tilepath);
        scene.SetCollideProp(collide_prop);
        scene.SetLayerSwitchProp(layerswitch_prop);

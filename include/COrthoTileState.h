@@ -4,7 +4,7 @@
 #include <CGameState.h>
 #include "CSdlGameContext.h"
 #include "CRPGGameData.h"
-#include "CGameScene.h"
+#include "C2DGameScene.h"
 #include "Str_Utilities.h"
 
 class COrthoTileState : public CGameState
@@ -44,7 +44,7 @@ class COrthoTileState : public CGameState
         int m_player_layer=1;
         bool m_player_onstair=false;
         bool m_player_collide=false;
-        CGameScene m_game_scene;
+        C2DGameScene m_game_scene;
         void LoadScene();
         bool CheckCollision(int x,int y,int width,int height,int layer_level);
         bool CheckCollisionByGrid(int gridx,int gridy,int layer_base);

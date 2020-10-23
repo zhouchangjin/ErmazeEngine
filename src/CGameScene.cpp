@@ -7,41 +7,29 @@ CGameScene::CGameScene()
 
 
 CGameScene::CGameScene(const CGameScene& gamescene){
-    m_tilemap_path=gamescene.GetTileMapPath();
-    m_collide_prop=gamescene.GetTileCollideProp();
-    m_layerswitch_prop=gamescene.GetLayerSwitchProp();
-}
 
-const std::string CGameScene::GetTileMapPath()const{
-    const std::string path=m_tilemap_path;
-    return path;
-}
-
-bool CGameScene::GetTileCollideBool(int tile_id){
-   if(m_collidable_tiles.find(tile_id)!=m_collidable_tiles.end()){
-        return true;
-   }else{
-        return false;
-   }
-}
-
-bool CGameScene::GetSwitchTileBool(int tile_id){
-    if(m_layerswitches.find(tile_id)!=m_layerswitches.end()){
-        return true;
-    }else{
-        return false;
-    }
-}
-
-void CGameScene::AddCollideTile(int tile_id){
-    m_collidable_tiles[tile_id]=true;
-}
-
-void CGameScene::AddSwitchTile(int tile_id){
-    m_layerswitches[tile_id]=true;
 }
 
 CGameScene::~CGameScene()
 {
     //dtor
+}
+
+void CGameScene::ClearScene(){
+    for(size_t i=0;i<m_layer_list.size();i++){
+        delete m_layer_list[i];
+    }
+    m_layer_list.clear();
+}
+
+int CGameScene::GetLayerCnt(){
+    return m_layer_list.size();
+}
+
+void CGameScene::AddLayer(CLayer* layer){
+    m_layer_list.push_back(layer);
+}
+
+CLayer* CGameScene::GetLayer(int layer_no){
+   return m_layer_list[layer_no];
 }

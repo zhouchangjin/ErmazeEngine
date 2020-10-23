@@ -5,7 +5,7 @@
 #include <map>
 
 #include <CGameData.h>
-#include <CGameScene.h>
+#include <C2DGameScene.h>
 #include <XML_Utilities.h>
 
 class CRPGGameData : public CGameData
@@ -14,10 +14,10 @@ class CRPGGameData : public CGameData
         CRPGGameData();
         virtual ~CRPGGameData();
 
-        void AddGameScene(std::string name,CGameScene scene);
-        CGameScene GetGameScene(std::string name);
+        void AddGameScene(std::string name,C2DGameScene scene);
+        C2DGameScene GetGameScene(std::string name);
         void SetCurrentScene(std::string current_scene);
-        CGameScene GetCurrentScene();
+        C2DGameScene GetCurrentScene();
         void ParseGameDataByXMLDoc(xmlutils::MyXMLDoc* document);
 
 
@@ -25,7 +25,7 @@ class CRPGGameData : public CGameData
 
     private:
         std::string m_current_scene;
-        std::map<std::string,CGameScene> m_scene_list;
+        std::map<std::string,C2DGameScene> m_scene_list;
 
 
 };

@@ -3,7 +3,8 @@
 
 #include <map>
 #include <string>
-#include "common_struct.h"
+
+#include <CLayer.h>
 
 class CGameScene
 {
@@ -11,45 +12,14 @@ class CGameScene
         CGameScene();
         CGameScene(const CGameScene& copyscene);
         virtual ~CGameScene();
-        const std::string GetTileMapPath()const;
-        void SetTileMapPath(std::string path){m_tilemap_path=path;};
-        int GetLayerCnt(){return m_layers.size();};
-        void AddLayer(ge_common_struct::LAYER_IDX layer){m_layers.push_back(layer);};
-        ge_common_struct::LAYER_IDX GetLayer(int layer_no){return m_layers[layer_no];};
-        void ClearScene(){m_layers.clear();};
-        void SetTexture(void* texture){m_tileset_texture=texture;};
-        void* GetTexture(){return m_tileset_texture;};
-        int GetTileWidth(){return m_tile_width;};
-        int GetTileHeight(){return m_tile_height;};
-        int GetMapWidth(){return m_map_width;};
-        int GetMapHeight(){return m_map_height;};
-        const std::string GetTileCollideProp()const{return m_collide_prop;};
-        const std::string GetLayerSwitchProp()const{return m_layerswitch_prop;};
-        bool GetTileCollideBool(int tile_id);
-        bool GetSwitchTileBool(int tile_id);
-        void SetTileWidth(int tile_width){m_tile_width=tile_width;};
-        void SetTileHeight(int tile_height){m_tile_height=tile_height;};
-        void SetMapWidth(int map_width){m_map_width=map_width;};
-        void SetMapHeight(int map_height){m_map_height=map_height;};
-        void SetCollideProp(std::string prop_name){m_collide_prop=prop_name;};
-        void SetLayerSwitchProp(std::string prop_name){m_layerswitch_prop=prop_name;};
-        void AddCollideTile(int tile_id);
-        void AddSwitchTile(int tile_id);
-
+        int GetLayerCnt();
+        void ClearScene();
+        CLayer* GetLayer(int layer_no);
+        void AddLayer(CLayer* layer);
     protected:
-
+        std::vector<CLayer*> m_layer_list;
     private:
-        int m_tile_width;
-        int m_tile_height;
-        int m_map_width;
-        int m_map_height;
-        std::string m_tilemap_path;
-        std::vector<ge_common_struct::LAYER_IDX> m_layers;
-        void* m_tileset_texture;
-        std::map<int,bool> m_collidable_tiles;
-        std::map<int,bool> m_layerswitches;
-        std::string m_collide_prop;
-        std::string m_layerswitch_prop;
+
 
 };
 

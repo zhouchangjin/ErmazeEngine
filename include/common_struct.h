@@ -5,6 +5,12 @@
 
 namespace ge_common_struct{
 
+  enum layer_type{
+     OBJECT_LAYER,
+     TILED_LAYER,
+     PICTURE_LAYER
+  };
+
   enum game_event{
     NO_EVENT,
     QUIT,
