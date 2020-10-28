@@ -8,10 +8,12 @@ CGameEngine::~CGameEngine()
     //TODO hard coding
     m_game_context->ClearUp();
     delete m_game_context;
-    m_game_context=NULL;
+    m_game_context=nullptr;
     for(int i=1;i<=2;i++){
        delete m_states[i];
     }
+    delete m_gamedata;
+    m_gamedata=nullptr;
 }
 
 void CGameEngine::Init(){

@@ -28,7 +28,7 @@ class CSdlGameContext : public CGameContext
     private:
         SDL_Renderer * m_renderer;
         SDL_Window * m_window;
-        TTF_Font *m_font = NULL;
+        TTF_Font *m_font = nullptr;
 };
 
 #endif // CSDLGAMECONTEXT_H

@@ -17,9 +17,11 @@ namespace sdlutil2{
 
     void* LoadFont(std::string path);
 
-    void RenderSceneLayer(CGameContext* p_context,C2DGameScene& scene,int layer_idx,int centerx,int centery,ge_common_struct::ge_rect window,int scale);
+    void RenderSceneLayer(CGameContext* p_context,C2DGameScene& scene,int layer_idx,int camerax,int cameray,ge_common_struct::ge_rect window,int scale);
 
-    void RenderSprite(CGameContext* p_context,CSprite* sprite,int sprite_idx,int screenx,int screeny,int scale);
+    void RenderSprite(CGameContext* p_context,CSprite* sprite,int screenx,int screeny,int scale);
+
+    void RenderGameObject(CGameContext* p_context,CSpriteGameObject* object,ge_common_struct::ge_rect window,int camerax,int cameray,int scale);
 
     void RenderTexture(CGameContext* p_context,int x,int y,ge_common_struct::ge_rect rect,void* texture,int scale);
 

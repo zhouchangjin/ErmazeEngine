@@ -2,10 +2,12 @@
 #define CORTHOTILESTATE_H
 
 #include <CGameState.h>
+#include <CSceneData.h>
 #include "CSdlGameContext.h"
 #include "CRPGGameData.h"
 #include "C2DGameScene.h"
 #include "Str_Utilities.h"
+
 
 class COrthoTileState : public CGameState
 {
@@ -26,30 +28,21 @@ class COrthoTileState : public CGameState
     protected:
 
     private:
-        CSpriteSheet* m_sprite_sheet;
-        CSprite* m_protagnist;
         int m_scale=2;
-        int m_step=0;
-        int m_movex=0;
-        int m_movey=0;
-        int m_move_speed=5;
-        std::string m_current_action="downward";
-        std::string m_current_tileset;
-        int m_map_width;
-        int m_map_height;
-        int m_tile_width;
-        int m_tile_height;
-        int m_player_x=516;
-        int m_player_y=484;
-        int m_player_layer=1;
-        bool m_player_onstair=false;
-        bool m_player_collide=false;
         C2DGameScene m_game_scene;
+
+        std::vector<CSpriteGameObject*> m_player;
+        std::vector<CSpriteGameObject*> m_player_two;
+        //private function
         void LoadScene();
-        bool CheckCollision(int x,int y,int width,int height,int layer_level);
+        void LoadPlayer();
+        bool CheckCollision(CSpriteGameObject* object);
+        bool CheckCollision(int x,int y,int width,int height,int layer_level,
+                            int movespd,int move_x,int move_y);
         bool CheckCollisionByGrid(int gridx,int gridy,int layer_base);
-
-
+        void UpdateLadder(CSpriteGameObject* object);
+        int GetGridIdx(int gridx,int gridy,int level);
+        ge_common_struct::grid_type GetGridType(int gridx,int gridy,int level);
 };
 
 #endif // CORTHOTILESTATE_H

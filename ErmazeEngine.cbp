@@ -55,6 +55,7 @@
 			<Add after="XCOPY $(#sdl2)\bin\*.dll $(TARGET_OUTPUT_DIR) /D /Y" />
 		</ExtraCommands>
 		<Unit filename="include/C2DGameScene.h" />
+		<Unit filename="include/CCamera2D.h" />
 		<Unit filename="include/CGame.h" />
 		<Unit filename="include/CGameContext.h" />
 		<Unit filename="include/CGameData.h" />
@@ -68,6 +69,7 @@
 		<Unit filename="include/COrthoTileState.h" />
 		<Unit filename="include/CRPGGameData.h" />
 		<Unit filename="include/CSDLRenderService.h" />
+		<Unit filename="include/CSceneData.h" />
 		<Unit filename="include/CSdlGameContext.h" />
 		<Unit filename="include/CSprite.h" />
 		<Unit filename="include/CSpriteGameObject.h" />
@@ -82,6 +84,7 @@
 		<Unit filename="libs/pugixml/pugixml.cpp" />
 		<Unit filename="libs/pugixml/pugixml.hpp" />
 		<Unit filename="src/C2DGameScene.cpp" />
+		<Unit filename="src/CCamera2D.cpp" />
 		<Unit filename="src/CGame.cpp" />
 		<Unit filename="src/CGameContext.cpp" />
 		<Unit filename="src/CGameData.cpp" />
@@ -95,6 +98,7 @@
 		<Unit filename="src/COrthoTileState.cpp" />
 		<Unit filename="src/CRPGGameData.cpp" />
 		<Unit filename="src/CSDLRenderService.cpp" />
+		<Unit filename="src/CSceneData.cpp" />
 		<Unit filename="src/CSdlGameContext.cpp" />
 		<Unit filename="src/CSprite.cpp" />
 		<Unit filename="src/CSpriteGameObject.cpp" />

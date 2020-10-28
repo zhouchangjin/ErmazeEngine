@@ -17,7 +17,8 @@ SDL_Renderer* CSdlGameContext::GetRenderer(){
 ge_common_struct::game_event CSdlGameContext::EventCatch(){
 
     SDL_Event e;
-    ge_common_struct::game_event translate_event;
+    ge_common_struct::game_event translate_event=ge_common_struct
+    ::game_event::NO_EVENT;
     while(SDL_PollEvent( &e ) != 0 ){
 
              if( e.type == SDL_QUIT )

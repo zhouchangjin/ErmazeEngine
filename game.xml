@@ -4,24 +4,46 @@
 </settings>
 
 <game>
-  <menustate default="true">
-	<menu background="res/xxx.png">
+  <gamestate>
+	<menustate default="true">
+	  <menu background="res/xxx.png">
 		<menuitem type="newgame" sceneid="01">开始游戏</menuitem>
 		<menuitem>载入进度</menuitem>
 		<menuitem>退出游戏</menuitem>
-   </menu>
-  </menustate>
-  <tilemapstate type="orth">
+     </menu>
+    </menustate>
+	<tilemapstate type="orth">
   
-  </tilemapstate>
-   
-   <scenes>
+	</tilemapstate>
+  </gamestate>
+  <spritesheets>
+	 <spritesheet  id="1" path="sprites.png" width="16" height="16" col="8" row="10" />
+  </spritesheets>
+  <characters>
+	 <character id="p1" sheet_id="1">
+		<actions>
+			<action name="upward" ids="2,3"  />
+			<action name="downward" ids="0,1" />
+			<action name="leftward" ids="4,5" />
+			<action name="rightward" ids="6,7" />
+		</actions>
+	 </character>
+  </characters>
+  
+  <players>
+	<player>
+		<character id="p1"/>
+		<character id="p1"/>
+	</player>
+  </players>
+  <startpoint scene="01" x="516" y="484" direction="upward" layer="1" />
+  
+  <scenes>
      <scene id="01">
-		<spritesheet path="sprites/sprites.png" width="16" height="16" col="8" row="10" />
 		<tilemap collide_prop="collidable" layerswitch_prop="layer_switch" name="FF3-01"/>
 	 </scene>
 	 <scene id="02">
-		<tilemap name="FF3-02"/>
+		<tilemap collide_prop="collidable" layerswitch_prop="layer_switch" name="FF3-02"/>
 	 </scene>
    </scenes>
 </game>

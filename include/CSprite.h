@@ -7,17 +7,19 @@ class CSprite
 {
     public:
         CSprite();
-        CSprite(CSpriteSheet* sprite_sheet,std::vector<int> sequence);
+        CSprite(CSpriteSheet* sprite_sheet);
         virtual ~CSprite();
         CSpriteSheet* GetSpriteSheet(){return this->m_sprite_sheet;};
         ge_common_struct::ge_rect GetRectByIdx(int sprite_idx);
         void AddAction(std::string action_name,std::vector<int> frame_idx_arr);
-        int PlayAction(std::string action_name,int step);
+        void PlayAction(std::string action_name,int step);
+        void SetSheet(CSpriteSheet* sheet){m_sprite_sheet=sheet;};
+        int GetFrameIdx(){return m_frame_idx;}
     protected:
 
     private:
+        int m_frame_idx=0;
         CSpriteSheet* m_sprite_sheet;
-        std::vector<int> m_sequence;
         std::map<std::string,std::vector<int>> m_action_map;
 };
 

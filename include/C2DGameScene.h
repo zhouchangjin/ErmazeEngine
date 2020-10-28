@@ -3,6 +3,10 @@
 
 #include <CGameScene.h>
 #include <CTileLayer.h>
+#include <CSpriteSheet.h>
+#include <CSceneData.h>
+#include <CCamera2D.h>
+#include <CSpriteGameObject.h>
 
 class C2DGameScene :public CGameScene
 {
@@ -10,13 +14,6 @@ class C2DGameScene :public CGameScene
         C2DGameScene();
         C2DGameScene(const C2DGameScene& copyscene);
         virtual ~C2DGameScene();
-
-        const std::string GetTileCollideProp()const{return m_collide_prop;};
-        const std::string GetLayerSwitchProp()const{return m_layerswitch_prop;};
-        const std::string GetTileMapPath()const;
-        void SetTileMapPath(std::string path){m_tilemap_path=path;};
-        void SetCollideProp(std::string prop_name){m_collide_prop=prop_name;};
-        void SetLayerSwitchProp(std::string prop_name){m_layerswitch_prop=prop_name;};
 
         int GetTileWidth(){return m_tile_width;};
         int GetTileHeight(){return m_tile_height;};
@@ -34,15 +31,15 @@ class C2DGameScene :public CGameScene
         void AddSwitchTile(int tile_id);
         bool GetTileCollideBool(int tile_id);
         bool GetSwitchTileBool(int tile_id);
-
-
         CTileLayer* GetTileLayer(int layer_no);
-
+        void SetSheetParam(std::string sheetpath,int width,
+                           int height,int col,int row);
+        void LoadSpriteSheet(CSceneData scenedata);
+        int GetCamera2DX(){return m_camera.GetCamera2DX();};
+        int GetCamera2DY(){return m_camera.GetCamera2DY();};
+        CCamera2D* GetCameraPointer(){return &m_camera;};
 
     protected:
-        std::string m_tilemap_path;
-        std::string m_collide_prop;
-        std::string m_layerswitch_prop;
 
         int m_tile_width;
         int m_tile_height;
@@ -51,7 +48,7 @@ class C2DGameScene :public CGameScene
         void* m_tileset_texture;
         std::map<int,bool> m_collidable_tiles;
         std::map<int,bool> m_layerswitches;
-
+        CCamera2D m_camera;
 
 
     private:

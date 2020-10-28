@@ -44,7 +44,8 @@ SDL_Rect TransformRect(ge_common_struct::ge_rect rect)
     return rRect;
 }
 
-void RenderTexture(CGameContext* p_context,int x,int y,ge_common_struct::ge_rect rect,void* texture,int scale)
+void RenderTexture(CGameContext* p_context,int x,int y,
+                   ge_common_struct::ge_rect rect,void* texture,int scale)
 {
     SDL_Renderer * renderer=GetRenderer(p_context);
     SDL_Rect clip=TransformRect(rect);
@@ -52,14 +53,37 @@ void RenderTexture(CGameContext* p_context,int x,int y,ge_common_struct::ge_rect
     sdlutil::RenderTexture(x,y,&clip,sdltexture,renderer,scale);
 }
 
+void RenderGameObject(CGameContext* p_context,CSpriteGameObject* object
+                      ,ge_common_struct::ge_rect window,
+                      int camera_x,int camera_y,int scale)
+{
+    CSprite* sprite=object->GetSprite();
+    int x=object->GetX();
+    int y=object->GetY();
+    int centerx=window.x+window.w/2;
+    int centery=window.y+window.h/2;
+    centerx=centerx+x-camera_x;
+    centery=centery+y-camera_y;
+    RenderSprite(p_context,sprite,centerx,centery,scale);
 
-void RenderSprite(CGameContext* p_context,CSprite* sprite,int sprite_idx,int screenx,int screeny,int scale)
+}
+
+
+void RenderSprite(CGameContext* p_context,CSprite* sprite,int screenx,
+                  int screeny,int scale)
 {
     CSpriteSheet* spritesheet=sprite->GetSpriteSheet();
     void * texture=spritesheet->GetTexture();
+    if(!texture)
+    {
+        //load texture
+        std::string path=spritesheet->GetSpritePath();
+        spritesheet->SetTexture(LoadPngTexture(path,p_context));
+        texture=spritesheet->GetTexture();
+    }
     SDL_Texture* sdl_texture=(SDL_Texture* )texture;
     SDL_Renderer * renderer=GetRenderer(p_context);
-
+    int sprite_idx=sprite->GetFrameIdx();
     ge_common_struct::ge_rect rect=sprite->GetRectByIdx(sprite_idx);
     SDL_Rect sdlrect=TransformRect(rect);
 
@@ -74,7 +98,8 @@ void RenderPresent(CGameContext* p_context)
 }
 
 
-void FillRect(CGameContext* p_context,ge_common_struct::ge_rect rect,int r,int g,int b,int a)
+void FillRect(CGameContext* p_context,ge_common_struct::ge_rect rect,int r,
+              int g,int b,int a)
 {
 
     SDL_Renderer * renderer=GetRenderer(p_context);
@@ -83,7 +108,8 @@ void FillRect(CGameContext* p_context,ge_common_struct::ge_rect rect,int r,int g
     SDL_RenderFillRect( renderer, &sdlrect );
 }
 
-void DrawRect(CGameContext* p_context,ge_common_struct::ge_rect rect,int r,int g,int b,int a)
+void DrawRect(CGameContext* p_context,ge_common_struct::ge_rect rect,
+              int r,int g,int b,int a)
 {
     SDL_Renderer * renderer=GetRenderer(p_context);
     SDL_Rect sdlrect=TransformRect(rect);
@@ -92,7 +118,9 @@ void DrawRect(CGameContext* p_context,ge_common_struct::ge_rect rect,int r,int g
 }
 
 
-void RenderText(CGameContext* p_context,void* font,int x,int y,std::string textureText,ge_common_struct::ge_color text_color,int scale)
+void RenderText(CGameContext* p_context,void* font,int x,int y,
+                std::string textureText,ge_common_struct::ge_color text_color,
+                int scale)
 {
     SDL_Renderer * renderer=GetRenderer(p_context);
     TTF_Font * ttlfont=(TTF_Font*)font;
@@ -107,7 +135,7 @@ ge_common_struct::ge_rect LoadWindowRect(CGameContext* p_context)
 }
 
 void RenderSceneLayer(CGameContext* p_context,C2DGameScene& scene,
-                      int layer_idx,int centerx,int centery,
+                      int layer_idx,int camera_x,int camera_y,
                       ge_common_struct::ge_rect window,int scale)
 {
 
@@ -115,66 +143,73 @@ void RenderSceneLayer(CGameContext* p_context,C2DGameScene& scene,
     int tileheight=scene.GetTileHeight();
 
     SDL_Texture* sdl_texture=(SDL_Texture*)scene.GetTexture();
-    int width;int height;
+    int width;
+    int height;
     sdlutil::LoadTextureWidthHeight(sdl_texture,&width,&height);
     int tileset_cols=width/tilewidth;
     //int tileset_rows=height/tileheight;
 
     SDL_Renderer* renderer=GetRenderer(p_context);
     CLayer* tlayer=scene.GetLayer(layer_idx);
-    if(tlayer->GetLayerType()==ge_common_struct::layer_type::TILED_LAYER){
+    if(tlayer->GetLayerType()==ge_common_struct::layer_type::TILED_LAYER)
+    {
 
-    CTileLayer* tilelayer=(CTileLayer*)tlayer;
-    ge_common_struct::LAYER_IDX layer=tilelayer->GetTiles();
+        CTileLayer* tilelayer=(CTileLayer*)tlayer;
+        ge_common_struct::LAYER_IDX layer=tilelayer->GetTiles();
 
-    int start_screen_x=centerx*scale-window.w/2;
-    int start_screen_y=centery*scale-window.h/2;
+        int start_screen_x=camera_x*scale-window.w/2;
+        int start_screen_y=camera_y*scale-window.h/2;
 
-    int start_x=start_screen_x/2;
-    int start_y=start_screen_y/2;
+        int start_x=start_screen_x/2;
+        int start_y=start_screen_y/2;
 
-    int start_screen_coorx=-1*(start_x%tilewidth);
-    int start_screen_coory=-1*(start_y%tileheight);
+        int start_screen_coorx=-1*(start_x%tilewidth);
+        int start_screen_coory=-1*(start_y%tileheight);
 
-    int min_col=start_x/tilewidth;
-    int min_row=start_y/tileheight;
+        int min_col=start_x/tilewidth;
+        int min_row=start_y/tileheight;
 
-    int max_col=(start_x+window.w/scale)/tilewidth;
-    int max_row=(start_y+window.h/scale)/tileheight;
+        int max_col=(start_x+window.w/scale)/tilewidth;
+        int max_row=(start_y+window.h/scale)/tileheight;
 
 
 
-    for(int j=min_row;j<=max_row;j++){
+        for(int j=min_row; j<=max_row; j++)
+        {
 
-        for(int i=min_col;i<=max_col;i++){
+            for(int i=min_col; i<=max_col; i++)
+            {
 
-            if(j<0 || j>=((int)layer.size())){
-                continue;
+                if(j<0 || j>=((int)layer.size()))
+                {
+                    continue;
+                }
+                ge_common_struct::ROW_IDX row=layer[j];
+                if(i<0 || i>=((int)row.size()))
+                {
+                    continue;
+                }
+
+                int idx=row[i]-1; //注意这里是因为原来tmx文件是从1开始的编号的
+
+                int tileset_row_num=idx/tileset_cols;
+                int tileset_col_num=idx%tileset_cols;
+
+                ge_common_struct::ge_rect rect;
+                rect.w=tilewidth;
+                rect.h=tileheight;
+                rect.x=tileset_col_num*tilewidth;
+                rect.y=tileset_row_num*tileheight;
+                SDL_Rect sdlrect=TransformRect(rect);
+                int c_screen_x=scale*(start_screen_coorx+(i-min_col)*tilewidth);
+                int c_screen_y=scale*(start_screen_coory+(j-min_row)*tileheight);
+                sdlutil::RenderTexture(c_screen_x,c_screen_y,&sdlrect,
+                                       sdl_texture,renderer,scale);
+
+
+
             }
-            ge_common_struct::ROW_IDX row=layer[j];
-            if(i<0 || i>=((int)row.size())){
-                continue;
-            }
-
-            int idx=row[i]-1; //注意这里是因为原来tmx文件是从1开始的编号的
-
-            int tileset_row_num=idx/tileset_cols;
-            int tileset_col_num=idx%tileset_cols;
-
-            ge_common_struct::ge_rect rect;
-            rect.w=tilewidth;
-            rect.h=tileheight;
-            rect.x=tileset_col_num*tilewidth;
-            rect.y=tileset_row_num*tileheight;
-            SDL_Rect sdlrect=TransformRect(rect);
-            int c_screen_x=scale*(start_screen_coorx+(i-min_col)*tilewidth);
-            int c_screen_y=scale*(start_screen_coory+(j-min_row)*tileheight);
-            sdlutil::RenderTexture(c_screen_x,c_screen_y,&sdlrect,sdl_texture,renderer,scale);
-
-
-
         }
-    }
 
 
     }
