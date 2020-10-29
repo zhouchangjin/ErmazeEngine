@@ -71,15 +71,16 @@ void CGameEngine::Update(){
 
 }
 
+
 int CGameEngine::FrameDiff(){
    return m_game_context->GetTicks()-m_frametime;
 }
 
 void CGameEngine::Delay(){
-
+    int min_frametime=m_game_setting.GetMinFrameTime();
     int diff=FrameDiff();
-    if(m_cap_frame && diff<(int)m_min_frametime){
-        unsigned int time= m_min_frametime-(unsigned int)diff;
+    if(m_cap_frame && diff<min_frametime){
+        unsigned int time= min_frametime-(unsigned int)diff;
         m_game_context->DelayTime(time);
     }
 }
@@ -93,8 +94,9 @@ void CGameEngine::LoadSetting(){
     xmlutils::MyXMLDoc doc=xmlutils::LoadXML(m_setting_file);
     int width=doc.GetIntAttribute("/ermaze/settings/window/@width");
     int height=doc.GetIntAttribute("/ermaze/settings/window/@height");
+    int fps=atoi(doc.GetStr("/ermaze/settings/framerate").c_str());
     m_game_setting.SetWidthHeight(width,height);
-
+    m_game_setting.SetFramePerSecond(fps);
     CRPGGameData* gamedata=(CRPGGameData*)m_gamedata;
     gamedata->ParseGameDataByXMLDoc(&doc);
 

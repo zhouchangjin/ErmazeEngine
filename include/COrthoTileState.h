@@ -38,7 +38,7 @@ class COrthoTileState : public CGameState
         void LoadPlayer();
         bool CheckCollision(CSpriteGameObject* object);
         bool CheckCollision(int x,int y,int width,int height,int layer_level,
-                            int movespd,int move_x,int move_y);
+                            int move_x,int move_y);
         bool CheckCollisionByGrid(int gridx,int gridy,int layer_base);
         void UpdateLadder(CSpriteGameObject* object);
         int GetGridIdx(int gridx,int gridy,int level);

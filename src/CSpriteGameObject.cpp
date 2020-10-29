@@ -12,12 +12,12 @@ CSpriteGameObject::~CSpriteGameObject()
 
 void CSpriteGameObject::PlayAction(std::string action_name)
 {
-    m_sprite->PlayAction(action_name,m_step);
+    m_frame_idx=m_sprite->PlayAction(action_name,m_step);
 }
 
 void CSpriteGameObject::Play()
 {
-    m_sprite->PlayAction(m_current_action,m_step);
+    m_frame_idx=m_sprite->PlayAction(m_current_action,m_step);
 }
 
 void CSpriteGameObject::UpdateX(int x)
@@ -31,7 +31,7 @@ void CSpriteGameObject::UpdateX(int x)
         }
         if(m_pal)
         {
-            m_pal->UpdateX(m_x);
+            //m_pal->UpdateX(m_x);
         }
     }
 }
@@ -47,7 +47,7 @@ void CSpriteGameObject::UpdateY(int y)
         }
         if(m_pal)
         {
-            m_pal->UpdateY(m_y);
+            //m_pal->UpdateY(m_y);
         }
     }
 
@@ -63,7 +63,7 @@ void CSpriteGameObject::UpdateXY(int x,int y)
        m_y=y;
     }
     if(m_pal){
-        m_pal->UpdateXY(m_x,m_y);
+        //m_pal->UpdateXY(m_x,m_y);
     }
     if(m_camera)
     {
@@ -105,15 +105,37 @@ void CSpriteGameObject::UpdateDirection(std::string action_name)
     m_current_action=action_name;
     m_step++;
     if(m_pal){
-        m_pal->UpdateDirection(m_current_action);
+        //m_pal->UpdateDirection(m_current_action);
     }
 }
 
 void CSpriteGameObject::BindPal(CSpriteGameObject* pal)
 {
     m_pal=pal;
-    m_pal->UpdateXY(m_x,m_y);
-    m_pal->UpdateDirection(m_current_action);
+}
+
+void CSpriteGameObject::MoveUpward(int dy){
+    if(m_move_x==0 && m_move_y==0){
+        m_move_y=-1*dy;
+    }
+}
+
+void CSpriteGameObject::MoveDownward(int dy){
+    if(m_move_x==0 && m_move_y==0){
+       m_move_y=dy;
+    }
+}
+
+void CSpriteGameObject::MoveLeftward(int dx){
+    if(m_move_x==0 && m_move_y==0){
+      m_move_x=-1*dx;
+    }
+}
+
+void CSpriteGameObject::MoveRightward(int dx){
+    if(m_move_x==0 && m_move_y==0){
+      m_move_x=dx;
+    }
 }
 
 void CSpriteGameObject::MoveUpward(){
@@ -142,17 +164,42 @@ void CSpriteGameObject::StopMoving(){
 }
 
 void CSpriteGameObject::MoveUpdate(){
-    UpdateXY(m_x+m_move_x,m_y+m_move_y);
     if(m_move_y<0){
         UpdateDirection("upward");
+        if(m_move_y+m_move_speed>0){
+            m_move_y=0;
+            UpdateY(m_y+m_move_y);
+        }else{
+            m_move_y+=m_move_speed;
+            UpdateY(m_y-m_move_speed);
+        }
     }else if(m_move_y>0){
         UpdateDirection("downward");
+        if(m_move_y-m_move_speed<0){
+            m_move_y=0;
+            UpdateY(m_y+m_move_y);
+        }else{
+            m_move_y-=m_move_speed;
+            UpdateY(m_y+m_move_speed);
+        }
     }else if(m_move_x<0){
         UpdateDirection("leftward");
+        if(m_move_x+m_move_speed>0){
+            m_move_x=0;
+            UpdateX(m_x+m_move_x);
+        }else{
+            m_move_x+=m_move_speed;
+            UpdateX(m_x-m_move_speed);
+        }
     }else if(m_move_x>0){
         UpdateDirection("rightward");
+        if(m_move_x-m_move_speed<0){
+            m_move_x=0;
+            UpdateX(m_x+m_move_x);
+        }else{
+            m_move_x-=m_move_speed;
+            UpdateX(m_x+m_move_speed);
+        }
     }
-    m_move_x=0;
-    m_move_y=0;
     Play();
 }

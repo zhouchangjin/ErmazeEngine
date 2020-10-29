@@ -137,7 +137,7 @@ void CRPGGameData::ParseGameDataByXMLDoc(xmlutils::MyXMLDoc* document)
 
     for(; char_node; char_node=char_node.NextSlibing("character"))
     {
-        std::string character=char_node.StrAttribute("id");
+        std::string character=char_node.StrAttribute("refid");
         AddPlayer(character);
     }
 

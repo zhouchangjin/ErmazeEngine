@@ -62,15 +62,16 @@ void RenderGameObject(CGameContext* p_context,CSpriteGameObject* object
     int y=object->GetY();
     int centerx=window.x+window.w/2;
     int centery=window.y+window.h/2;
-    centerx=centerx+x-camera_x;
-    centery=centery+y-camera_y;
-    RenderSprite(p_context,sprite,centerx,centery,scale);
+    int screenx=centerx+(x-camera_x)*scale;
+    int screeny=centery+(y-camera_y)*scale;
+    int frameidx=object->GetFrameIdx();
+    RenderSprite(p_context,sprite,screenx,screeny,frameidx,scale);
 
 }
 
 
 void RenderSprite(CGameContext* p_context,CSprite* sprite,int screenx,
-                  int screeny,int scale)
+                  int screeny,int sprite_idx,int scale)
 {
     CSpriteSheet* spritesheet=sprite->GetSpriteSheet();
     void * texture=spritesheet->GetTexture();
@@ -83,7 +84,6 @@ void RenderSprite(CGameContext* p_context,CSprite* sprite,int screenx,
     }
     SDL_Texture* sdl_texture=(SDL_Texture* )texture;
     SDL_Renderer * renderer=GetRenderer(p_context);
-    int sprite_idx=sprite->GetFrameIdx();
     ge_common_struct::ge_rect rect=sprite->GetRectByIdx(sprite_idx);
     SDL_Rect sdlrect=TransformRect(rect);
 

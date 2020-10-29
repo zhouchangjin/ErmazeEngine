@@ -1,6 +1,7 @@
 <ermaze>
 <settings>
 	<window type="window" width="1024" height="768" />
+	<framerate>15</framerate>
 </settings>
 
 <game>
@@ -32,11 +33,11 @@
   
   <players>
 	<player>
-		<character id="p1"/>
-		<character id="p1"/>
+		<character refid="p1"/>
+		<character refid="p1"/>
 	</player>
   </players>
-  <startpoint scene="01" x="516" y="484" direction="upward" layer="1" />
+  <startpoint scene="01" x="160" y="480" direction="upward" layer="1" />
   
   <scenes>
      <scene id="01">

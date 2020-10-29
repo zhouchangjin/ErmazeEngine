@@ -26,6 +26,10 @@ class CSpriteGameObject  : public CGameObject
         void MoveDownward();
         void MoveLeftward();
         void MoveRightward();
+        void MoveUpward(int dy);
+        void MoveDownward(int dy);
+        void MoveLeftward(int dy);
+        void MoveRightward(int dy);
         bool IsMoving();
         void StopMoving();
         void MoveUpdate();
@@ -36,19 +40,21 @@ class CSpriteGameObject  : public CGameObject
         int GetMoveX(){return m_move_x;};
         int GetMoveY(){return m_move_y;};
         int GetMoveSpeed(){return m_move_speed;};
+        int GetFrameIdx(){return m_frame_idx;};
         CSprite* GetSprite(){return m_sprite;};
 
     protected:
 
     private:
         CSprite* m_sprite;
+        int m_frame_idx=0;
         int m_step=0;
         int m_x=0;
         int m_y=0;
         std::string m_current_action="downward";
         int m_move_x=0;
         int m_move_y=0;
-        int m_move_speed=5;
+        int m_move_speed=8;
         int m_layer=1;
         int m_show_layer=1;
         bool m_onstair=false;

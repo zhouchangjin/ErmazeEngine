@@ -71,19 +71,19 @@ void COrthoTileState::HandleEvent(ge_common_struct::game_event event)
     {
         if(event==ge_common_struct::KEY_UP)
         {
-            player->MoveUpward();
+            player->MoveUpward(16);
         }
         else if(event==ge_common_struct::KEY_DOWN)
         {
-            player->MoveDownward();
+            player->MoveDownward(16);
         }
         else if(event==ge_common_struct::KEY_LEFT)
         {
-            player->MoveLeftward();
+            player->MoveLeftward(16);
         }
         else if(event==ge_common_struct::KEY_RIGHT)
         {
-            player->MoveRightward();
+            player->MoveRightward(16);
         }
 
     }
@@ -255,17 +255,17 @@ bool COrthoTileState::CheckCollisionByGrid(int gridx,int gridy,int level)
 
 bool COrthoTileState::CheckCollision(int x,int y,int width,
                                      int height,int level,
-                                     int movespd,int move_x,int move_y)
+                                     int move_x,int move_y)
 {
     int swidth=m_game_scene.GetMapWidth();
     int sheight=m_game_scene.GetMapHeight();
     int gwidth=m_game_scene.GetTileWidth();
     int gheight=m_game_scene.GetTileHeight();
 
-    int gridLeftX=(x+movespd)/gwidth;
-    int gridFootY=(y+height-movespd)/gheight;
-    int gridRightX=(x+width-movespd)/gwidth;
-    int gridHeadY=(y+movespd)/gheight;
+    int gridLeftX=x/gwidth;
+    int gridFootY=(y+height-1)/gheight;
+    int gridRightX=(x+width-1)/gwidth;
+    int gridHeadY=y/gheight;
     if(gridFootY>=sheight || gridHeadY<0 || gridLeftX<0 || gridRightX>=swidth)
     {
         //³¬³ö±ß½ç
@@ -309,12 +309,26 @@ bool COrthoTileState::CheckCollision(CSpriteGameObject* player)
     int width=player->GetSprite()->GetSpriteSheet()->GetSpriteWidth();
     int height=player->GetSprite()->GetSpriteSheet()->GetSpriteHeight();
     int spd=player->GetMoveSpeed();
-    return CheckCollision(player_x+movex,player_y+movey,width,height,layer,
-                          spd,movex,movey);
+    if(movex>0){
+        player_x+=spd;
+    }else if(movex<0){
+        player_x-=spd;
+    }
+    if(movey<0){
+        player_y-=spd;
+    }else if(movey>0){
+        player_y+=spd;
+    }
+    return CheckCollision(player_x,player_y,width,height,layer,
+                          movex,movey);
 }
 
 int COrthoTileState::GetGridIdx(int gridx,int gridy,int level)
 {
+    if(gridx<0 || gridy<0 || gridx>=m_game_scene.GetMapWidth()
+       || gridy>=m_game_scene.GetMapHeight()){
+              return 0;
+       }
     ge_common_struct::LAYER_IDX layer=m_game_scene.GetTileLayer(level)
                                       ->GetTiles();
     int idx=layer[gridy][gridx];
@@ -362,12 +376,21 @@ void COrthoTileState::UpdateLadder(CSpriteGameObject* object)
     int y=object->GetY();
     int height=object->GetSprite()->GetSpriteSheet()->GetSpriteHeight();
     int width=object->GetSprite()->GetSpriteSheet()->GetSpriteWidth();
-    int spd=object->GetMoveSpeed();
     int gheight=m_game_scene.GetTileHeight();
     int gwidth=m_game_scene.GetTileWidth();
-
-    int gridFootY=(y+movey+height-spd)/gheight;
-    int gridCenterX=(x+movex+width/2-spd)/gwidth;
+    int spd=object->GetMoveSpeed();
+    if(movex>0){
+        x+=spd;
+    }else if(movex<0){
+        x-=spd;
+    }
+    if(movey>0){
+        y+=spd;
+    }else if(movey<0){
+        y-=spd;
+    }
+    int gridFootY=(y+height-1)/gheight;
+    int gridCenterX=(x+width/2)/gwidth;
 
     ge_common_struct::grid_type uptile=GetGridType(gridCenterX,gridFootY,layer);
     ge_common_struct::grid_type downtile=ge_common_struct::EMPTY;

@@ -19,7 +19,6 @@ class CGameEngine
     public:
         CGameEngine();
         virtual ~CGameEngine();
-        uint32_t GetMinFrametime(){return m_min_frametime;};
         void Init();
         void HandleEvent();
         void Update();
@@ -37,9 +36,7 @@ class CGameEngine
             std::string m_setting_file="game.xml";
             CGameData* m_gamedata;
             bool m_cap_frame=true; //限制帧数
-            int m_fps=24;
-            uint32_t m_min_frametime=1000/m_fps; //每帧毫秒数
-            bool m_running=true;                 //游戏关闭状态
+            bool m_running=true;   //游戏关闭状态
             CGameSettings m_game_setting;
             CGameState* m_current_state;
             CGameContext* m_game_context;
