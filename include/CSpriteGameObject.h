@@ -42,7 +42,7 @@ class CSpriteGameObject  : public CGameObject
         int GetMoveSpeed(){return m_move_speed;};
         int GetFrameIdx(){return m_frame_idx;};
         CSprite* GetSprite(){return m_sprite;};
-
+        void AddActionLog(ge_common_struct::action_type log);
     protected:
 
     private:
@@ -58,6 +58,9 @@ class CSpriteGameObject  : public CGameObject
         int m_layer=1;
         int m_show_layer=1;
         bool m_onstair=false;
+        unsigned int m_pop_size=2;
+        std::queue<ge_common_struct::action_type> m_action_log;
+
         CCamera2D* m_camera=nullptr;
         CSpriteGameObject* m_pal=nullptr;
 

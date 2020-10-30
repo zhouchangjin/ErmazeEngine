@@ -1,4 +1,5 @@
 #include "COrthoTileState.h"
+#include <iostream>
 
 COrthoTileState::COrthoTileState()
 {
@@ -27,26 +28,55 @@ void COrthoTileState::Cleanup()
 
 void COrthoTileState::Draw()
 {
-    ge_common_struct::ge_rect fullWindow=sdlutil2::LoadWindowRect(m_context);
-    sdlutil2::FillRect(m_context,fullWindow,0,0,0);
-    int camera_x=m_game_scene.GetCamera2DX();
-    int camera_y=m_game_scene.GetCamera2DY();
 
-    int cnt=m_game_scene.GetLayerCnt();
-    //TODO 优化空白图片不要画，覆盖的不要画。
-    for(int i=0; i<cnt; i++)
+    ge_common_struct::ge_rect fullWindow=sdlutil2::LoadWindowRect(m_context);
+    if(m_fade_out || m_fade_in )
     {
-        sdlutil2::RenderSceneLayer(m_context,m_game_scene,i,camera_x,camera_y,fullWindow,m_scale);
-        for(int j=m_player.size()-1; j>=0; j--)
+        if(m_alpha_value>255)
         {
-            CSpriteGameObject* p=m_player[j];
-            int layer=p->GetShowLayer();
-            if(i==layer)
-            {
-                sdlutil2::RenderGameObject(m_context,p,fullWindow,camera_x,camera_y,m_scale);
-            }
+            m_alpha_value=255;
         }
+        if(m_alpha_value<0)
+        {
+            m_alpha_value=0;
+        }
+        sdlutil2::FillRect(m_context,fullWindow,0,0,0,m_alpha_value);
+        FadeInOrOut();
     }
+    else
+    {
+        if(m_scene_loading)
+        {
+
+        }
+        else
+        {
+
+
+            sdlutil2::FillRect(m_context,fullWindow,0,0,0);
+            int camera_x=m_game_scene.GetCamera2DX();
+            int camera_y=m_game_scene.GetCamera2DY();
+
+            int cnt=m_game_scene.GetLayerCnt();
+            //TODO 优化空白图片不要画，覆盖的不要画。
+            for(int i=0; i<cnt; i++)
+            {
+                sdlutil2::RenderSceneLayer(m_context,m_game_scene,i,camera_x,camera_y,fullWindow,m_scale);
+                for(int j=m_player.size()-1; j>=0; j--)
+                {
+                    CSpriteGameObject* p=m_player[j];
+                    int layer=p->GetShowLayer();
+                    if(i==layer)
+                    {
+                        sdlutil2::RenderGameObject(m_context,p,fullWindow,camera_x,camera_y,m_scale);
+                    }
+                }
+            }
+
+        }
+
+    }
+
     sdlutil2::RenderPresent(m_context);
 
 }
@@ -58,6 +88,10 @@ int COrthoTileState::GetStateValue()
 
 void COrthoTileState::HandleEvent(ge_common_struct::game_event event)
 {
+    if(!m_key_enable)
+    {
+        return;
+    }
     CSpriteGameObject* player=nullptr;
     if(m_player.size()>0)
     {
@@ -125,6 +159,7 @@ void COrthoTileState::Update()
         CSpriteGameObject* player=m_player[0];
         if(player->IsMoving())
         {
+            CheckTransfer(player);
             bool collision=CheckCollision(player);
             if(collision)
             {
@@ -154,7 +189,8 @@ void COrthoTileState::LoadPlayer()
         CSprite* p=gamedata->GetPlayer(i);
         CSpriteGameObject* controllable_player=new CSpriteGameObject(p);
         m_player.push_back(controllable_player);
-        if(i>0){
+        if(i>0)
+        {
             m_player[i-1]->BindPal(controllable_player);
         }
     }
@@ -193,9 +229,12 @@ bool COrthoTileState::CheckCollisionByGrid(int gridx,int gridy,int level)
                                                         ->GetTiles();
                 int idx_upper=layer_upper[gridy][gridx];
                 bool uppcol=m_game_scene.GetTileCollideBool(idx_upper-1);
-                if(!uppcol){
+                if(!uppcol)
+                {
                     return false;
-                }else{
+                }
+                else
+                {
                     return true;
                 }
             }
@@ -309,14 +348,20 @@ bool COrthoTileState::CheckCollision(CSpriteGameObject* player)
     int width=player->GetSprite()->GetSpriteSheet()->GetSpriteWidth();
     int height=player->GetSprite()->GetSpriteSheet()->GetSpriteHeight();
     int spd=player->GetMoveSpeed();
-    if(movex>0){
+    if(movex>0)
+    {
         player_x+=spd;
-    }else if(movex<0){
+    }
+    else if(movex<0)
+    {
         player_x-=spd;
     }
-    if(movey<0){
+    if(movey<0)
+    {
         player_y-=spd;
-    }else if(movey>0){
+    }
+    else if(movey>0)
+    {
         player_y+=spd;
     }
     return CheckCollision(player_x,player_y,width,height,layer,
@@ -326,9 +371,10 @@ bool COrthoTileState::CheckCollision(CSpriteGameObject* player)
 int COrthoTileState::GetGridIdx(int gridx,int gridy,int level)
 {
     if(gridx<0 || gridy<0 || gridx>=m_game_scene.GetMapWidth()
-       || gridy>=m_game_scene.GetMapHeight()){
-              return 0;
-       }
+            || gridy>=m_game_scene.GetMapHeight())
+    {
+        return 0;
+    }
     ge_common_struct::LAYER_IDX layer=m_game_scene.GetTileLayer(level)
                                       ->GetTiles();
     int idx=layer[gridy][gridx];
@@ -379,14 +425,20 @@ void COrthoTileState::UpdateLadder(CSpriteGameObject* object)
     int gheight=m_game_scene.GetTileHeight();
     int gwidth=m_game_scene.GetTileWidth();
     int spd=object->GetMoveSpeed();
-    if(movex>0){
+    if(movex>0)
+    {
         x+=spd;
-    }else if(movex<0){
+    }
+    else if(movex<0)
+    {
         x-=spd;
     }
-    if(movey>0){
+    if(movey>0)
+    {
         y+=spd;
-    }else if(movey<0){
+    }
+    else if(movey<0)
+    {
         y-=spd;
     }
     int gridFootY=(y+height-1)/gheight;
@@ -433,6 +485,67 @@ void COrthoTileState::UpdateLadder(CSpriteGameObject* object)
     }
 }
 
+void COrthoTileState::CheckTransfer(CSpriteGameObject* object)
+{
+
+    int x=object->GetX();
+    int y=object->GetY();
+    int w=object->GetSprite()->GetSpriteSheet()->GetSpriteWidth();
+    int h=object->GetSprite()->GetSpriteSheet()->GetSpriteHeight();
+
+    int mid_x=x+w/2;
+    int mid_y=y+h/2;
+
+    for(int i=0; i<m_game_scene.GetTransferAreaCnt(); i++)
+    {
+        CTransferArea area=m_game_scene.GetTransferArea(i);
+        int area_minx=area.GetX();
+        int area_maxx=area_minx+area.GetWidth();
+        int area_miny=area.GetY();
+        int area_maxy=area_miny+area.GetHeight();
+        if(mid_x>area_minx && mid_x<area_maxx && mid_y>area_miny && mid_y<area_maxy)
+        {
+            //简化版本AABB检测
+            //std::cout<<"=="<<area.GetScene()<<area.GetMapX()<<","<<area.GetMapY()<<std::endl;
+            ExitScene();
+
+        }
+    }
+
+
+}
+
+void COrthoTileState::FadeInOrOut()
+{
+    if(m_fade_out)
+    {
+        m_alpha_value+=20;
+    }
+    else if(m_fade_in)
+    {
+        m_alpha_value-=20;
+    }
+    if(m_alpha_value>=255)
+    {
+        m_fade_out=false;
+        m_key_enable=false;
+    }
+    if(m_alpha_value<=0)
+    {
+        m_fade_in=false;
+    }
+}
+
+void COrthoTileState::ExitScene()
+{
+    if(!m_fade_out)
+    {
+        m_alpha_value=0;
+        m_fade_out=true;
+        m_scene_loading=true;
+    }
+}
+
 void COrthoTileState::LoadScene()
 {
     m_game_scene.ClearScene();
@@ -474,6 +587,74 @@ void COrthoTileState::LoadScene()
 
         m_game_scene.AddLayer(tiled_layer);
     }
+
+    xmlutils::MyXMLNode obj_groupnode=doc.GetNode("/map/objectgroup");
+
+    for(; obj_groupnode; obj_groupnode=obj_groupnode.NextSlibing("objectgroup"))
+    {
+        xmlutils::MyXMLNode obj_node=obj_groupnode.Child("object");
+
+        for(; obj_node; obj_node=obj_node.NextSlibing("object"))
+        {
+            std::string obj_type=obj_node.StrAttribute("type");
+            if(obj_type.compare("transfer")==0)
+            {
+                int x=obj_node.IntAttribute("x");
+                int y=obj_node.IntAttribute("y");
+                int width=obj_node.IntAttribute("width");
+                int height=obj_node.IntAttribute("height");
+                int transfer_x=0;
+                int transfer_y=0;
+                int direction=1;
+                std::string scene="";
+                int layer=1;
+
+                xmlutils::MyXMLNode properties=obj_node.Child("properties");
+                if(properties)
+                {
+                    xmlutils::MyXMLNode pnode=properties.Child("property");
+                    for(; pnode; pnode=pnode.NextSlibing("property"))
+                    {
+                        std::string name=pnode.StrAttribute("name");
+                        if(name.compare("scene")==0)
+                        {
+                            scene=pnode.StrAttribute("value");
+                        }
+                        else if(name.compare("x")==0)
+                        {
+                            transfer_x=pnode.IntAttribute("value");
+                        }
+                        else if(name.compare("y")==0)
+                        {
+                            transfer_y=pnode.IntAttribute("value");
+                        }
+                        else if(name.compare("layer")==0)
+                        {
+                            layer=pnode.IntAttribute("value");
+                        }
+                        else if(name.compare("direction")==0)
+                        {
+                            direction=pnode.IntAttribute("value");
+                        }
+                    }
+                }
+                CTransferArea area;
+                area.SetX(x);
+                area.SetY(y);
+                area.SetMapX(transfer_x);
+                area.SetMapY(transfer_y);
+                area.SetScene(scene);
+                area.SetDirection((ge_common_struct::action_type)direction);
+                area.SetMapLayer(layer);
+                area.SetWidth(width);
+                area.SetHeight(height);
+                m_game_scene.AddTransferArea(area);
+            }
+
+        }
+
+    }
+
     std::string tileset_file_path="./scenes/"+ tileset_file_name;
 
     xmlutils::MyXMLDoc tilesetdoc=xmlutils::LoadXML(tileset_file_path);
@@ -517,9 +698,12 @@ void COrthoTileState::LoadScene()
     if(m_player.size()>0)
     {
         m_player[0]->BindCamera(m_game_scene.GetCameraPointer());
-        m_player[0]->UpdateXY(gamedata->GetStartX(),gamedata->GetStartY());
-        m_player[0]->UpdateDirection(gamedata->GetStartDirection());
-        m_player[0]->UpdateLayer(gamedata->GetStartLayer());
+        for(size_t i=0; i<m_player.size(); i++)
+        {
+            m_player[i]->UpdateXY(gamedata->GetStartX(),gamedata->GetStartY());
+            m_player[i]->UpdateDirection(gamedata->GetStartDirection());
+            m_player[i]->UpdateLayer(gamedata->GetStartLayer());
+        }
     }
 
 

@@ -24,10 +24,18 @@ class COrthoTileState : public CGameState
         void Draw();
         void PrepareData();
         int GetStateValue();
+        void ExitScene();
+        void FadeInOrOut();
 
     protected:
 
     private:
+
+        bool m_key_enable=true;
+        bool m_fade_out=false;
+        bool m_fade_in=false;
+        bool m_scene_loading=false;
+        int m_alpha_value=255;
         int m_scale=2;
         C2DGameScene m_game_scene;
 
@@ -36,6 +44,7 @@ class COrthoTileState : public CGameState
         //private function
         void LoadScene();
         void LoadPlayer();
+        void CheckTransfer(CSpriteGameObject* object);
         bool CheckCollision(CSpriteGameObject* object);
         bool CheckCollision(int x,int y,int width,int height,int layer_level,
                             int move_x,int move_y);

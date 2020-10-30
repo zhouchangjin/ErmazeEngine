@@ -5,9 +5,10 @@
 1602481920 c:\work\cplusworkspace\ermazeengine\include\cgamecontext.h
 	"common_struct.h"
 
-1603867842 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
+1603962041 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
 	<vector>
 	<string>
+	<queue>
 
 1592551478 source:c:\work\cplusworkspace\ermazeengine\src\cgamesettings.cpp
 	"CGameSettings.h"
@@ -400,7 +401,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1602416014 c:\work\cplusworkspace\ermazeengine\include\sdl_utilities.h
+1603983964 c:\work\cplusworkspace\ermazeengine\include\sdl_utilities.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -423,7 +424,7 @@
 	<SDL_image.h>
 	<CGameContext.h>
 
-1603894265 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
+1604070729 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
 	<CGameState.h>
 	<CSceneData.h>
 	"CSdlGameContext.h"
@@ -437,13 +438,14 @@
 1592891680 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
 	"CMenuState.h"
 
-1603952213 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
+1604068121 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
 	"COrthoTileState.h"
+	<iostream>
 
 1603614857 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
 	"CSdlGameContext.h"
 
-1602415750 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
+1603983952 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
 	"SDL_Utilities.h"
 
 1602069157 source:c:\work\cplusworkspace\ermazeengine\src\main.cpp
@@ -482,10 +484,10 @@
 	"SDL_Utilities.h"
 	"common_struct.h"
 
-1603956762 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
+1604070567 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
 	"Render_Util.h"
 
-1603956506 c:\work\cplusworkspace\ermazeengine\include\render_util.h
+1603984023 c:\work\cplusworkspace\ermazeengine\include\render_util.h
 	<string>
 	"SDL_Utilities.h"
 	"CSDLGameContext.h"
@@ -547,7 +549,7 @@
 	<string>
 	<vector>
 
-1602232082 source:c:\work\cplusworkspace\ermazeengine\src\str_utilities.cpp
+1603977736 source:c:\work\cplusworkspace\ermazeengine\src\str_utilities.cpp
 	"Str_Utilities.h"
 
 1602232433 source:c:\work\cplusworkspace\ermazeengine\src\cscenelayers.cpp
@@ -561,24 +563,25 @@
 
 1602824774 c:\work\cplusworkspace\ermazeengine\include\cgameobject.h
 
-1603956697 source:c:\work\cplusworkspace\ermazeengine\src\cspritegameobject.cpp
+1603962091 source:c:\work\cplusworkspace\ermazeengine\src\cspritegameobject.cpp
 	"CSpriteGameObject.h"
 
-1603956739 c:\work\cplusworkspace\ermazeengine\include\cspritegameobject.h
+1603960936 c:\work\cplusworkspace\ermazeengine\include\cspritegameobject.h
 	<CGameObject.h>
 	<CSprite.h>
 	<CCamera2D.h>
 
-1603633007 source:c:\work\cplusworkspace\ermazeengine\src\c2dgamescene.cpp
+1603963996 source:c:\work\cplusworkspace\ermazeengine\src\c2dgamescene.cpp
 	"C2DGameScene.h"
 
-1603703537 c:\work\cplusworkspace\ermazeengine\include\c2dgamescene.h
+1603980936 c:\work\cplusworkspace\ermazeengine\include\c2dgamescene.h
 	<CGameScene.h>
 	<CTileLayer.h>
 	<CSpriteSheet.h>
 	<CSceneData.h>
 	<CCamera2D.h>
 	<CSpriteGameObject.h>
+	<CTransferArea.h>
 
 1602827914 source:c:\work\cplusworkspace\ermazeengine\src\clayer.cpp
 	"CLayer.h"
@@ -607,4 +610,10 @@
 	"CCamera2D.h"
 
 1603629802 c:\work\cplusworkspace\ermazeengine\include\ccamera2d.h
+
+1603977244 source:c:\work\cplusworkspace\ermazeengine\src\ctransferarea.cpp
+	"CTransferArea.h"
+
+1603978461 c:\work\cplusworkspace\ermazeengine\include\ctransferarea.h
+	<common_struct.h>
 

@@ -35,6 +35,8 @@ namespace sdlutil2{
 
     void RenderText(CGameContext* p_context,void* font,int x,int y,std::string textureText,ge_common_struct::ge_color text_color,int scale=1);
 
+    void SetAlphaMode(C2DGameScene& gamescene,int alpha);
+
 }
 
 #endif // RENDER_UTIL_H_INCLUDED

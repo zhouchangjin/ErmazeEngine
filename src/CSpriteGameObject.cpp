@@ -29,10 +29,6 @@ void CSpriteGameObject::UpdateX(int x)
         {
             m_camera->SetCamera2DX(m_x);
         }
-        if(m_pal)
-        {
-            //m_pal->UpdateX(m_x);
-        }
     }
 }
 
@@ -44,10 +40,6 @@ void CSpriteGameObject::UpdateY(int y)
         if(m_camera)
         {
             m_camera->SetCamera2DY(y);
-        }
-        if(m_pal)
-        {
-            //m_pal->UpdateY(m_y);
         }
     }
 
@@ -61,9 +53,6 @@ void CSpriteGameObject::UpdateXY(int x,int y)
     }
     if(y!=m_y){
        m_y=y;
-    }
-    if(m_pal){
-        //m_pal->UpdateXY(m_x,m_y);
     }
     if(m_camera)
     {
@@ -104,9 +93,6 @@ void CSpriteGameObject::UpdateDirection(std::string action_name)
     //compare string is wasting time
     m_current_action=action_name;
     m_step++;
-    if(m_pal){
-        //m_pal->UpdateDirection(m_current_action);
-    }
 }
 
 void CSpriteGameObject::BindPal(CSpriteGameObject* pal)
@@ -164,8 +150,10 @@ void CSpriteGameObject::StopMoving(){
 }
 
 void CSpriteGameObject::MoveUpdate(){
+    ge_common_struct::action_type log=ge_common_struct::action_type::NO_MOVE;
     if(m_move_y<0){
         UpdateDirection("upward");
+        log=ge_common_struct::action_type::MOVE_UP;
         if(m_move_y+m_move_speed>0){
             m_move_y=0;
             UpdateY(m_y+m_move_y);
@@ -175,6 +163,7 @@ void CSpriteGameObject::MoveUpdate(){
         }
     }else if(m_move_y>0){
         UpdateDirection("downward");
+        log=ge_common_struct::action_type::MOVE_DOWN;
         if(m_move_y-m_move_speed<0){
             m_move_y=0;
             UpdateY(m_y+m_move_y);
@@ -184,6 +173,7 @@ void CSpriteGameObject::MoveUpdate(){
         }
     }else if(m_move_x<0){
         UpdateDirection("leftward");
+        log=ge_common_struct::action_type::MOVE_LEFT;
         if(m_move_x+m_move_speed>0){
             m_move_x=0;
             UpdateX(m_x+m_move_x);
@@ -193,6 +183,7 @@ void CSpriteGameObject::MoveUpdate(){
         }
     }else if(m_move_x>0){
         UpdateDirection("rightward");
+        log=ge_common_struct::action_type::MOVE_RIGHT;
         if(m_move_x-m_move_speed<0){
             m_move_x=0;
             UpdateX(m_x+m_move_x);
@@ -201,5 +192,29 @@ void CSpriteGameObject::MoveUpdate(){
             UpdateX(m_x+m_move_speed);
         }
     }
+    if(m_pal){
+       if(log!=ge_common_struct::action_type::NO_MOVE){
+            m_pal->AddActionLog(log);
+       }
+    }
     Play();
+}
+
+
+void CSpriteGameObject::AddActionLog(ge_common_struct::action_type log){
+    m_action_log.push(log);
+    if(m_action_log.size()>m_pop_size){
+        ge_common_struct::action_type act=m_action_log.front();
+        m_action_log.pop();
+        if(act==ge_common_struct::action_type::MOVE_UP){
+            MoveUpward();
+        }else if(act==ge_common_struct::action_type::MOVE_DOWN){
+            MoveDownward();
+        }else if(act==ge_common_struct::action_type::MOVE_LEFT){
+            MoveLeftward();
+        }else if(act==ge_common_struct::action_type::MOVE_RIGHT){
+            MoveRightward();
+        }
+    }
+    MoveUpdate();
 }

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <queue>
 
 namespace ge_common_struct{
 
@@ -46,6 +47,33 @@ namespace ge_common_struct{
     int r;
     int g;
     int b;
+  };
+
+  enum action_type{
+      NO_MOVE,
+      MOVE_UP,
+      MOVE_DOWN,
+      MOVE_LEFT,
+      MOVE_RIGHT,
+  };
+
+  struct action_log{
+    std::string action;
+    int move_x;
+    int move_y;
+    action_log operator=(action_log& copylog){
+        action=copylog.action;
+        move_x=copylog.move_x;
+        move_y=copylog.move_y;
+        return *this;
+    };
+    action_log(){
+    };
+    action_log(const action_log& other){
+        action=other.action;
+        move_x=other.move_x;
+        move_y=other.move_y;
+    };
   };
 
   struct start_point2d{

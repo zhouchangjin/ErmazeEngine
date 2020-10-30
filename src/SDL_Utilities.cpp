@@ -88,5 +88,9 @@ void RenderText(TTF_Font* font,SDL_Renderer* renderer,int x,int y,std::string te
 
 }
 
+void SetTextureAlpha(SDL_Texture* texture,int alpha){
+    SDL_SetTextureAlphaMod(texture,alpha);
+}
+
 
 }

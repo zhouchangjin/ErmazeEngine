@@ -51,5 +51,20 @@ CTileLayer* C2DGameScene::GetTileLayer(int layer_no){
     }
 }
 
+void C2DGameScene::AddGridType(int gridx,int gridy,
+                               ge_common_struct::grid_type type){
+    int gridId=gridy*m_map_width+gridx;
+    m_grid_type[gridId]=type;
+}
+
+ge_common_struct::grid_type C2DGameScene::GetGridType(int gridx,int gridy){
+    int gridId=gridy*m_map_width+gridx;
+    if(m_grid_type.find(gridId)!=m_grid_type.end()){
+        return ge_common_struct::grid_type::NORMAL;
+    }else{
+        return m_grid_type[gridId];
+    }
+}
+
 
 

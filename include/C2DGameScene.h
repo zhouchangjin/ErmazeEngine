@@ -7,6 +7,7 @@
 #include <CSceneData.h>
 #include <CCamera2D.h>
 #include <CSpriteGameObject.h>
+#include <CTransferArea.h>
 
 class C2DGameScene :public CGameScene
 {
@@ -38,6 +39,11 @@ class C2DGameScene :public CGameScene
         int GetCamera2DX(){return m_camera.GetCamera2DX();};
         int GetCamera2DY(){return m_camera.GetCamera2DY();};
         CCamera2D* GetCameraPointer(){return &m_camera;};
+        void AddGridType(int gridx,int gridy,ge_common_struct::grid_type type);
+        ge_common_struct::grid_type GetGridType(int gridx,int gridy);
+        void AddTransferArea(CTransferArea area){m_transfer_area.push_back(area);};
+        CTransferArea GetTransferArea(int i){return m_transfer_area[i];};
+        int GetTransferAreaCnt(){return m_transfer_area.size();};
 
     protected:
 
@@ -48,6 +54,8 @@ class C2DGameScene :public CGameScene
         void* m_tileset_texture;
         std::map<int,bool> m_collidable_tiles;
         std::map<int,bool> m_layerswitches;
+        std::map<int,ge_common_struct::grid_type> m_grid_type;
+        std::vector<CTransferArea> m_transfer_area;
         CCamera2D m_camera;
 
 

@@ -18,6 +18,8 @@ namespace sdlutil{
 
     void RenderText(TTF_Font* font,SDL_Renderer* renderer,int x,int y,std::string textureText,SDL_Color textColor,int scale=1);
 
+    void SetTextureAlpha(SDL_Texture* texture,int alpha);
+
 }
 
 #endif // SDL_UTILITIES_H_INCLUDED

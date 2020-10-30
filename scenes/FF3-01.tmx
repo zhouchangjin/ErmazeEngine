@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.5" orientation="orthogonal" renderorder="left-up" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
+<map version="1.2" tiledversion="1.3.5" orientation="orthogonal" renderorder="left-up" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="19">
  <tileset firstgid="1" source="FF3.tsx"/>
  <layer id="2" name="water" width="100" height="100" locked="1">
   <data encoding="csv">
@@ -313,4 +313,60 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="4" name="transfer">
+  <object id="8" name="transfer" type="transfer" x="280" y="150" width="550" height="50">
+   <properties>
+    <property name="direction" type="int" value="1"/>
+    <property name="layer" type="int" value="1"/>
+    <property name="scene" value="02"/>
+    <property name="x" type="int" value="100"/>
+    <property name="y" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="9" name="transfer" type="transfer" x="800" y="200" width="80" height="550">
+   <properties>
+    <property name="direction" type="int" value="1"/>
+    <property name="layer" type="int" value="1"/>
+    <property name="scene" value="02"/>
+    <property name="x" type="int" value="100"/>
+    <property name="y" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="10" name="transfer" type="transfer" x="280" y="750" width="550" height="80">
+   <properties>
+    <property name="direction" type="int" value="1"/>
+    <property name="layer" type="int" value="1"/>
+    <property name="scene" value="02"/>
+    <property name="x" type="int" value="100"/>
+    <property name="y" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="11" name="transfer" type="transfer" x="200" y="200" width="80" height="550">
+   <properties>
+    <property name="direction" type="int" value="1"/>
+    <property name="layer" type="int" value="1"/>
+    <property name="scene" value="02"/>
+    <property name="x" type="int" value="100"/>
+    <property name="y" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="17" type="transfer" x="448" y="385.667" width="18" height="18.6667">
+   <properties>
+    <property name="direction" type="int" value="1"/>
+    <property name="layer" type="int" value="1"/>
+    <property name="scene" value="02"/>
+    <property name="x" type="int" value="100"/>
+    <property name="y" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="18" type="transfer" x="672" y="718.667" width="18" height="22">
+   <properties>
+    <property name="direction" type="int" value="1"/>
+    <property name="layer" type="int" value="1"/>
+    <property name="scene" value="02"/>
+    <property name="x" type="int" value="100"/>
+    <property name="y" type="int" value="100"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

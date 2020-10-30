@@ -69,6 +69,11 @@ void RenderGameObject(CGameContext* p_context,CSpriteGameObject* object
 
 }
 
+void SetAlphaMode(C2DGameScene& scene,int alpha){
+    SDL_Texture* sdl_texture=(SDL_Texture*)scene.GetTexture();
+    sdlutil::SetTextureAlpha(sdl_texture,alpha);
+}
+
 
 void RenderSprite(CGameContext* p_context,CSprite* sprite,int screenx,
                   int screeny,int sprite_idx,int scale)
@@ -104,6 +109,7 @@ void FillRect(CGameContext* p_context,ge_common_struct::ge_rect rect,int r,
 
     SDL_Renderer * renderer=GetRenderer(p_context);
     SDL_SetRenderDrawColor( renderer, r, g, b, a );
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_Rect sdlrect=TransformRect(rect);
     SDL_RenderFillRect( renderer, &sdlrect );
 }
