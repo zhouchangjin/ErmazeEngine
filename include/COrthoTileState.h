@@ -41,6 +41,7 @@ class COrthoTileState : public CGameState
 
         std::vector<CSpriteGameObject*> m_player;
         std::vector<CSpriteGameObject*> m_player_two;
+
         //private function
         void LoadScene();
         void LoadPlayer();

@@ -1,0 +1,58 @@
+<scene>
+	<objects>
+		<object type="character" x="100" y="100" layer="1" direction="1" refid="p1">
+			<dialogtree>
+			   <root>
+					<condition>true</condition>
+					<children type="dialog">
+						<dialog>
+							<condition>true</condition>
+							<text>
+								<line>
+								xxxxxxxxx
+								</line>								
+								<line>
+								xxxxxxxxx
+								</line>
+							</text>
+							<children type="option">
+								<option>
+									<text>xxxxxxxxx</text>
+									<children type="dialog">
+										<dialog>
+											<condition>true</condition>
+											<text>
+												<line>
+												xxxxxxxxx
+												</line>								
+												<line>
+												xxxxxxxxx
+												</line>
+											</text>
+										</dialog>
+									</children>
+								</option>
+								<option>
+									<text>bbbbbbbb</text>
+									<children type="dialog">
+										<dialog>
+											<condition>true</condition>
+											<text>
+												<line>
+												xxxxxxxxx
+												</line>								
+												<line>
+												xxxxxxxxx
+												</line>
+											</text>
+										</dialog>
+									</children>
+								</option>
+							</children>							
+						</dialog>
+					</children>
+			   </root>
+			</dialogtree>
+		</object>
+	</objects>
+</scene>

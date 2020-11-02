@@ -749,6 +749,11 @@ void COrthoTileState::LoadScene()
     void* map_texture=sdlutil2::LoadPngTexture(current_tileset,m_context);
     m_game_scene.SetTexture(map_texture);
 
+    //放置对象
+
+
+
+    //放置角色
     if(m_player.size()>0)
     {
         GE_LOG("Repositioning player to %d,%d\n",

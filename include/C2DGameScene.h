@@ -33,9 +33,6 @@ class C2DGameScene :public CGameScene
         bool GetTileCollideBool(int tile_id);
         bool GetSwitchTileBool(int tile_id);
         CTileLayer* GetTileLayer(int layer_no);
-        void SetSheetParam(std::string sheetpath,int width,
-                           int height,int col,int row);
-        void LoadSpriteSheet(CSceneData scenedata);
         int GetCamera2DX(){return m_camera.GetCamera2DX();};
         int GetCamera2DY(){return m_camera.GetCamera2DY();};
         CCamera2D* GetCameraPointer(){return &m_camera;};
@@ -57,8 +54,6 @@ class C2DGameScene :public CGameScene
         std::map<int,ge_common_struct::grid_type> m_grid_type;
         std::vector<CTransferArea> m_transfer_area;
         CCamera2D m_camera;
-
-
     private:
 };
 
