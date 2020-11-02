@@ -60,6 +60,10 @@ CSceneData CRPGGameData::GetCurrentScene()
     return m_scene_list[m_current_scene];
 }
 
+void CRPGGameData::SetCurrentScene(std::string scene){
+    m_current_scene=scene;
+}
+
 void CRPGGameData::AddSpriteSheet(std::string id,std::string path,int width,
                                   int height, int col,int row)
 {

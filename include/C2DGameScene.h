@@ -15,7 +15,7 @@ class C2DGameScene :public CGameScene
         C2DGameScene();
         C2DGameScene(const C2DGameScene& copyscene);
         virtual ~C2DGameScene();
-
+        void ClearScene();
         int GetTileWidth(){return m_tile_width;};
         int GetTileHeight(){return m_tile_height;};
         int GetMapWidth(){return m_map_width;};

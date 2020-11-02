@@ -197,6 +197,9 @@ void CSpriteGameObject::MoveUpdate(){
             m_pal->AddActionLog(log);
        }
     }
+    if(m_camera){
+       GE_LOG("player coor (%d,%d)\n",m_x,m_y);
+    }
     Play();
 }
 
@@ -217,4 +220,10 @@ void CSpriteGameObject::AddActionLog(ge_common_struct::action_type log){
         }
     }
     MoveUpdate();
+}
+
+void CSpriteGameObject::ClearActionLog(){
+    while(!m_action_log.empty()){
+        m_action_log.pop();
+    }
 }

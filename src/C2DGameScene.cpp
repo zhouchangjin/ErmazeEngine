@@ -1,4 +1,5 @@
 #include "C2DGameScene.h"
+#include <iostream>
 
 C2DGameScene::C2DGameScene()
 {
@@ -12,6 +13,14 @@ C2DGameScene::~C2DGameScene()
 
 C2DGameScene::C2DGameScene(const C2DGameScene& copyscene){
 
+}
+
+void C2DGameScene::ClearScene(){
+    CGameScene::ClearScene();
+    m_collidable_tiles.clear();
+    m_layerswitches.clear();
+    m_transfer_area.clear();
+    m_grid_type.clear();
 }
 
 

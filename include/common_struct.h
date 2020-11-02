@@ -5,6 +5,13 @@
 #include <string>
 #include <queue>
 
+#ifdef GE_DEBUG
+#define GE_LOG(format, ...) printf(format, ##__VA_ARGS__)
+#else
+#define GE_LOG(format, ...)
+#endif
+
+
 namespace ge_common_struct{
 
   enum layer_type{

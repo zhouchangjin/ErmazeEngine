@@ -1,5 +1,4 @@
 #include "COrthoTileState.h"
-#include <iostream>
 
 COrthoTileState::COrthoTileState()
 {
@@ -182,16 +181,20 @@ void COrthoTileState::PrepareData()
 
 void COrthoTileState::LoadPlayer()
 {
-    CRPGGameData* gamedata=(CRPGGameData*)m_game_data;
-    int cnt=gamedata->GetPlayerOneCnt();
-    for(int i=0; i<cnt; i++)
+    if(m_player.size()==0)
     {
-        CSprite* p=gamedata->GetPlayer(i);
-        CSpriteGameObject* controllable_player=new CSpriteGameObject(p);
-        m_player.push_back(controllable_player);
-        if(i>0)
+
+        CRPGGameData* gamedata=(CRPGGameData*)m_game_data;
+        int cnt=gamedata->GetPlayerOneCnt();
+        for(int i=0; i<cnt; i++)
         {
-            m_player[i-1]->BindPal(controllable_player);
+            CSprite* p=gamedata->GetPlayer(i);
+            CSpriteGameObject* controllable_player=new CSpriteGameObject(p);
+            m_player.push_back(controllable_player);
+            if(i>0)
+            {
+                m_player[i-1]->BindPal(controllable_player);
+            }
         }
     }
 }
@@ -310,7 +313,10 @@ bool COrthoTileState::CheckCollision(int x,int y,int width,
         //超出边界
         return true;
     }
-
+    if(level>=m_game_scene.GetLayerCnt())
+    {
+        return true;
+    }
     if( (move_x<0 || move_y<0)
             && CheckCollisionByGrid(gridLeftX,gridHeadY,level))
     {
@@ -372,6 +378,10 @@ int COrthoTileState::GetGridIdx(int gridx,int gridy,int level)
 {
     if(gridx<0 || gridy<0 || gridx>=m_game_scene.GetMapWidth()
             || gridy>=m_game_scene.GetMapHeight())
+    {
+        return 0;
+    }
+    if(level>=m_game_scene.GetLayerCnt())
     {
         return 0;
     }
@@ -495,22 +505,64 @@ void COrthoTileState::CheckTransfer(CSpriteGameObject* object)
 
     int mid_x=x+w/2;
     int mid_y=y+h/2;
-
-    for(int i=0; i<m_game_scene.GetTransferAreaCnt(); i++)
+    bool findTransferEvent=false;
+    int findArea=-1;
+    for(findArea=0; findArea<m_game_scene.GetTransferAreaCnt(); findArea++)
     {
-        CTransferArea area=m_game_scene.GetTransferArea(i);
+        CTransferArea area=m_game_scene.GetTransferArea(findArea);
         int area_minx=area.GetX();
         int area_maxx=area_minx+area.GetWidth();
         int area_miny=area.GetY();
         int area_maxy=area_miny+area.GetHeight();
         if(mid_x>area_minx && mid_x<area_maxx && mid_y>area_miny && mid_y<area_maxy)
         {
-            //简化版本AABB检测
-            //std::cout<<"=="<<area.GetScene()<<area.GetMapX()<<","<<area.GetMapY()<<std::endl;
-            ExitScene();
-
+            findTransferEvent=true;
+            break;
         }
     }
+
+    if(findTransferEvent)
+    {
+        CTransferArea area=m_game_scene.GetTransferArea(findArea);
+
+        ExitScene();
+        CRPGGameData* gamedata=(CRPGGameData*)m_game_data;
+        gamedata->SetCurrentScene(area.GetScene());
+        ge_common_struct::start_point2d point2d;
+        point2d.x=area.GetMapX();
+        point2d.y=area.GetMapY();
+        point2d.layer=area.GetMapLayer();
+        if(area.GetDirection()==ge_common_struct::action_type::MOVE_UP)
+        {
+            point2d.direction="upward";
+        }
+        else if(area.GetDirection()==ge_common_struct::action_type::MOVE_DOWN)
+        {
+            point2d.direction="downward";
+        }
+        else if(area.GetDirection()==ge_common_struct::action_type::MOVE_LEFT)
+        {
+            point2d.direction="leftward";
+        }
+        else if(area.GetDirection()==ge_common_struct::action_type::MOVE_RIGHT)
+        {
+            point2d.direction="rightward";
+        }
+        point2d.start_scene=area.GetScene();
+        gamedata->SetStartPoint(point2d);
+        for(size_t i=0; i<m_player.size(); i++)
+        {
+            m_player[i]->ClearActionLog();
+            m_player[i]->ClearMove();
+        }
+        LoadScene();
+
+
+    }
+
+
+
+
 
 
 }
@@ -528,7 +580,6 @@ void COrthoTileState::FadeInOrOut()
     if(m_alpha_value>=255)
     {
         m_fade_out=false;
-        m_key_enable=false;
     }
     if(m_alpha_value<=0)
     {
@@ -542,15 +593,18 @@ void COrthoTileState::ExitScene()
     {
         m_alpha_value=0;
         m_fade_out=true;
-        m_scene_loading=true;
     }
 }
 
 void COrthoTileState::LoadScene()
 {
+    m_key_enable=false;
+    m_scene_loading=true;
+
     m_game_scene.ClearScene();
     CRPGGameData* gamedata=(CRPGGameData*)m_game_data;
     CSceneData scene=gamedata->GetCurrentScene();
+    GE_LOG("Loading Scene %s\n",scene.GetTileMapPath().c_str());
     std::string scenefile="./scenes/"+scene.GetTileMapPath()+".tmx";
     xmlutils::MyXMLDoc doc =xmlutils::LoadXML(scenefile);
     xmlutils::MyXMLNode docmap=doc.GetNode("/map");
@@ -697,6 +751,8 @@ void COrthoTileState::LoadScene()
 
     if(m_player.size()>0)
     {
+        GE_LOG("Repositioning player to %d,%d\n",
+               gamedata->GetStartX(),gamedata->GetStartY());
         m_player[0]->BindCamera(m_game_scene.GetCameraPointer());
         for(size_t i=0; i<m_player.size(); i++)
         {
@@ -706,5 +762,6 @@ void COrthoTileState::LoadScene()
         }
     }
 
-
+    m_key_enable=true;
+    m_scene_loading=false;
 }

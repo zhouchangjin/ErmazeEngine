@@ -43,6 +43,8 @@ class CSpriteGameObject  : public CGameObject
         int GetFrameIdx(){return m_frame_idx;};
         CSprite* GetSprite(){return m_sprite;};
         void AddActionLog(ge_common_struct::action_type log);
+        void ClearActionLog();
+        void ClearMove(){m_move_x=0;m_move_y=0;};
     protected:
 
     private:
