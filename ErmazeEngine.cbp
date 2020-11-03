@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-DGE_DEBUG" />
 					<Add directory="include" />
 				</Compiler>
 			</Target>
@@ -66,6 +67,7 @@
 		<Unit filename="include/CGameState.h" />
 		<Unit filename="include/CLayer.h" />
 		<Unit filename="include/CMenuState.h" />
+		<Unit filename="include/CNPCGameObject.h" />
 		<Unit filename="include/COrthoTileState.h" />
 		<Unit filename="include/CRPGGameData.h" />
 		<Unit filename="include/CSDLRenderService.h" />
@@ -96,6 +98,7 @@
 		<Unit filename="src/CGameState.cpp" />
 		<Unit filename="src/CLayer.cpp" />
 		<Unit filename="src/CMenuState.cpp" />
+		<Unit filename="src/CNPCGameObject.cpp" />
 		<Unit filename="src/COrthoTileState.cpp" />
 		<Unit filename="src/CRPGGameData.cpp" />
 		<Unit filename="src/CSDLRenderService.cpp" />

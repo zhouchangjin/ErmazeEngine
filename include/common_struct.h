@@ -64,6 +64,12 @@ namespace ge_common_struct{
       MOVE_RIGHT,
   };
 
+  enum npc_move_type{
+      NPC_STILL,
+      NPC_HALT,
+      NPC_RANDOM
+  };
+
   struct action_log{
     std::string action;
     int move_x;

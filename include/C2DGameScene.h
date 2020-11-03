@@ -8,6 +8,7 @@
 #include <CCamera2D.h>
 #include <CSpriteGameObject.h>
 #include <CTransferArea.h>
+#include <CNPCGameObject.h>
 
 class C2DGameScene :public CGameScene
 {
@@ -41,6 +42,16 @@ class C2DGameScene :public CGameScene
         void AddTransferArea(CTransferArea area){m_transfer_area.push_back(area);};
         CTransferArea GetTransferArea(int i){return m_transfer_area[i];};
         int GetTransferAreaCnt(){return m_transfer_area.size();};
+        void AddNpc(CNPCGameObject* npc){m_npcs.push_back(npc);};
+        CNPCGameObject* GetNpc(int i){return m_npcs[i];};
+        int GetNpcCnt(){return m_npcs.size();};
+        void AddSprite(std::string id,CSpriteSheet* psheet);
+        CSprite* GetSprite(std::string sprite_id);
+        void AddSpriteAction(std::string id,std::string action_name,
+                             std::vector<int> ids);
+        CNPCGameObject* CreateNpc(std::string spr_id,int x,int y
+                                  ,int layer,int direction);
+
 
     protected:
 
@@ -53,6 +64,8 @@ class C2DGameScene :public CGameScene
         std::map<int,bool> m_layerswitches;
         std::map<int,ge_common_struct::grid_type> m_grid_type;
         std::vector<CTransferArea> m_transfer_area;
+        std::vector<CNPCGameObject*> m_npcs;
+        std::map<std::string,CSprite*> m_sprites;
         CCamera2D m_camera;
     private:
 };

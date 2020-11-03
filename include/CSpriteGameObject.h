@@ -33,21 +33,24 @@ class CSpriteGameObject  : public CGameObject
         bool IsMoving();
         void StopMoving();
         void MoveUpdate();
-        int GetLayer(){return m_layer;};
+        int GetLayer()const{return m_layer;};
         int GetShowLayer();
-        int GetX(){return m_x;};
-        int GetY(){return m_y;};
-        int GetMoveX(){return m_move_x;};
-        int GetMoveY(){return m_move_y;};
-        int GetMoveSpeed(){return m_move_speed;};
+        int GetX()const{return m_x;};
+        int GetY()const{return m_y;};
+        int GetMoveX()const{return m_move_x;};
+        int GetMoveY()const{return m_move_y;};
+        int GetMoveSpeed()const{return m_move_speed;};
+        int GetObjectWidth()const{return m_sprite->
+        GetSpriteSheet()->GetSpriteWidth();};
+        int GetObjectHeight()const{return m_sprite->GetSpriteSheet()->GetSpriteHeight();};
         int GetFrameIdx(){return m_frame_idx;};
         CSprite* GetSprite(){return m_sprite;};
         void AddActionLog(ge_common_struct::action_type log);
         void ClearActionLog();
         void ClearMove(){m_move_x=0;m_move_y=0;};
+        void Step(){m_step++;};
+        bool CheckCollision(const CSpriteGameObject& other);
     protected:
-
-    private:
         CSprite* m_sprite;
         int m_frame_idx=0;
         int m_step=0;
@@ -66,7 +69,7 @@ class CSpriteGameObject  : public CGameObject
         CCamera2D* m_camera=nullptr;
         CSpriteGameObject* m_pal=nullptr;
 
-        void Step(){m_step++;};
+    private:
 
 };
 

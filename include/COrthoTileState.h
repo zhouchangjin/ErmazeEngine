@@ -37,6 +37,7 @@ class COrthoTileState : public CGameState
         bool m_scene_loading=false;
         int m_alpha_value=255;
         int m_scale=2;
+
         C2DGameScene m_game_scene;
 
         std::vector<CSpriteGameObject*> m_player;
@@ -45,7 +46,9 @@ class COrthoTileState : public CGameState
         //private function
         void LoadScene();
         void LoadPlayer();
-        void CheckTransfer(CSpriteGameObject* object);
+
+        bool CheckCollisionObject(CSpriteGameObject* object);
+        bool CheckTransfer(CSpriteGameObject* object);
         bool CheckCollision(CSpriteGameObject* object);
         bool CheckCollision(int x,int y,int width,int height,int layer_level,
                             int move_x,int move_y);

@@ -91,7 +91,6 @@ void RenderSprite(CGameContext* p_context,CSprite* sprite,int screenx,
     SDL_Renderer * renderer=GetRenderer(p_context);
     ge_common_struct::ge_rect rect=sprite->GetRectByIdx(sprite_idx);
     SDL_Rect sdlrect=TransformRect(rect);
-
     sdlutil::RenderTexture(screenx,screeny,&sdlrect,sdl_texture,renderer,scale);
 }
 

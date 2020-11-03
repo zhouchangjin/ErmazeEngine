@@ -5,7 +5,7 @@
 1602481920 c:\work\cplusworkspace\ermazeengine\include\cgamecontext.h
 	"common_struct.h"
 
-1604297758 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
+1604378248 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
 	<vector>
 	<string>
 	<queue>
@@ -424,7 +424,7 @@
 	<SDL_image.h>
 	<CGameContext.h>
 
-1604308688 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
+1604391524 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
 	<CGameState.h>
 	<CSceneData.h>
 	"CSdlGameContext.h"
@@ -438,7 +438,7 @@
 1592891680 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
 	"CMenuState.h"
 
-1604308665 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
+1604395827 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
 	"COrthoTileState.h"
 
 1603614857 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
@@ -483,7 +483,7 @@
 	"SDL_Utilities.h"
 	"common_struct.h"
 
-1604070567 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
+1604383428 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
 	"Render_Util.h"
 
 1603984023 c:\work\cplusworkspace\ermazeengine\include\render_util.h
@@ -562,19 +562,19 @@
 
 1602824774 c:\work\cplusworkspace\ermazeengine\include\cgameobject.h
 
-1604298119 source:c:\work\cplusworkspace\ermazeengine\src\cspritegameobject.cpp
+1604396248 source:c:\work\cplusworkspace\ermazeengine\src\cspritegameobject.cpp
 	"CSpriteGameObject.h"
 
-1604206165 c:\work\cplusworkspace\ermazeengine\include\cspritegameobject.h
+1604392446 c:\work\cplusworkspace\ermazeengine\include\cspritegameobject.h
 	<CGameObject.h>
 	<CSprite.h>
 	<CCamera2D.h>
 
-1604205340 source:c:\work\cplusworkspace\ermazeengine\src\c2dgamescene.cpp
+1604367817 source:c:\work\cplusworkspace\ermazeengine\src\c2dgamescene.cpp
 	"C2DGameScene.h"
 	<iostream>
 
-1604320692 c:\work\cplusworkspace\ermazeengine\include\c2dgamescene.h
+1604367759 c:\work\cplusworkspace\ermazeengine\include\c2dgamescene.h
 	<CGameScene.h>
 	<CTileLayer.h>
 	<CSpriteSheet.h>
@@ -582,6 +582,7 @@
 	<CCamera2D.h>
 	<CSpriteGameObject.h>
 	<CTransferArea.h>
+	<CNPCGameObject.h>
 
 1602827914 source:c:\work\cplusworkspace\ermazeengine\src\clayer.cpp
 	"CLayer.h"
@@ -616,4 +617,10 @@
 
 1603978461 c:\work\cplusworkspace\ermazeengine\include\ctransferarea.h
 	<common_struct.h>
+
+1604383236 source:c:\work\cplusworkspace\ermazeengine\src\cnpcgameobject.cpp
+	"CNPCGameObject.h"
+
+1604383291 c:\work\cplusworkspace\ermazeengine\include\cnpcgameobject.h
+	<CSpriteGameObject.h>
 

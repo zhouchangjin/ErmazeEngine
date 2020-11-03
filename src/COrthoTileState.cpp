@@ -70,7 +70,16 @@ void COrthoTileState::Draw()
                         sdlutil2::RenderGameObject(m_context,p,fullWindow,camera_x,camera_y,m_scale);
                     }
                 }
+                int objs_cnt=m_game_scene.GetNpcCnt();
+                for(int o=0;o<objs_cnt;o++){
+                    CNPCGameObject* npc=m_game_scene.GetNpc(o);
+                    int layer=npc->GetShowLayer();
+                    if(i==layer){
+                        sdlutil2::RenderGameObject(m_context,npc,fullWindow,camera_x,camera_y,m_scale);
+                    }
+                }
             }
+
 
         }
 
@@ -141,6 +150,10 @@ void COrthoTileState::Resume()
 
 void COrthoTileState::Update()
 {
+    int npc=m_game_scene.GetNpcCnt();
+    for(int i=0;i<npc;i++){
+        m_game_scene.GetNpc(i)->Move();
+    }
 
     /*Update 方法里处理更新数据，一些复杂的事件也在这里进行判断
     放在前面判断会相对不合理。由于是单一引擎，不需要事件注册的机制
@@ -158,7 +171,10 @@ void COrthoTileState::Update()
         CSpriteGameObject* player=m_player[0];
         if(player->IsMoving())
         {
-            CheckTransfer(player);
+            bool transfer=CheckTransfer(player);
+            if(transfer){
+                return;
+            }
             bool collision=CheckCollision(player);
             if(collision)
             {
@@ -166,11 +182,31 @@ void COrthoTileState::Update()
             }
             else
             {
-                player->MoveUpdate();
+                bool collision_with_object=CheckCollisionObject(player);
+                if(collision_with_object){
+                    GE_LOG("Collide with sprites\n");
+                    player->StopMoving();
+                }else{
+                    player->MoveUpdate();
+                }
             }
         }
     }
 
+    for(int i=0;i<npc;i++){
+        CNPCGameObject* npc=m_game_scene.GetNpc(i);
+        bool collision=CheckCollision(npc);
+
+        if(!collision && player_cnt>0){
+            CSpriteGameObject* player=m_player[0];
+            collision=npc->CheckCollision(*player);
+        }
+        if(!collision){
+            npc->MoveUpdate();
+        }else{
+            npc->StopMoving();
+        }
+    }
 }
 
 void COrthoTileState::PrepareData()
@@ -495,7 +531,7 @@ void COrthoTileState::UpdateLadder(CSpriteGameObject* object)
     }
 }
 
-void COrthoTileState::CheckTransfer(CSpriteGameObject* object)
+bool COrthoTileState::CheckTransfer(CSpriteGameObject* object)
 {
 
     int x=object->GetX();
@@ -560,7 +596,7 @@ void COrthoTileState::CheckTransfer(CSpriteGameObject* object)
 
     }
 
-
+    return findTransferEvent;
 
 
 
@@ -605,8 +641,10 @@ void COrthoTileState::LoadScene()
     CRPGGameData* gamedata=(CRPGGameData*)m_game_data;
     CSceneData scene=gamedata->GetCurrentScene();
     GE_LOG("Loading Scene %s\n",scene.GetTileMapPath().c_str());
-    std::string scenefile="./scenes/"+scene.GetTileMapPath()+".tmx";
-    xmlutils::MyXMLDoc doc =xmlutils::LoadXML(scenefile);
+    std::string scene_file="./scenes/"+scene.GetTileMapPath()+".tmx";
+    std::string object_file="./scenes/"+scene.GetTileMapPath()+".objs";
+    xmlutils::MyXMLDoc doc =xmlutils::LoadXML(scene_file);
+    xmlutils::MyXMLDoc obj_doc=xmlutils::LoadXML(object_file);
     xmlutils::MyXMLNode docmap=doc.GetNode("/map");
 
     int map_width=docmap.IntAttribute("width");
@@ -750,9 +788,56 @@ void COrthoTileState::LoadScene()
     m_game_scene.SetTexture(map_texture);
 
     //放置对象
+    xmlutils::MyXMLNode cha_node=obj_doc.GetNode("/scene/characters/character");
+    xmlutils::MyXMLNode obj_node=obj_doc.GetNode("/scene/objects/object");
 
+    for(;cha_node;cha_node=cha_node.NextSlibing("character")){
+        std::string sheet_id=cha_node.StrAttribute("sheet_id");
+        std::string id=cha_node.StrAttribute("id");
+        CSpriteSheet* sheet=gamedata->GetSpriteSheet(sheet_id);
+        m_game_scene.AddSprite(id,sheet);
+        //////////////////
+        xmlutils::MyXMLNode actionsnode=cha_node.Child("actions");
+        if(actionsnode)
+        {
+            xmlutils::MyXMLNode action_node=actionsnode.Child("action");
+            for(; action_node; action_node=action_node.NextSlibing("action"))
+            {
+                std::string action_name=action_node.StrAttribute("name");
+                std::string actiontile=action_node.StrAttribute("ids");
+                std::vector<int> ids=ge_str_utilities::
+                                     SplitStrToIntArray(actiontile,',');
+                m_game_scene.AddSpriteAction(id,action_name,ids);
 
+            }
+        }
+    }
 
+    for(;obj_node;obj_node=obj_node.NextSlibing("object")){
+        std::string otype=obj_node.StrAttribute("type");
+        if(otype.compare("character")==0){
+            int x=obj_node.IntAttribute("x");
+            int y=obj_node.IntAttribute("y");
+            int layer=obj_node.IntAttribute("layer");
+            int direction=obj_node.IntAttribute("direction");
+            std::string sprite_id=obj_node.StrAttribute("refid");
+            CNPCGameObject* npc=m_game_scene.CreateNpc(sprite_id,x,y
+                                                       ,layer,direction);
+            xmlutils::MyXMLNode w_node=obj_node.Child("walkingmode");
+            if(w_node){
+                std::string mode=w_node.StrAttribute("type");
+                if(mode.compare("halt")==0){
+                    npc->SetWalkingMode(ge_common_struct::npc_move_type::NPC_HALT);
+                }else if(mode.compare("random")==0){
+                    npc->SetWalkingMode(ge_common_struct::npc_move_type::NPC_RANDOM);
+                }else{
+                    npc->SetWalkingMode(ge_common_struct::npc_move_type::NPC_STILL);
+                }
+            }
+
+        }
+    }
+    GE_LOG("Found %d Characters \n",m_game_scene.GetNpcCnt());
     //放置角色
     if(m_player.size()>0)
     {
@@ -769,4 +854,18 @@ void COrthoTileState::LoadScene()
 
     m_key_enable=true;
     m_scene_loading=false;
+}
+
+
+bool COrthoTileState::CheckCollisionObject(CSpriteGameObject* object){
+    bool collision=false;
+    int npc_cnt=m_game_scene.GetNpcCnt();
+    for(int i=0;i<npc_cnt;i++){
+        CNPCGameObject* npc=m_game_scene.GetNpc(i);
+        collision=object->CheckCollision(*npc);
+        if(collision){
+            break;
+        }
+    }
+    return collision;
 }
