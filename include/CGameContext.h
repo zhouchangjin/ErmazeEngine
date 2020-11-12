@@ -15,6 +15,7 @@ class CGameContext
         virtual ge_common_struct::ge_rect GetWindowSize()=0;
         virtual unsigned int GetTicks()=0;
         virtual void DelayTime(unsigned int time)=0;
+        virtual void* GetFont()const=0;
     protected:
 
     private:

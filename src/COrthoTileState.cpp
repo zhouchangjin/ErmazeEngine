@@ -57,7 +57,7 @@ void COrthoTileState::Draw()
             int camera_y=m_game_scene.GetCamera2DY();
 
             int cnt=m_game_scene.GetLayerCnt();
-            //TODO ÓÅ»¯¿Õ°×Í¼Æ¬²»Òª»­£¬¸²¸ÇµÄ²»Òª»­¡£
+            //TODO ä¼˜åŒ–ç©ºç™½å›¾ç‰‡ä¸è¦ç”»ï¼Œè¦†ç›–çš„ä¸è¦ç”»ã€‚
             for(int i=0; i<cnt; i++)
             {
                 sdlutil2::RenderSceneLayer(m_context,m_game_scene,i,camera_x,camera_y,fullWindow,m_scale);
@@ -92,12 +92,14 @@ void COrthoTileState::Draw()
             window.SetWidth(fullWindow.w);
             window.SetHeight(fullWindow.h/3);
             window.SetBackGroundColor(0,0,0,200);
-            window.SetTitle(u8"ÄãºÃ");
+            std::string title=u8"ä½ å¥½";
+            window.SetTitle(title);
             window.SetTitleHeight(50);
             window.SetTitleWidth(200);
             window.SetTitleX(fullWindow.x);
             window.SetTitleY(window.GetY()-window.GetTitleHeight()
                              +window.GetBorderWidth());
+            window.SetFontColor(255,255,255);
             sdlutil2::DrawWindow(m_context,window);
 
     }
@@ -173,10 +175,10 @@ void COrthoTileState::Update()
         m_game_scene.GetNpc(i)->Move();
     }
 
-    /*Update ·½·¨Àï´¦Àí¸üĞÂÊı¾İ£¬Ò»Ğ©¸´ÔÓµÄÊÂ¼şÒ²ÔÚÕâÀï½øĞĞÅĞ¶Ï
-    ·ÅÔÚÇ°ÃæÅĞ¶Ï»áÏà¶Ô²»ºÏÀí¡£ÓÉÓÚÊÇµ¥Ò»ÒıÇæ£¬²»ĞèÒªÊÂ¼ş×¢²áµÄ»úÖÆ
-    Ö»ÓĞÓÎÏ·µÄÖ÷½Ç¶ÔÏó»á¼àÌıÊÂ¼ş£¬¶øÇÒÊÇÇ¿ÖÆµÄ£¬
-    ËùÒÔÃ»±ØÒªÊµÏÖ×¨ÃÅµÄÊÂ¼ş¼àÌı
+    /*Update æ–¹æ³•é‡Œå¤„ç†æ›´æ–°æ•°æ®ï¼Œä¸€äº›å¤æ‚çš„äº‹ä»¶ä¹Ÿåœ¨è¿™é‡Œè¿›è¡Œåˆ¤æ–­
+    æ”¾åœ¨å‰é¢åˆ¤æ–­ä¼šç›¸å¯¹ä¸åˆç†ã€‚ç”±äºæ˜¯å•ä¸€å¼•æ“ï¼Œä¸éœ€è¦äº‹ä»¶æ³¨å†Œçš„æœºåˆ¶
+    åªæœ‰æ¸¸æˆçš„ä¸»è§’å¯¹è±¡ä¼šç›‘å¬äº‹ä»¶ï¼Œè€Œä¸”æ˜¯å¼ºåˆ¶çš„ï¼Œ
+    æ‰€ä»¥æ²¡å¿…è¦å®ç°ä¸“é—¨çš„äº‹ä»¶ç›‘å¬
     */
     size_t player_cnt=m_player.size();
     if(player_cnt>0)
@@ -364,7 +366,7 @@ bool COrthoTileState::CheckCollision(int x,int y,int width,
     int gridHeadY=y/gheight;
     if(gridFootY>=sheight || gridHeadY<0 || gridLeftX<0 || gridRightX>=swidth)
     {
-        //³¬³ö±ß½ç
+        //è¶…å‡ºè¾¹ç•Œ
         return true;
     }
     if(level>=m_game_scene.GetLayerCnt())
@@ -476,9 +478,9 @@ ge_common_struct::grid_type COrthoTileState::GetGridType(int gridx,
 void COrthoTileState::UpdateLadder(CSpriteGameObject* object)
 {
 
-    // ²»ÂÛ¶ÔÏóÊÇÉÏÏÂÒÆ¶¯»¹ÊÇ×óÓÒÒÆ¶¯Âß¼­¶¼ÏàÍ¬
-    // Èç¹ûonstair=false  ½ÅÔÚÌİ×ÓÖĞ¼ä£¬ÄÇÃ´onstair=true£¬Í¼²ãÏÔÊ¾stairÉÏÃæÒ»²ã
-    // Èç¹ûonstair=true   ½ÅÀë¿ªÌİ×Ó£¬ÄÇÃ´Èç¹ûËùÊôÍ¼²ãÖ»ÓĞÄ³Ò»²ãÓĞÊı¾İ£¬Ôò½øÈëÄÇÒ»²ã
+    // ä¸è®ºå¯¹è±¡æ˜¯ä¸Šä¸‹ç§»åŠ¨è¿˜æ˜¯å·¦å³ç§»åŠ¨é€»è¾‘éƒ½ç›¸åŒ
+    // å¦‚æœonstair=false  è„šåœ¨æ¢¯å­ä¸­é—´ï¼Œé‚£ä¹ˆonstair=trueï¼Œå›¾å±‚æ˜¾ç¤ºstairä¸Šé¢ä¸€å±‚
+    // å¦‚æœonstair=true   è„šç¦»å¼€æ¢¯å­ï¼Œé‚£ä¹ˆå¦‚æœæ‰€å±å›¾å±‚åªæœ‰æŸä¸€å±‚æœ‰æ•°æ®ï¼Œåˆ™è¿›å…¥é‚£ä¸€å±‚
     int layer=object->GetLayer();
     int movex=object->GetMoveX();
     int movey=object->GetMoveY();
@@ -805,7 +807,7 @@ void COrthoTileState::LoadScene()
     void* map_texture=sdlutil2::LoadPngTexture(current_tileset,m_context);
     m_game_scene.SetTexture(map_texture);
 
-    //·ÅÖÃ¶ÔÏó
+    //æ”¾ç½®å¯¹è±¡
     xmlutils::MyXMLNode cha_node=obj_doc.GetNode("/scene/characters/character");
     xmlutils::MyXMLNode obj_node=obj_doc.GetNode("/scene/objects/object");
 
@@ -856,7 +858,7 @@ void COrthoTileState::LoadScene()
         }
     }
     GE_LOG("Found %d Characters \n",m_game_scene.GetNpcCnt());
-    //·ÅÖÃ½ÇÉ«
+    //æ”¾ç½®è§’è‰²
     if(m_player.size()>0)
     {
         GE_LOG("Repositioning player to %d,%d\n",

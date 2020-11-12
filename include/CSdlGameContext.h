@@ -5,7 +5,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
-
+#include <SDL_Utilities.h>
 #include <CGameContext.h>
 
 
@@ -21,7 +21,7 @@ class CSdlGameContext : public CGameContext
         ge_common_struct::ge_rect GetWindowSize();
         unsigned int GetTicks();
         void DelayTime(uint32_t time);
-
+        void* GetFont()const{return (void*)m_font;};
 
     protected:
 
@@ -29,6 +29,7 @@ class CSdlGameContext : public CGameContext
         SDL_Renderer * m_renderer;
         SDL_Window * m_window;
         TTF_Font *m_font = nullptr;
+        std::string m_font_name="fangzhengpixel";
 };
 
 #endif // CSDLGAMECONTEXT_H

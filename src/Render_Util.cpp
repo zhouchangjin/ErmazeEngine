@@ -228,7 +228,7 @@ void DrawWindow(CGameContext* p_context,CGameWindow& window)
     RenderBorder(p_context,window_rect,window.GetBorderWidth(),color);
     RenderBorder(p_context,title_rect,window.GetBorderWidth(),color);
 
-    RenderText(p_context,,title_rect.x+2*window.GetBorderWidth()
+    RenderText(p_context,p_context->GetFont(),title_rect.x+2*window.GetBorderWidth()
                ,title_rect.y+2*window.GetBorderWidth(),window.GetTitle()
                ,window.GetFontColor());
 
