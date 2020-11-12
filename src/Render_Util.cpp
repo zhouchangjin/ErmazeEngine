@@ -4,6 +4,72 @@
 namespace sdlutil2
 {
 
+
+ge_common_struct::ge_rect GetBorderLeft(ge_common_struct::ge_rect rect,
+                                        int line_width)
+{
+    ge_common_struct::ge_rect border_left;
+    border_left.x=rect.x;
+    border_left.y=rect.y;
+    border_left.w=line_width;
+    border_left.h=rect.h;
+    return border_left;
+}
+
+ge_common_struct::ge_rect GetBorderRight(ge_common_struct::ge_rect rect,
+        int line_width)
+{
+    ge_common_struct::ge_rect border_right;
+    border_right.x=rect.x+rect.w-line_width;
+    border_right.y=rect.y;
+    border_right.w=line_width;
+    border_right.h=rect.h;
+    return border_right;
+}
+
+
+ge_common_struct::ge_rect GetBorderBottom(ge_common_struct::ge_rect rect,
+        int line_width)
+{
+    ge_common_struct::ge_rect bottom_line;
+    bottom_line.x=rect.x;
+    bottom_line.y=rect.y+rect.h-line_width;
+    bottom_line.w=rect.w;
+    bottom_line.h=line_width;
+    return bottom_line;
+}
+
+ge_common_struct::ge_rect GetBorderTop(ge_common_struct::ge_rect rect,
+                                       int line_width)
+{
+
+    ge_common_struct::ge_rect top_line;
+    top_line.x=rect.x;
+    top_line.y=rect.y;
+    top_line.w=rect.w;
+    top_line.h=line_width;
+    return top_line;
+}
+
+
+void RenderBorder(CGameContext* context,ge_common_struct::ge_rect window_rect
+                  ,int line_width,ge_common_struct::ge_color color)
+{
+    int red=color.r;
+    int blue=color.b;
+    int green=color.g;
+    ge_common_struct::ge_rect border_top=GetBorderTop(window_rect,line_width);
+    FillRect(context,border_top,red,green,blue,255);
+    ge_common_struct::ge_rect border_bottom=GetBorderBottom(window_rect,line_width);
+    FillRect(context,border_bottom,red,green,blue,255);
+    ge_common_struct::ge_rect border_left=GetBorderLeft(window_rect,line_width);
+    FillRect(context,border_left,red,green,blue,255);
+    ge_common_struct::ge_rect border_right=GetBorderRight(window_rect,line_width);
+    FillRect(context,border_right,red,green,blue,255);
+
+}
+
+
 SDL_Renderer* GetRenderer(CGameContext* p_context)
 {
     CSdlGameContext* context=(CSdlGameContext*)p_context;
@@ -69,7 +135,8 @@ void RenderGameObject(CGameContext* p_context,CSpriteGameObject* object
 
 }
 
-void SetAlphaMode(C2DGameScene& scene,int alpha){
+void SetAlphaMode(C2DGameScene& scene,int alpha)
+{
     SDL_Texture* sdl_texture=(SDL_Texture*)scene.GetTexture();
     sdlutil::SetTextureAlpha(sdl_texture,alpha);
 }
@@ -137,6 +204,34 @@ ge_common_struct::ge_rect LoadWindowRect(CGameContext* p_context)
 {
     ge_common_struct::ge_rect rect=p_context->GetWindowSize();
     return rect;
+}
+
+void DrawWindow(CGameContext* p_context,CGameWindow& window)
+{
+    ge_common_struct::ge_rect window_rect=window.GetWindowRect();
+    ge_common_struct::ge_rect title_rect=window.GetTitleRect();
+    int r=window.GetBackgroundColor().r;
+    int g=window.GetBackgroundColor().g;
+    int b=window.GetBackgroundColor().b;
+    int a=window.GetBackgroundColor().a;
+    FillRect(p_context,window_rect,r,g,b,a);
+    FillRect(p_context,title_rect,r,g,b,a);
+
+    int b_red=window.GetBorderColor().r;
+    int b_green=window.GetBorderColor().g;
+    int b_blue=window.GetBorderColor().b;
+
+    ge_common_struct::ge_color color;
+    color.r=b_red;
+    color.g=b_green;
+    color.b=b_blue;
+    RenderBorder(p_context,window_rect,window.GetBorderWidth(),color);
+    RenderBorder(p_context,title_rect,window.GetBorderWidth(),color);
+
+    RenderText(p_context,,title_rect.x+2*window.GetBorderWidth()
+               ,title_rect.y+2*window.GetBorderWidth(),window.GetTitle()
+               ,window.GetFontColor());
+
 }
 
 void RenderSceneLayer(CGameContext* p_context,C2DGameScene& scene,

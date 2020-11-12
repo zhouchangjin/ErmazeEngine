@@ -8,6 +8,7 @@
 #include "CSprite.h"
 #include "C2DGameScene.h"
 #include "CTileLayer.h"
+#include "CGameWindow.h"
 
 namespace sdlutil2{
 
@@ -36,6 +37,8 @@ namespace sdlutil2{
     void RenderText(CGameContext* p_context,void* font,int x,int y,std::string textureText,ge_common_struct::ge_color text_color,int scale=1);
 
     void SetAlphaMode(C2DGameScene& gamescene,int alpha);
+
+    void DrawWindow(CGameContext* p_context,CGameWindow& window);
 
 }
 

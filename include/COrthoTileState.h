@@ -35,6 +35,7 @@ class COrthoTileState : public CGameState
         bool m_fade_out=false;
         bool m_fade_in=false;
         bool m_scene_loading=false;
+        bool m_show_dialog=false;
         int m_alpha_value=255;
         int m_scale=2;
 

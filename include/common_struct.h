@@ -56,6 +56,13 @@ namespace ge_common_struct{
     int b;
   };
 
+  struct ge_adv_color{
+    int r;
+    int g;
+    int b;
+    int a;
+  };
+
   enum action_type{
       NO_MOVE,
       MOVE_UP,

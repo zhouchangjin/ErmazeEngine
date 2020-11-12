@@ -85,6 +85,22 @@ void COrthoTileState::Draw()
 
     }
 
+    if(m_show_dialog){
+            CGameWindow window;
+            window.SetX(fullWindow.x);
+            window.SetY(fullWindow.h*2/3);
+            window.SetWidth(fullWindow.w);
+            window.SetHeight(fullWindow.h/3);
+            window.SetBackGroundColor(0,0,0,200);
+            window.SetTitle(u8"ÄãºÃ");
+            window.SetTitleHeight(50);
+            window.SetTitleWidth(200);
+            window.SetTitleX(fullWindow.x);
+            window.SetTitleY(window.GetY()-window.GetTitleHeight()
+                             +window.GetBorderWidth());
+            sdlutil2::DrawWindow(m_context,window);
+
+    }
     sdlutil2::RenderPresent(m_context);
 
 }
@@ -126,6 +142,8 @@ void COrthoTileState::HandleEvent(ge_common_struct::game_event event)
         else if(event==ge_common_struct::KEY_RIGHT)
         {
             player->MoveRightward(16);
+        }else if(event==ge_common_struct::KEY_ENTER){
+            m_show_dialog=true;
         }
 
     }

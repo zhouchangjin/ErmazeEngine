@@ -95,7 +95,7 @@ void CSdlGameContext::Init(int window_width,int window_height){
 
     if( TTF_Init() == -1 )
     {
-
+        m_font=sdlutil2::LoadFont();
     }
 
 }
