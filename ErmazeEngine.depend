@@ -5,7 +5,7 @@
 1605192151 c:\work\cplusworkspace\ermazeengine\include\cgamecontext.h
 	"common_struct.h"
 
-1604398239 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
+1605277022 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
 	<vector>
 	<string>
 	<queue>
@@ -425,7 +425,7 @@
 	<SDL_Utilities.h>
 	<CGameContext.h>
 
-1604400054 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
+1605280378 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
 	<CGameState.h>
 	<CSceneData.h>
 	"CSdlGameContext.h"
@@ -439,13 +439,13 @@
 1592891680 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
 	"CMenuState.h"
 
-1605194103 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
+1605278674 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
 	"COrthoTileState.h"
 
 1605192275 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
 	"CSdlGameContext.h"
 
-1603983952 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
+1605278939 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
 	"SDL_Utilities.h"
 
 1602069157 source:c:\work\cplusworkspace\ermazeengine\src\main.cpp
@@ -484,12 +484,13 @@
 	"SDL_Utilities.h"
 	"common_struct.h"
 
-1605192078 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
+1605280344 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
 	"Render_Util.h"
 
-1604464931 c:\work\cplusworkspace\ermazeengine\include\render_util.h
+1605278528 c:\work\cplusworkspace\ermazeengine\include\render_util.h
 	<string>
 	"SDL_Utilities.h"
+	"Str_Utilities.h"
 	"CSDLGameContext.h"
 	"CSprite.h"
 	"C2DGameScene.h"
@@ -546,11 +547,11 @@
 	<new>
 	<stdint.h>
 
-1602232077 c:\work\cplusworkspace\ermazeengine\include\str_utilities.h
+1605278368 c:\work\cplusworkspace\ermazeengine\include\str_utilities.h
 	<string>
 	<vector>
 
-1603977736 source:c:\work\cplusworkspace\ermazeengine\src\str_utilities.cpp
+1605278431 source:c:\work\cplusworkspace\ermazeengine\src\str_utilities.cpp
 	"Str_Utilities.h"
 
 1602232433 source:c:\work\cplusworkspace\ermazeengine\src\cscenelayers.cpp

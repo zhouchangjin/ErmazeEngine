@@ -4,6 +4,22 @@
 namespace sdlutil2
 {
 
+ge_common_struct::ge_point CalcTitlePos(ge_common_struct::ge_rect r,int charcnt
+                                       ,int font_size=24)
+{
+    ge_common_struct::ge_point p;
+    if(charcnt*font_size>r.w){
+        p.x=r.x+font_size/2;
+        p.y=r.y+r.h-font_size;
+    }else{
+       int marginx= (r.w-charcnt*font_size)/2;
+       int marginy= (r.h-font_size)/2;
+       p.x=r.x+marginx;
+       p.y=r.y+marginy;
+    }
+    return p;
+}
+
 
 ge_common_struct::ge_rect GetBorderLeft(ge_common_struct::ge_rect rect,
                                         int line_width)
@@ -208,14 +224,20 @@ ge_common_struct::ge_rect LoadWindowRect(CGameContext* p_context)
 
 void DrawWindow(CGameContext* p_context,CGameWindow& window)
 {
+    std::string title=window.GetTitle();
+    int length=ge_str_utilities::utf8_strlen(title);
+    bool showTitle=true;
+    if(length==0)
+    {
+        showTitle=false;
+    }
     ge_common_struct::ge_rect window_rect=window.GetWindowRect();
-    ge_common_struct::ge_rect title_rect=window.GetTitleRect();
     int r=window.GetBackgroundColor().r;
     int g=window.GetBackgroundColor().g;
     int b=window.GetBackgroundColor().b;
     int a=window.GetBackgroundColor().a;
     FillRect(p_context,window_rect,r,g,b,a);
-    FillRect(p_context,title_rect,r,g,b,a);
+
 
     int b_red=window.GetBorderColor().r;
     int b_green=window.GetBorderColor().g;
@@ -226,11 +248,17 @@ void DrawWindow(CGameContext* p_context,CGameWindow& window)
     color.g=b_green;
     color.b=b_blue;
     RenderBorder(p_context,window_rect,window.GetBorderWidth(),color);
-    RenderBorder(p_context,title_rect,window.GetBorderWidth(),color);
 
-    RenderText(p_context,p_context->GetFont(),title_rect.x+2*window.GetBorderWidth()
-               ,title_rect.y+2*window.GetBorderWidth(),window.GetTitle()
-               ,window.GetFontColor());
+    if(showTitle)
+    {
+        ge_common_struct::ge_rect title_rect=window.GetTitleRect();
+        FillRect(p_context,title_rect,r,g,b,a);
+        RenderBorder(p_context,title_rect,window.GetBorderWidth(),color);
+        ge_common_struct::ge_point p=CalcTitlePos(title_rect,length);
+        RenderText(p_context,p_context->GetFont(),p.x
+                   ,p.y,title
+                   ,window.GetFontColor());
+    }
 
 }
 
@@ -260,8 +288,8 @@ void RenderSceneLayer(CGameContext* p_context,C2DGameScene& scene,
         int start_screen_x=camera_x*scale-window.w/2;
         int start_screen_y=camera_y*scale-window.h/2;
 
-        int start_x=start_screen_x/2;
-        int start_y=start_screen_y/2;
+        int start_x=start_screen_x/scale;
+        int start_y=start_screen_y/scale;
 
         int start_screen_coorx=-1*(start_x%tilewidth);
         int start_screen_coory=-1*(start_y%tileheight);

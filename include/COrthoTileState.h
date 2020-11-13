@@ -37,7 +37,7 @@ class COrthoTileState : public CGameState
         bool m_scene_loading=false;
         bool m_show_dialog=false;
         int m_alpha_value=255;
-        int m_scale=2;
+        int m_scale=4;
 
         C2DGameScene m_game_scene;
 

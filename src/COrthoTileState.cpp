@@ -92,7 +92,7 @@ void COrthoTileState::Draw()
             window.SetWidth(fullWindow.w);
             window.SetHeight(fullWindow.h/3);
             window.SetBackGroundColor(0,0,0,200);
-            std::string title=u8"你好";
+            std::string title=u8"主角";
             window.SetTitle(title);
             window.SetTitleHeight(50);
             window.SetTitleWidth(200);

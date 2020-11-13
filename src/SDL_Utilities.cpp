@@ -51,7 +51,7 @@ namespace sdlutil{
 
 TTF_Font* LoadFont(std::string fontPath)
 {
-    TTF_Font* font = TTF_OpenFont( fontPath.c_str(), 20 );
+    TTF_Font* font = TTF_OpenFont( fontPath.c_str(), 24 );
     return font;
 }
 

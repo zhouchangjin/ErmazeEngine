@@ -63,6 +63,11 @@ namespace ge_common_struct{
     int a;
   };
 
+  struct ge_point{
+      int x;
+      int y;
+  };
+
   enum action_type{
       NO_MOVE,
       MOVE_UP,

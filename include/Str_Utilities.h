@@ -14,6 +14,8 @@ namespace ge_str_utilities{
 
     std::string TrimStr(std::string input);
 
+    int utf8_strlen(const std::string& str);
+
 }
 
 

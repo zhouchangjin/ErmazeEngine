@@ -4,6 +4,7 @@
 
 #include <string>
 #include "SDL_Utilities.h"
+#include "Str_Utilities.h"
 #include "CSDLGameContext.h"
 #include "CSprite.h"
 #include "C2DGameScene.h"
