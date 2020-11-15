@@ -425,7 +425,7 @@
 	<SDL_Utilities.h>
 	<CGameContext.h>
 
-1605280378 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
+1605421091 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
 	<CGameState.h>
 	<CSceneData.h>
 	"CSdlGameContext.h"
@@ -439,7 +439,7 @@
 1592891680 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
 	"CMenuState.h"
 
-1605278674 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
+1605428759 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
 	"COrthoTileState.h"
 
 1605192275 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
@@ -448,7 +448,7 @@
 1605278939 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
 	"SDL_Utilities.h"
 
-1602069157 source:c:\work\cplusworkspace\ermazeengine\src\main.cpp
+1605419695 source:c:\work\cplusworkspace\ermazeengine\src\main.cpp
 	<exception>
 	<string>
 	<iostream>
@@ -484,10 +484,10 @@
 	"SDL_Utilities.h"
 	"common_struct.h"
 
-1605280344 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
+1605428630 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
 	"Render_Util.h"
 
-1605278528 c:\work\cplusworkspace\ermazeengine\include\render_util.h
+1605419759 c:\work\cplusworkspace\ermazeengine\include\render_util.h
 	<string>
 	"SDL_Utilities.h"
 	"Str_Utilities.h"
@@ -495,7 +495,7 @@
 	"CSprite.h"
 	"C2DGameScene.h"
 	"CTileLayer.h"
-	"CGameWindow.h"
+	"CGameDialog.h"
 
 1603709491 c:\work\cplusworkspace\ermazeengine\include\cspritesheet.h
 	<string>
@@ -547,11 +547,11 @@
 	<new>
 	<stdint.h>
 
-1605278368 c:\work\cplusworkspace\ermazeengine\include\str_utilities.h
+1605417931 c:\work\cplusworkspace\ermazeengine\include\str_utilities.h
 	<string>
 	<vector>
 
-1605278431 source:c:\work\cplusworkspace\ermazeengine\src\str_utilities.cpp
+1605422028 source:c:\work\cplusworkspace\ermazeengine\src\str_utilities.cpp
 	"Str_Utilities.h"
 
 1602232433 source:c:\work\cplusworkspace\ermazeengine\src\cscenelayers.cpp
@@ -630,6 +630,12 @@
 1605181601 source:c:\work\cplusworkspace\ermazeengine\src\cgamewindow.cpp
 	"CGameWindow.h"
 
-1605181550 c:\work\cplusworkspace\ermazeengine\include\cgamewindow.h
+1605406637 c:\work\cplusworkspace\ermazeengine\include\cgamewindow.h
 	<common_struct.h>
+
+1605428600 source:c:\work\cplusworkspace\ermazeengine\src\cgamedialog.cpp
+	"CGameDialog.h"
+
+1605428504 c:\work\cplusworkspace\ermazeengine\include\cgamedialog.h
+	<CGameWindow.h>
 

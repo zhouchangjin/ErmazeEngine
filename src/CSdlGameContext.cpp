@@ -81,16 +81,23 @@ void CSdlGameContext::Init(int window_width,int window_height){
     {
 
 
+    }else{
+         GE_LOG("Initialize....\n");
     }
     if ( SDL_CreateWindowAndRenderer( window_width, window_height, SDL_WINDOW_SHOWN,
                                       &m_window, &m_renderer ) != 0 )
     {
+
+    }else{
+         GE_LOG("Window Create Done.\n");
     }
 
     int imgFlags = IMG_INIT_PNG;
     if( !( IMG_Init( imgFlags ) & imgFlags ) )
     {
 
+    }else{
+         GE_LOG("Image initial Successful.\n");
     }
 
     if( TTF_Init() == -1 )
@@ -99,6 +106,7 @@ void CSdlGameContext::Init(int window_width,int window_height){
     }else{
         std::string path="./fonts/"+m_font_name+".ttf";
         m_font=sdlutil::LoadFont(path);
+        GE_LOG("Font Load Successful.\n");
     }
 
 }

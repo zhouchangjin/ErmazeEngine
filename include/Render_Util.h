@@ -9,7 +9,7 @@
 #include "CSprite.h"
 #include "C2DGameScene.h"
 #include "CTileLayer.h"
-#include "CGameWindow.h"
+#include "CGameDialog.h"
 
 namespace sdlutil2{
 
@@ -40,6 +40,8 @@ namespace sdlutil2{
     void SetAlphaMode(C2DGameScene& gamescene,int alpha);
 
     void DrawWindow(CGameContext* p_context,CGameWindow& window);
+
+    void DrawDialog(CGameContext* p_context,CGameDialog& dialog);
 
 }
 

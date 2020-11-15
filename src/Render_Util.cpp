@@ -222,6 +222,22 @@ ge_common_struct::ge_rect LoadWindowRect(CGameContext* p_context)
     return rect;
 }
 
+void DrawDialog(CGameContext* p_context,CGameDialog& dialog){
+    DrawWindow(p_context,dialog);
+    int line=dialog.GetCurrentDialogLineCharCnt();
+    std::string text=dialog.GetText();
+    int pos=dialog.GetCurrentPos();
+    std::vector<std::string> lines=ge_str_utilities::
+        SplitByUTF8CharPos(text,line,pos);
+    for(size_t i=0;i<lines.size();i++){
+        int rh=i*dialog.GetFontSize();
+        int x=dialog.GetX()+dialog.GetBorderWidth()+dialog.GetTextMargin();
+        int y=dialog.GetY()+dialog.GetBorderWidth()+dialog.GetTextMargin()+rh;
+        RenderText(p_context,p_context->GetFont(),
+                   x,y,lines[i],dialog.GetFontColor());
+    }
+}
+
 void DrawWindow(CGameContext* p_context,CGameWindow& window)
 {
     std::string title=window.GetTitle();

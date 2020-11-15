@@ -9,6 +9,42 @@ std::string TrimStr(std::string input)
     return res;
 }
 
+std::vector<std::string> SplitByUTF8CharPos(const std::string& input,
+                                            int line,int pos)
+{
+    std::vector<std::string> lines;
+    size_t ps=0;
+    int cCnt=0;
+    size_t cSize=input.length();
+    for(;ps<cSize;cCnt++){
+         if(cCnt>pos){
+            break;
+         }
+         int col=cCnt%line;
+         int row=cCnt/line;
+        if(col==0){
+            lines.push_back("");
+        }
+        int c=(unsigned char)input[ps];
+        if(c>=0 && c<=127){
+            lines[row]+=input.substr(ps,1);
+            ps++;
+        }else if((c & 0xE0) == 0xC0){
+            lines[row]+=input.substr(ps,2);
+            ps+=2;
+        }else if ((c & 0xF0) == 0xE0){
+            lines[row]+=input.substr(ps,3);
+            ps+=3;
+        }else if ((c & 0xF8) == 0xF0){
+            lines[row]+=input.substr(ps,4);
+            ps+=4;
+        }else{
+            return lines;
+        }
+    }
+    return lines;
+}
+
 std::vector<std::string> Splitstr(const std::string& input,char delim)
 {
     std::string str=TrimStr(input);
@@ -57,7 +93,8 @@ std::vector<int> SplitStrToIntArray(const std::string& input,char delim)
     return splitarray;
 }
 
-int utf8_strlen(const std::string& str){
+int utf8_strlen(const std::string& str)
+{
     int c,i,ix,q;
     for (q=0, i=0, ix=str.length(); i < ix; i++, q++)
     {

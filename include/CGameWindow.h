@@ -43,7 +43,7 @@ class CGameWindow
     protected:
 
         std::string m_title;
-        int m_border_width=3;
+        int m_border_width=2;
         ge_common_struct::ge_rect m_window_rect;
         ge_common_struct::ge_rect m_title_rect;
         ge_common_struct::ge_adv_color m_bg_color;

@@ -16,6 +16,9 @@ namespace ge_str_utilities{
 
     int utf8_strlen(const std::string& str);
 
+    std::vector<std::string> SplitByUTF8CharPos(const std::string& input,
+                                            int line,int pos);
+
 }
 
 

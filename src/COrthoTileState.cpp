@@ -27,7 +27,6 @@ void COrthoTileState::Cleanup()
 
 void COrthoTileState::Draw()
 {
-
     ge_common_struct::ge_rect fullWindow=sdlutil2::LoadWindowRect(m_context);
     if(m_fade_out || m_fade_in )
     {
@@ -82,25 +81,10 @@ void COrthoTileState::Draw()
 
 
         }
-
     }
 
     if(m_show_dialog){
-            CGameWindow window;
-            window.SetX(fullWindow.x);
-            window.SetY(fullWindow.h*2/3);
-            window.SetWidth(fullWindow.w);
-            window.SetHeight(fullWindow.h/3);
-            window.SetBackGroundColor(0,0,0,200);
-            std::string title=u8"主角";
-            window.SetTitle(title);
-            window.SetTitleHeight(50);
-            window.SetTitleWidth(200);
-            window.SetTitleX(fullWindow.x);
-            window.SetTitleY(window.GetY()-window.GetTitleHeight()
-                             +window.GetBorderWidth());
-            window.SetFontColor(255,255,255);
-            sdlutil2::DrawWindow(m_context,window);
+        LoadDialog();
 
     }
     sdlutil2::RenderPresent(m_context);
@@ -145,7 +129,8 @@ void COrthoTileState::HandleEvent(ge_common_struct::game_event event)
         {
             player->MoveRightward(16);
         }else if(event==ge_common_struct::KEY_ENTER){
-            m_show_dialog=true;
+            //TODO mockupcode
+            m_show_dialog=!m_show_dialog;
         }
 
     }
@@ -235,6 +220,27 @@ void COrthoTileState::PrepareData()
     LoadScene();
 }
 
+void COrthoTileState::LoadDialog(){
+            ge_common_struct::ge_rect fullWindow=sdlutil2::LoadWindowRect(m_context);
+
+            m_dialog.SetX(fullWindow.x);
+            m_dialog.SetY(fullWindow.h*2/3);
+            m_dialog.SetWidth(fullWindow.w);
+            m_dialog.SetHeight(fullWindow.h/3);
+            m_dialog.SetBackGroundColor(0,0,0,200);
+            std::string title=u8"12主角";
+
+            m_dialog.SetTitle(title);
+            m_dialog.SetTitleHeight(50);
+            m_dialog.SetTitleWidth(200);
+            m_dialog.SetTitleX(fullWindow.x);
+            m_dialog.SetTitleY(m_dialog.GetY()-m_dialog.GetTitleHeight()
+                             +m_dialog.GetBorderWidth());
+            m_dialog.SetFontColor(255,255,255);
+
+            sdlutil2::DrawDialog(m_context,m_dialog);
+            m_dialog.TextUpdate();
+}
 void COrthoTileState::LoadPlayer()
 {
     if(m_player.size()==0)

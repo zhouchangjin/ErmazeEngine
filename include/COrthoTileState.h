@@ -40,13 +40,14 @@ class COrthoTileState : public CGameState
         int m_scale=4;
 
         C2DGameScene m_game_scene;
-
+        CGameDialog  m_dialog;
         std::vector<CSpriteGameObject*> m_player;
         std::vector<CSpriteGameObject*> m_player_two;
 
         //private function
         void LoadScene();
         void LoadPlayer();
+        void LoadDialog();
 
         bool CheckCollisionObject(CSpriteGameObject* object);
         bool CheckTransfer(CSpriteGameObject* object);
