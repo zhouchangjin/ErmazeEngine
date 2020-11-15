@@ -401,10 +401,11 @@
 	"begin_code.h"
 	"close_code.h"
 
-1604399267 c:\work\cplusworkspace\ermazeengine\include\sdl_utilities.h
+1605435264 c:\work\cplusworkspace\ermazeengine\include\sdl_utilities.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
+	<SDL2_gfxPrimitives.h>
 	<string>
 
 1561870398 c:\work\librarycb\mingw\sdl2_image-2.0.5\x86_64-w64-mingw32\include\sdl2\sdl_image.h
@@ -442,10 +443,10 @@
 1605428759 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
 	"COrthoTileState.h"
 
-1605192275 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
+1605429123 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
 	"CSdlGameContext.h"
 
-1605278939 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
+1605435565 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
 	"SDL_Utilities.h"
 
 1605419695 source:c:\work\cplusworkspace\ermazeengine\src\main.cpp
@@ -484,10 +485,10 @@
 	"SDL_Utilities.h"
 	"common_struct.h"
 
-1605428630 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
+1605448459 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
 	"Render_Util.h"
 
-1605419759 c:\work\cplusworkspace\ermazeengine\include\render_util.h
+1605435815 c:\work\cplusworkspace\ermazeengine\include\render_util.h
 	<string>
 	"SDL_Utilities.h"
 	"Str_Utilities.h"
@@ -627,15 +628,19 @@
 1604383291 c:\work\cplusworkspace\ermazeengine\include\cnpcgameobject.h
 	<CSpriteGameObject.h>
 
-1605181601 source:c:\work\cplusworkspace\ermazeengine\src\cgamewindow.cpp
+1605436579 source:c:\work\cplusworkspace\ermazeengine\src\cgamewindow.cpp
 	"CGameWindow.h"
 
-1605406637 c:\work\cplusworkspace\ermazeengine\include\cgamewindow.h
+1605436525 c:\work\cplusworkspace\ermazeengine\include\cgamewindow.h
 	<common_struct.h>
 
-1605428600 source:c:\work\cplusworkspace\ermazeengine\src\cgamedialog.cpp
+1605448431 source:c:\work\cplusworkspace\ermazeengine\src\cgamedialog.cpp
 	"CGameDialog.h"
 
-1605428504 c:\work\cplusworkspace\ermazeengine\include\cgamedialog.h
+1605448557 c:\work\cplusworkspace\ermazeengine\include\cgamedialog.h
 	<CGameWindow.h>
+
+1543567862 c:\work\librarycb\mingw\sdl2_gfx-1.0.4\include\sdl2\sdl2_gfxprimitives.h
+	<math.h>
+	"SDL.h"
 

@@ -18,7 +18,7 @@ class CGameWindow
         int GetTitleHeight()const{return m_title_rect.h;};
         std::string GetTitle()const{return m_title;};
         int GetBorderWidth()const{return m_border_width;};
-        ge_common_struct::ge_adv_color GetBorderColor()const
+        ge_common_struct::ge_color GetBorderColor()const
         {return m_bd_color;};
         ge_common_struct::ge_adv_color GetBackgroundColor()const
         {return m_bg_color;};
@@ -37,7 +37,7 @@ class CGameWindow
         void SetTitleHeight(int th){m_title_rect.h=th;};
         void SetTitle(std::string title){m_title=title;};
         void SetBackGroundColor(int red,int green,int blue,int alpha);
-        void SetBorderColor(int red,int green,int blue,int alpha);
+        void SetBorderColor(int red,int green,int blue);
         void SetFontColor(int red,int green,int blue);
 
     protected:
@@ -47,7 +47,7 @@ class CGameWindow
         ge_common_struct::ge_rect m_window_rect;
         ge_common_struct::ge_rect m_title_rect;
         ge_common_struct::ge_adv_color m_bg_color;
-        ge_common_struct::ge_adv_color m_bd_color;
+        ge_common_struct::ge_color m_bd_color;
         ge_common_struct::ge_color m_font_color;
     private:
 };

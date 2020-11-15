@@ -19,9 +19,21 @@ int CGameDialog::GetCurrentDialogLineCharCnt(){
 
 void CGameDialog::TextUpdate(){
     m_current_pos+=m_display_speed;
+    m_current_frame++;
 }
 
 void CGameDialog::SetText(std::string text){
     m_text=text;
     m_current_pos=m_display_speed;
+}
+
+int CGameDialog::GetIndicatorX(){
+    int x=GetX()+GetWidth()/2;
+    return x;
+}
+
+int CGameDialog::GetIndicatorY(){
+
+    int y=GetY()+GetHeight()-GetBorderWidth()-m_current_frame%8;
+    return y;
 }

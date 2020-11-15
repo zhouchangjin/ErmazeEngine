@@ -236,6 +236,9 @@ void DrawDialog(CGameContext* p_context,CGameDialog& dialog){
         RenderText(p_context,p_context->GetFont(),
                    x,y,lines[i],dialog.GetFontColor());
     }
+    int tx=dialog.GetIndicatorX();
+    int ty=dialog.GetIndicatorY();
+    DrawPointDownTriangle(p_context,tx,ty,dialog.GetHeight()/20,dialog.GetBorderColor());
 }
 
 void DrawWindow(CGameContext* p_context,CGameWindow& window)
@@ -359,6 +362,16 @@ void RenderSceneLayer(CGameContext* p_context,C2DGameScene& scene,
     }
 
 
+}
+
+void DrawPointDownTriangle(CGameContext* p_context,int x,int y,int height,
+                           ge_common_struct::ge_color color){
+    SDL_Renderer * renderer=GetRenderer(p_context);
+    int x1=x-height/2;
+    int x2=x+height/2;
+    int y1=y-height;
+    int y2=y1;
+    sdlutil::DrawTrangle(renderer,x,y,x1,y1,x2,y2,color.r,color.g,color.b);
 }
 
 }

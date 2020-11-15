@@ -17,12 +17,17 @@ class CGameDialog: public CGameWindow
         int GetTextMargin()const{return m_text_margin;};
         int GetFontSize()const{return m_font_size;};
         void TextUpdate();
+        int GetIndicatorX();
+        int GetIndicatorY();
+        bool GetShowIndicator()const{return m_show_indicator;};
     protected:
         std::string m_text;
         int m_display_speed=100;
         int m_current_pos=1;
         int m_text_margin=20;
         int m_font_size=24;
+        int m_current_frame=0;
+        bool m_show_indicator=false;
     private:
 };
 

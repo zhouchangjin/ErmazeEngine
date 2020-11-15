@@ -43,6 +43,8 @@ namespace sdlutil2{
 
     void DrawDialog(CGameContext* p_context,CGameDialog& dialog);
 
+    void DrawPointDownTriangle(CGameContext* p_context,int x,int y,int height,ge_common_struct::ge_color color);
+
 }
 
 #endif // RENDER_UTIL_H_INCLUDED

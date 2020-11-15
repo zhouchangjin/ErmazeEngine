@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL2_gfxPrimitives.h>
 #include <string>
 
 
@@ -19,6 +20,8 @@ namespace sdlutil{
     void RenderText(TTF_Font* font,SDL_Renderer* renderer,int x,int y,std::string textureText,SDL_Color textColor,int scale=1);
 
     void SetTextureAlpha(SDL_Texture* texture,int alpha);
+
+    void DrawTrangle(SDL_Renderer* renderer,int x,int y,int x1,int y1,int x2,int y2,int r,int g,int b);
 
 }
 

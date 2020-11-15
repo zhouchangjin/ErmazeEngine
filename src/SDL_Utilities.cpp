@@ -1,13 +1,16 @@
 #include "SDL_Utilities.h"
 
-namespace sdlutil{
+namespace sdlutil
+{
 
- void LoadTextureWidthHeight(SDL_Texture* texture,int* w,int* h){
+void LoadTextureWidthHeight(SDL_Texture* texture,int* w,int* h)
+{
     SDL_QueryTexture(texture,NULL,NULL,w,h);
- }
+}
 
 
- SDL_Texture* LoadPngTexture(std::string path,SDL_Renderer * renderer){
+SDL_Texture* LoadPngTexture(std::string path,SDL_Renderer * renderer)
+{
 
     //The final texture
     SDL_Texture* newTexture = NULL;
@@ -33,9 +36,9 @@ namespace sdlutil{
     return newTexture;
 
 
- }
+}
 
- void RenderTexture(int x,int y,SDL_Rect* clip,SDL_Texture* texture,SDL_Renderer* renderer,int scale)
+void RenderTexture(int x,int y,SDL_Rect* clip,SDL_Texture* texture,SDL_Renderer* renderer,int scale)
 {
 
 
@@ -55,7 +58,8 @@ TTF_Font* LoadFont(std::string fontPath)
     return font;
 }
 
-void RenderText(TTF_Font* font,SDL_Renderer* renderer,int x,int y,std::string textureText,SDL_Color textColor,int scale){
+void RenderText(TTF_Font* font,SDL_Renderer* renderer,int x,int y,std::string textureText,SDL_Color textColor,int scale)
+{
 
     SDL_Surface* textSurface = TTF_RenderUTF8_Solid( font, textureText.c_str(), textColor );
     if( textSurface == NULL )
@@ -88,9 +92,17 @@ void RenderText(TTF_Font* font,SDL_Renderer* renderer,int x,int y,std::string te
 
 }
 
-void SetTextureAlpha(SDL_Texture* texture,int alpha){
+void SetTextureAlpha(SDL_Texture* texture,int alpha)
+{
     SDL_SetTextureAlphaMod(texture,alpha);
 }
+
+void DrawTrangle(SDL_Renderer* renderer,int x,int y,
+                 int x1,int y1,int x2,int y2,int r,int g,int b)
+{
+    filledTrigonRGBA(renderer,x,y,x1,y1,x2,y2,r,g,b,255);
+}
+
 
 
 }
