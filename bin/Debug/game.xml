@@ -38,7 +38,7 @@
 		<character refid="p1"/>
 	</player>
   </players>
-  <startpoint scene="01" x="160" y="480" direction="upward" layer="1" />
+  <startpoint scene="01" x="368" y="480" direction="upward" layer="1" />
   
   <scenes>
      <scene id="01">
