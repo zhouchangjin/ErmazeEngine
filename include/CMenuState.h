@@ -24,7 +24,7 @@ class CMenuState : public CGameState
 
     private:
         std::string m_background_path="res/menu.png";
-        std::string m_font_path="res/simhei.ttf";
+        std::string m_font_path="fonts/simhei.ttf";
         void* m_background_texture;
         void* m_font;
         ge_common_struct::ge_rect m_select_rect;
