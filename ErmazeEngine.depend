@@ -5,7 +5,7 @@
 1605192151 c:\work\cplusworkspace\ermazeengine\include\cgamecontext.h
 	"common_struct.h"
 
-1605277022 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
+1605526426 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
 	<vector>
 	<string>
 	<queue>
@@ -643,4 +643,15 @@
 1543567862 c:\work\librarycb\mingw\sdl2_gfx-1.0.4\include\sdl2\sdl2_gfxprimitives.h
 	<math.h>
 	"SDL.h"
+
+1605522387 source:c:\work\cplusworkspace\ermazeengine\src\ceventmanager.cpp
+	"CEventManager.h"
+
+1605522387 c:\work\cplusworkspace\ermazeengine\include\ceventmanager.h
+
+1605526442 source:c:\work\cplusworkspace\ermazeengine\src\cgameevent.cpp
+	"CGameEvent.h"
+
+1605528168 c:\work\cplusworkspace\ermazeengine\include\cgameevent.h
+	"common_struct.h"
 
