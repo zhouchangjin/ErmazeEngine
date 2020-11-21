@@ -57,7 +57,7 @@ void CMenuState::Resume(){
     m_menu_1="Resume Game";
 }
 
-void CMenuState::HandleEvent(ge_common_struct::game_event event){
+void CMenuState::HandleEvent(ge_common_struct::input_event event){
 
     if(event==ge_common_struct::KEY_DOWN){
         if(m_select_idx<2)

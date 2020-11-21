@@ -5,11 +5,12 @@
 #include <string>
 #include "SDL_Utilities.h"
 #include "Str_Utilities.h"
-#include "CSDLGameContext.h"
+#include "CGameContext.h"
 #include "CSprite.h"
 #include "C2DGameScene.h"
 #include "CTileLayer.h"
-#include "CGameDialog.h"
+#include "CAdvDialog.h"
+#include "CChoiceDialog.h"
 
 namespace sdlutil2{
 
@@ -35,6 +36,8 @@ namespace sdlutil2{
 
     void DrawRect(CGameContext* p_context,ge_common_struct::ge_rect rect,int r,int g,int b,int a);
 
+    void FillTriangle(CGameContext* p_context,ge_common_struct::ge_triangle triangle,ge_common_struct::ge_color color);
+
     void RenderText(CGameContext* p_context,void* font,int x,int y,std::string textureText,ge_common_struct::ge_color text_color,int scale=1);
 
     void SetAlphaMode(C2DGameScene& gamescene,int alpha);
@@ -42,6 +45,10 @@ namespace sdlutil2{
     void DrawWindow(CGameContext* p_context,CGameWindow& window);
 
     void DrawDialog(CGameContext* p_context,CGameDialog& dialog);
+
+    void DrawAdvDialog(CGameContext* p_context,CAdvDialog& dialog);
+
+    void DrawChoiceDialog(CGameContext* p_context,CChoiceDialog& dialog);
 
     void DrawPointDownTriangle(CGameContext* p_context,int x,int y,int height,ge_common_struct::ge_color color);
 

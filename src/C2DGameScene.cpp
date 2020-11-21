@@ -152,4 +152,11 @@ CNPCGameObject* C2DGameScene::CreateNpc(std::string sprite_id,int x,int y,
 }
 
 
+ge_common_struct::ge_point C2DGameScene::GetGridCoor(int x_coor,int y_coor){
+    ge_common_struct::ge_point point;
+    point.x=x_coor/m_tile_width;
+    point.y=y_coor/m_tile_height;
+    return point;
+}
+
 

@@ -1,21 +1,24 @@
 #include "Render_Util.h"
 //该工具方法可以被面向对象的Service类取代
-
+#include "CSdlGameContext.h"
 namespace sdlutil2
 {
 
 ge_common_struct::ge_point CalcTitlePos(ge_common_struct::ge_rect r,int charcnt
-                                       ,int font_size=24)
+                                        ,int font_size=24)
 {
     ge_common_struct::ge_point p;
-    if(charcnt*font_size>r.w){
+    if(charcnt*font_size>r.w)
+    {
         p.x=r.x+font_size/2;
         p.y=r.y+r.h-font_size;
-    }else{
-       int marginx= (r.w-charcnt*font_size)/2;
-       int marginy= (r.h-font_size)/2;
-       p.x=r.x+marginx;
-       p.y=r.y+marginy;
+    }
+    else
+    {
+        int marginx= (r.w-charcnt*font_size)/2;
+        int marginy= (r.h-font_size)/2;
+        p.x=r.x+marginx;
+        p.y=r.y+marginy;
     }
     return p;
 }
@@ -196,6 +199,10 @@ void FillRect(CGameContext* p_context,ge_common_struct::ge_rect rect,int r,
     SDL_RenderFillRect( renderer, &sdlrect );
 }
 
+/**
+difference between draw and fill is that draw method is
+painting the border of the rectangle.
+**/
 void DrawRect(CGameContext* p_context,ge_common_struct::ge_rect rect,
               int r,int g,int b,int a)
 {
@@ -203,6 +210,16 @@ void DrawRect(CGameContext* p_context,ge_common_struct::ge_rect rect,
     SDL_Rect sdlrect=TransformRect(rect);
     SDL_SetRenderDrawColor( renderer, r, g, b, a );
     SDL_RenderDrawRect(renderer,&sdlrect);
+}
+
+void FillTriangle(CGameContext* p_context,
+                  ge_common_struct::ge_triangle triangle,
+                  ge_common_struct::ge_color color)
+{
+    SDL_Renderer * renderer=GetRenderer(p_context);
+    sdlutil::DrawTrangle(renderer,triangle.p0.x,triangle.p0.y,
+                         triangle.p1.x,triangle.p1.y,
+                         triangle.p2.x,triangle.p2.y,color.r,color.g,color.b);
 }
 
 
@@ -222,14 +239,17 @@ ge_common_struct::ge_rect LoadWindowRect(CGameContext* p_context)
     return rect;
 }
 
-void DrawDialog(CGameContext* p_context,CGameDialog& dialog){
+
+void DrawDialog(CGameContext* p_context,CGameDialog& dialog)
+{
     DrawWindow(p_context,dialog);
     int line=dialog.GetCurrentDialogLineCharCnt();
     std::string text=dialog.GetText();
     int pos=dialog.GetCurrentPos();
     std::vector<std::string> lines=ge_str_utilities::
-        SplitByUTF8CharPos(text,line,pos);
-    for(size_t i=0;i<lines.size();i++){
+                                   SplitByUTF8CharPos(text,line,pos);
+    for(size_t i=0; i<lines.size(); i++)
+    {
         int rh=i*dialog.GetFontSize();
         int x=dialog.GetX()+dialog.GetBorderWidth()+dialog.GetTextMargin();
         int y=dialog.GetY()+dialog.GetBorderWidth()+dialog.GetTextMargin()+rh;
@@ -238,7 +258,35 @@ void DrawDialog(CGameContext* p_context,CGameDialog& dialog){
     }
     int tx=dialog.GetIndicatorX();
     int ty=dialog.GetIndicatorY();
-    DrawPointDownTriangle(p_context,tx,ty,dialog.GetHeight()/20,dialog.GetBorderColor());
+    if(dialog.GetShowIndicator())
+    {
+        DrawPointDownTriangle(p_context,tx,ty,dialog.GetHeight()/20,dialog.GetBorderColor());
+    }
+
+}
+
+void DrawChoiceDialog(CGameContext* p_context,CChoiceDialog& dialog){
+    DrawWindow(p_context,dialog);
+    ge_common_struct::ge_triangle triangle=dialog.GetIndicator();
+    sdlutil2::FillTriangle(p_context,triangle,dialog.GetFontColor());
+    for(int i=0; i<dialog.GetChoiceCnt(); i++)
+        {
+            int x=dialog.GetChoiceTextXStart();
+            int y=dialog.GetChoiceTextYStart()
+                  +i*dialog.GetLineHeight();
+            sdlutil2::RenderText(p_context,p_context->GetFont(),x,y,
+                                 dialog.GetChoice(i),dialog.GetFontColor());
+        }
+}
+
+void DrawAdvDialog(CGameContext* p_context,CAdvDialog& dialog)
+{
+    DrawDialog(p_context,dialog);
+    if(dialog.IsChoiceActive())
+    {
+        CChoiceDialog choice_dialog=dialog.GetChoiceDialog();
+        DrawChoiceDialog(p_context,choice_dialog);
+    }
 }
 
 void DrawWindow(CGameContext* p_context,CGameWindow& window)
@@ -365,7 +413,8 @@ void RenderSceneLayer(CGameContext* p_context,C2DGameScene& scene,
 }
 
 void DrawPointDownTriangle(CGameContext* p_context,int x,int y,int height,
-                           ge_common_struct::ge_color color){
+                           ge_common_struct::ge_color color)
+{
     SDL_Renderer * renderer=GetRenderer(p_context);
     int x1=x-height/2;
     int x2=x+height/2;

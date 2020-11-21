@@ -2,13 +2,10 @@
 
 COrthoTileState::COrthoTileState()
 {
-
-
 }
 
 COrthoTileState::COrthoTileState(CGameContext* context):CGameState(context)
 {
-    //ctor
 }
 
 COrthoTileState::~COrthoTileState()
@@ -18,11 +15,11 @@ COrthoTileState::~COrthoTileState()
 void COrthoTileState::Init()
 {
     this->m_state_value=0;
+
 }
 
 void COrthoTileState::Cleanup()
 {
-
 }
 
 void COrthoTileState::Draw()
@@ -70,10 +67,12 @@ void COrthoTileState::Draw()
                     }
                 }
                 int objs_cnt=m_game_scene.GetNpcCnt();
-                for(int o=0;o<objs_cnt;o++){
+                for(int o=0; o<objs_cnt; o++)
+                {
                     CNPCGameObject* npc=m_game_scene.GetNpc(o);
                     int layer=npc->GetShowLayer();
-                    if(i==layer){
+                    if(i==layer)
+                    {
                         sdlutil2::RenderGameObject(m_context,npc,fullWindow,camera_x,camera_y,m_scale);
                     }
                 }
@@ -82,13 +81,7 @@ void COrthoTileState::Draw()
 
         }
     }
-
-    if(m_show_dialog){
-        LoadDialog();
-
-    }
     sdlutil2::RenderPresent(m_context);
-
 }
 
 int COrthoTileState::GetStateValue()
@@ -96,49 +89,23 @@ int COrthoTileState::GetStateValue()
     return this->m_state_value;
 }
 
-void COrthoTileState::HandleEvent(ge_common_struct::game_event event)
+void COrthoTileState::HandleEvent(ge_common_struct::input_event event)
 {
     if(!m_key_enable)
     {
         return;
     }
-    CSpriteGameObject* player=nullptr;
-    if(m_player.size()>0)
+    if(event!=ge_common_struct::input_event::NO_EVENT)
     {
-        player=m_player[0];
+        CInputEvent inputevent;
+        inputevent.SetEventType(event);
+        inputevent.SetCurrentSubState(m_sub_state);
+        m_event_manager.EventPublish(inputevent);
     }
     if(event==ge_common_struct::KEY_ESC)
     {
         this->m_state_value=1;
     }
-    else if(player)
-    {
-        if(event==ge_common_struct::KEY_UP)
-        {
-            player->MoveUpward(16);
-        }
-        else if(event==ge_common_struct::KEY_DOWN)
-        {
-            player->MoveDownward(16);
-        }
-        else if(event==ge_common_struct::KEY_LEFT)
-        {
-            player->MoveLeftward(16);
-        }
-        else if(event==ge_common_struct::KEY_RIGHT)
-        {
-            player->MoveRightward(16);
-        }else if(event==ge_common_struct::KEY_ENTER){
-            //TODO mockupcode
-            m_show_dialog=!m_show_dialog;
-        }
-
-    }
-    else
-    {
-
-    }
-
 }
 
 void COrthoTileState::Pause()
@@ -156,7 +123,8 @@ void COrthoTileState::Resume()
 void COrthoTileState::Update()
 {
     int npc=m_game_scene.GetNpcCnt();
-    for(int i=0;i<npc;i++){
+    for(int i=0; i<npc; i++)
+    {
         m_game_scene.GetNpc(i)->Move();
     }
 
@@ -173,11 +141,12 @@ void COrthoTileState::Update()
             //TODO Event Manager
             UpdateLadder(m_player[j]);
         }
-        CSpriteGameObject* player=m_player[0];
+        CPCSpriteGameObject* player=m_player[0];
         if(player->IsMoving())
         {
             bool transfer=CheckTransfer(player);
-            if(transfer){
+            if(transfer)
+            {
                 return;
             }
             bool collision=CheckCollision(player);
@@ -188,27 +157,38 @@ void COrthoTileState::Update()
             else
             {
                 bool collision_with_object=CheckCollisionObject(player);
-                if(collision_with_object){
+                if(collision_with_object)
+                {
                     GE_LOG("Collide with sprites\n");
                     player->StopMoving();
-                }else{
+                }
+                else
+                {
                     player->MoveUpdate();
                 }
             }
+        }else if(player->IsActive()){
+            player->ComsumeAction();
+            CNPCGameObject* tnpc=CheckInteract(player);
         }
     }
 
-    for(int i=0;i<npc;i++){
+    for(int i=0; i<npc; i++)
+    {
         CNPCGameObject* npc=m_game_scene.GetNpc(i);
         bool collision=CheckCollision(npc);
 
-        if(!collision && player_cnt>0){
+        if(!collision && player_cnt>0)
+        {
             CSpriteGameObject* player=m_player[0];
             collision=npc->CheckCollision(*player);
         }
-        if(!collision){
+        if(!collision)
+        {
             npc->MoveUpdate();
-        }else{
+        }
+        else
+        {
             npc->StopMoving();
         }
     }
@@ -220,27 +200,7 @@ void COrthoTileState::PrepareData()
     LoadScene();
 }
 
-void COrthoTileState::LoadDialog(){
-            ge_common_struct::ge_rect fullWindow=sdlutil2::LoadWindowRect(m_context);
 
-            m_dialog.SetX(fullWindow.x);
-            m_dialog.SetY(fullWindow.h*2/3);
-            m_dialog.SetWidth(fullWindow.w);
-            m_dialog.SetHeight(fullWindow.h/3);
-            m_dialog.SetBackGroundColor(0,0,0,200);
-            std::string title=u8"12主角";
-
-            m_dialog.SetTitle(title);
-            m_dialog.SetTitleHeight(50);
-            m_dialog.SetTitleWidth(200);
-            m_dialog.SetTitleX(fullWindow.x);
-            m_dialog.SetTitleY(m_dialog.GetY()-m_dialog.GetTitleHeight()
-                             +m_dialog.GetBorderWidth());
-            m_dialog.SetFontColor(255,255,255);
-
-            sdlutil2::DrawDialog(m_context,m_dialog);
-            m_dialog.TextUpdate();
-}
 void COrthoTileState::LoadPlayer()
 {
     if(m_player.size()==0)
@@ -251,11 +211,15 @@ void COrthoTileState::LoadPlayer()
         for(int i=0; i<cnt; i++)
         {
             CSprite* p=gamedata->GetPlayer(i);
-            CSpriteGameObject* controllable_player=new CSpriteGameObject(p);
+            CPCSpriteGameObject* controllable_player=new CPCSpriteGameObject(p);
             m_player.push_back(controllable_player);
             if(i>0)
             {
                 m_player[i-1]->BindPal(controllable_player);
+            }
+            else
+            {
+                m_event_manager.EventSubscribe(controllable_player,CPCSpriteGameObject::ProcessInput);
             }
         }
     }
@@ -817,7 +781,8 @@ void COrthoTileState::LoadScene()
     xmlutils::MyXMLNode cha_node=obj_doc.GetNode("/scene/characters/character");
     xmlutils::MyXMLNode obj_node=obj_doc.GetNode("/scene/objects/object");
 
-    for(;cha_node;cha_node=cha_node.NextSlibing("character")){
+    for(; cha_node; cha_node=cha_node.NextSlibing("character"))
+    {
         std::string sheet_id=cha_node.StrAttribute("sheet_id");
         std::string id=cha_node.StrAttribute("id");
         CSpriteSheet* sheet=gamedata->GetSpriteSheet(sheet_id);
@@ -839,24 +804,32 @@ void COrthoTileState::LoadScene()
         }
     }
 
-    for(;obj_node;obj_node=obj_node.NextSlibing("object")){
+    for(; obj_node; obj_node=obj_node.NextSlibing("object"))
+    {
         std::string otype=obj_node.StrAttribute("type");
-        if(otype.compare("character")==0){
+        if(otype.compare("character")==0)
+        {
             int x=obj_node.IntAttribute("x");
             int y=obj_node.IntAttribute("y");
             int layer=obj_node.IntAttribute("layer");
             int direction=obj_node.IntAttribute("direction");
             std::string sprite_id=obj_node.StrAttribute("refid");
             CNPCGameObject* npc=m_game_scene.CreateNpc(sprite_id,x,y
-                                                       ,layer,direction);
+                                ,layer,direction);
             xmlutils::MyXMLNode w_node=obj_node.Child("walkingmode");
-            if(w_node){
+            if(w_node)
+            {
                 std::string mode=w_node.StrAttribute("type");
-                if(mode.compare("halt")==0){
+                if(mode.compare("halt")==0)
+                {
                     npc->SetWalkingMode(ge_common_struct::npc_move_type::NPC_HALT);
-                }else if(mode.compare("random")==0){
+                }
+                else if(mode.compare("random")==0)
+                {
                     npc->SetWalkingMode(ge_common_struct::npc_move_type::NPC_RANDOM);
-                }else{
+                }
+                else
+                {
                     npc->SetWalkingMode(ge_common_struct::npc_move_type::NPC_STILL);
                 }
             }
@@ -883,15 +856,43 @@ void COrthoTileState::LoadScene()
 }
 
 
-bool COrthoTileState::CheckCollisionObject(CSpriteGameObject* object){
+bool COrthoTileState::CheckCollisionObject(CSpriteGameObject* object)
+{
     bool collision=false;
     int npc_cnt=m_game_scene.GetNpcCnt();
-    for(int i=0;i<npc_cnt;i++){
+    for(int i=0; i<npc_cnt; i++)
+    {
         CNPCGameObject* npc=m_game_scene.GetNpc(i);
         collision=object->CheckCollision(*npc);
-        if(collision){
+        if(collision)
+        {
             break;
         }
     }
     return collision;
+}
+
+CNPCGameObject* COrthoTileState::CheckInteract(CSpriteGameObject* object){
+    std::string action_name=object->GetCurrentAction();
+    int ray_x=0;int ray_y=0;
+    if(action_name.compare("upward")==0){
+        ray_y=-1;
+    }else if(action_name.compare("downward")==0){
+        ray_y=1;
+    }else if(action_name.compare("leftward")==0){
+        ray_x=-1;
+    }else if(action_name.compare("rightward")==0){
+        ray_x=1;
+    }else{
+        return nullptr;
+    }
+    int npccnt=m_game_scene.GetNpcCnt();
+    for(int i=0;i<npccnt;i++){
+        CNPCGameObject* npc=m_game_scene.GetNpc(i);
+        int x=npc->GetX();
+        int y=npc->GetY();
+        int px=object->GetX();
+        int py=object->GetY();
+    }
+
 }

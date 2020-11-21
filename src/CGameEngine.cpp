@@ -53,7 +53,7 @@ void CGameEngine::Draw(){
 
 void CGameEngine::HandleEvent(){
 
-    ge_common_struct::game_event event=m_game_context->EventCatch();
+    ge_common_struct::input_event event=m_game_context->EventCatch();
 
     if(event==ge_common_struct::QUIT){
         m_running=false;

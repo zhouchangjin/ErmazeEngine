@@ -3,7 +3,7 @@
 
 #include <CGameState.h>
 #include <string>
-
+#include "Render_Util.h"
 
 class CMenuState : public CGameState
 {
@@ -15,7 +15,7 @@ class CMenuState : public CGameState
         void Cleanup();
         void Pause();
         void Resume();
-        void HandleEvent(ge_common_struct::game_event event);
+        void HandleEvent(ge_common_struct::input_event event);
         void Update();
         void Draw();
         void PrepareData(){};

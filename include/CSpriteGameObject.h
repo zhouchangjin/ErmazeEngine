@@ -37,6 +37,7 @@ class CSpriteGameObject  : public CGameObject
         int GetShowLayer();
         int GetX()const{return m_x;};
         int GetY()const{return m_y;};
+        int GetFootY()const{return m_y+GetObjectHeight()-1;}
         int GetMoveX()const{return m_move_x;};
         int GetMoveY()const{return m_move_y;};
         int GetMoveSpeed()const{return m_move_speed;};
@@ -50,6 +51,7 @@ class CSpriteGameObject  : public CGameObject
         void ClearMove(){m_move_x=0;m_move_y=0;};
         void Step(){m_step++;};
         bool CheckCollision(const CSpriteGameObject& other);
+        std::string GetCurrentAction()const{return m_current_action;};
     protected:
         CSprite* m_sprite;
         int m_frame_idx=0;

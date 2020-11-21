@@ -14,11 +14,11 @@ SDL_Renderer* CSdlGameContext::GetRenderer(){
     return m_renderer;
 }
 
-ge_common_struct::game_event CSdlGameContext::EventCatch(){
+ge_common_struct::input_event CSdlGameContext::EventCatch(){
 
     SDL_Event e;
-    ge_common_struct::game_event translate_event=ge_common_struct
-    ::game_event::NO_EVENT;
+    ge_common_struct::input_event translate_event=ge_common_struct
+    ::input_event::NO_EVENT;
     while(SDL_PollEvent( &e ) != 0 ){
 
              if( e.type == SDL_QUIT )

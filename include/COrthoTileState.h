@@ -1,17 +1,27 @@
 #ifndef CORTHOTILESTATE_H
 #define CORTHOTILESTATE_H
 
+
+
 #include <CGameState.h>
 #include <CSceneData.h>
-#include "CSdlGameContext.h"
-#include "CRPGGameData.h"
-#include "C2DGameScene.h"
-#include "Str_Utilities.h"
-
+#include <CSdlGameContext.h>
+#include <CRPGGameData.h>
+#include <C2DGameScene.h>
+#include <Str_Utilities.h>
+#include <CEventManager.h>
+#include <CInputEvent.h>
+#include <CPCSpriteGameObject.h>
+#include <CGameUISystem.h>
 
 class COrthoTileState : public CGameState
 {
     public:
+        enum substate{
+            TILE_STATE,
+            DIALOG_STATE,
+            MENU_STATE
+        };
         COrthoTileState();
         COrthoTileState(CGameContext* context);
         virtual ~COrthoTileState();
@@ -19,7 +29,7 @@ class COrthoTileState : public CGameState
         void Cleanup();
         void Pause();
         void Resume();
-        void HandleEvent(ge_common_struct::game_event event);
+        void HandleEvent(ge_common_struct::input_event event);
         void Update();
         void Draw();
         void PrepareData();
@@ -30,25 +40,25 @@ class COrthoTileState : public CGameState
     protected:
 
     private:
-
         bool m_key_enable=true;
         bool m_fade_out=false;
         bool m_fade_in=false;
         bool m_scene_loading=false;
-        bool m_show_dialog=false;
         int m_alpha_value=255;
         int m_scale=4;
+        substate m_sub_state=substate::TILE_STATE;
 
+        CEventManager m_event_manager;
         C2DGameScene m_game_scene;
-        CGameDialog  m_dialog;
-        std::vector<CSpriteGameObject*> m_player;
-        std::vector<CSpriteGameObject*> m_player_two;
+        CGameUISystem m_ui_system;
+
+        std::vector<CPCSpriteGameObject*> m_player;
+        std::vector<CPCSpriteGameObject*> m_player_two;
 
         //private function
         void LoadScene();
         void LoadPlayer();
-        void LoadDialog();
-
+        CNPCGameObject* CheckInteract(CSpriteGameObject* object);
         bool CheckCollisionObject(CSpriteGameObject* object);
         bool CheckTransfer(CSpriteGameObject* object);
         bool CheckCollision(CSpriteGameObject* object);

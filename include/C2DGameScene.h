@@ -52,6 +52,8 @@ class C2DGameScene :public CGameScene
         CNPCGameObject* CreateNpc(std::string spr_id,int x,int y
                                   ,int layer,int direction);
 
+        ge_common_struct::ge_point GetGridCoor(int x_coor,int y_coor);
+
 
     protected:
 
