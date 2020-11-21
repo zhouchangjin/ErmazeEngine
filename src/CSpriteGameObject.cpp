@@ -100,7 +100,6 @@ int CSpriteGameObject::GetShowLayer()
 void CSpriteGameObject::UpdateDirection(std::string action_name)
 {
     m_current_action=action_name;
-    m_step++;
 }
 
 void CSpriteGameObject::BindPal(CSpriteGameObject* pal)
@@ -114,6 +113,7 @@ void CSpriteGameObject::MoveUpward(int dy)
     {
         m_move_y=-1*dy;
     }
+    UpdateDirection("upward");
 }
 
 void CSpriteGameObject::MoveDownward(int dy)
@@ -122,6 +122,7 @@ void CSpriteGameObject::MoveDownward(int dy)
     {
         m_move_y=dy;
     }
+    UpdateDirection("downward");
 }
 
 void CSpriteGameObject::MoveLeftward(int dx)
@@ -130,6 +131,7 @@ void CSpriteGameObject::MoveLeftward(int dx)
     {
         m_move_x=-1*dx;
     }
+    UpdateDirection("leftward");
 }
 
 void CSpriteGameObject::MoveRightward(int dx)
@@ -138,26 +140,31 @@ void CSpriteGameObject::MoveRightward(int dx)
     {
         m_move_x=dx;
     }
+    UpdateDirection("rightward");
 }
 
 void CSpriteGameObject::MoveUpward()
 {
     m_move_y-=m_move_speed;
+    UpdateDirection("upward");
 }
 
 void CSpriteGameObject::MoveDownward()
 {
     m_move_y+=m_move_speed;
+    UpdateDirection("downward");
 }
 
 void CSpriteGameObject::MoveLeftward()
 {
     m_move_x-=m_move_speed;
+    UpdateDirection("leftward");
 }
 
 void CSpriteGameObject::MoveRightward()
 {
     m_move_x+=m_move_speed;
+    UpdateDirection("rightward");
 }
 
 bool CSpriteGameObject::IsMoving()
@@ -176,7 +183,7 @@ void CSpriteGameObject::MoveUpdate()
     ge_common_struct::action_type log=ge_common_struct::action_type::NO_MOVE;
     if(m_move_y<0)
     {
-        UpdateDirection("upward");
+
         log=ge_common_struct::action_type::MOVE_UP;
         if(m_move_y+m_move_speed>0)
         {
@@ -188,10 +195,11 @@ void CSpriteGameObject::MoveUpdate()
             m_move_y+=m_move_speed;
             UpdateY(m_y-m_move_speed);
         }
+        Step();
     }
     else if(m_move_y>0)
     {
-        UpdateDirection("downward");
+
         log=ge_common_struct::action_type::MOVE_DOWN;
         if(m_move_y-m_move_speed<0)
         {
@@ -203,10 +211,11 @@ void CSpriteGameObject::MoveUpdate()
             m_move_y-=m_move_speed;
             UpdateY(m_y+m_move_speed);
         }
+        Step();
     }
     else if(m_move_x<0)
     {
-        UpdateDirection("leftward");
+
         log=ge_common_struct::action_type::MOVE_LEFT;
         if(m_move_x+m_move_speed>0)
         {
@@ -218,10 +227,11 @@ void CSpriteGameObject::MoveUpdate()
             m_move_x+=m_move_speed;
             UpdateX(m_x-m_move_speed);
         }
+        Step();
     }
     else if(m_move_x>0)
     {
-        UpdateDirection("rightward");
+
         log=ge_common_struct::action_type::MOVE_RIGHT;
         if(m_move_x-m_move_speed<0)
         {
@@ -233,6 +243,7 @@ void CSpriteGameObject::MoveUpdate()
             m_move_x-=m_move_speed;
             UpdateX(m_x+m_move_speed);
         }
+        Step();
     }
     if(m_pal)
     {
@@ -384,5 +395,21 @@ bool CSpriteGameObject::CheckCollision(const CSpriteGameObject& obj)
     }
 
 
+
+}
+
+
+int CSpriteGameObject::GetCurrentOrientation()const{
+    if(m_current_action=="upward"){
+        return ge_common_struct::action_source::FACE_UP;
+    }else if(m_current_action=="downward"){
+        return ge_common_struct::action_source::FACE_DOWN;
+    }else if(m_current_action=="leftward"){
+        return ge_common_struct::action_source::FACE_LEFT;
+    }else if(m_current_action=="rightward"){
+        return ge_common_struct::action_source::FACE_RIGHT;
+    }else{
+        return 0;
+    }
 
 }

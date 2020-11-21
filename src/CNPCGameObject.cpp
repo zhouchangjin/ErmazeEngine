@@ -35,3 +35,18 @@ void CNPCGameObject::Move()
 
     }
 }
+
+void CNPCGameObject::OnAction(CActionEvent event){
+    int direction=event.GetActionDirection();
+    ge_common_struct::action_source source=(ge_common_struct
+                                            ::action_source)direction;
+    if(source==ge_common_struct::action_source::FACE_DOWN){
+        UpdateDirection("upward");
+    }else if(source==ge_common_struct::action_source::FACE_UP){
+        UpdateDirection("downward");
+    }else if(source==ge_common_struct::action_source::FACE_RIGHT){
+        UpdateDirection("leftward");
+    }else if(source==ge_common_struct::action_source::FACE_LEFT){
+        UpdateDirection("rightward");
+    }
+}

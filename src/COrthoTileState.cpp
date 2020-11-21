@@ -162,14 +162,20 @@ void COrthoTileState::Update()
                     GE_LOG("Collide with sprites\n");
                     player->StopMoving();
                 }
-                else
-                {
-                    player->MoveUpdate();
-                }
+
             }
+            player->MoveUpdate();
         }else if(player->IsActive()){
             player->ComsumeAction();
             CNPCGameObject* tnpc=CheckInteract(player);
+            if(tnpc!=nullptr){
+                CActionEvent talkevent;
+                talkevent.SetAction(CActionEvent::action_type::TALK
+                                ,player->GetCurrentOrientation());
+                talkevent.SetTarget((void*)tnpc);
+                m_event_manager.EventPublish(talkevent);
+
+            }
         }
     }
 
@@ -183,14 +189,11 @@ void COrthoTileState::Update()
             CSpriteGameObject* player=m_player[0];
             collision=npc->CheckCollision(*player);
         }
-        if(!collision)
-        {
-            npc->MoveUpdate();
-        }
-        else
+        if(collision)
         {
             npc->StopMoving();
         }
+        npc->MoveUpdate();
     }
 }
 
@@ -626,8 +629,9 @@ void COrthoTileState::LoadScene()
 {
     m_key_enable=false;
     m_scene_loading=true;
-
     m_game_scene.ClearScene();
+    CActionEvent event;
+    m_event_manager.ClearSubscriber(event);
     CRPGGameData* gamedata=(CRPGGameData*)m_game_data;
     CSceneData scene=gamedata->GetCurrentScene();
     GE_LOG("Loading Scene %s\n",scene.GetTileMapPath().c_str());
@@ -816,6 +820,7 @@ void COrthoTileState::LoadScene()
             std::string sprite_id=obj_node.StrAttribute("refid");
             CNPCGameObject* npc=m_game_scene.CreateNpc(sprite_id,x,y
                                 ,layer,direction);
+            m_event_manager.EventSubscribe(npc,CNPCGameObject::OnAction);
             xmlutils::MyXMLNode w_node=obj_node.Child("walkingmode");
             if(w_node)
             {
@@ -873,6 +878,7 @@ bool COrthoTileState::CheckCollisionObject(CSpriteGameObject* object)
 }
 
 CNPCGameObject* COrthoTileState::CheckInteract(CSpriteGameObject* object){
+    CNPCGameObject* npc_capture=nullptr;
     std::string action_name=object->GetCurrentAction();
     int ray_x=0;int ray_y=0;
     if(action_name.compare("upward")==0){
@@ -891,8 +897,16 @@ CNPCGameObject* COrthoTileState::CheckInteract(CSpriteGameObject* object){
         CNPCGameObject* npc=m_game_scene.GetNpc(i);
         int x=npc->GetX();
         int y=npc->GetY();
+        ge_common_struct::ge_point coor_npc=m_game_scene.GetGridCoor(x,y);
         int px=object->GetX();
         int py=object->GetY();
+        ge_common_struct::ge_point coor=m_game_scene.GetGridCoor(px,py);
+        if(coor.x+ray_x==coor_npc.x && coor.y+ray_y==coor_npc.y){
+            GE_LOG("talking to npc\n");
+            npc_capture=npc;
+            break;
+        }
     }
+    return npc_capture;
 
 }

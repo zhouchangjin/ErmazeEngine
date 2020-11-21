@@ -5,7 +5,7 @@
 1605575700 c:\work\cplusworkspace\ermazeengine\include\cgamecontext.h
 	"common_struct.h"
 
-1605883793 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
+1605948942 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
 	<vector>
 	<string>
 	<queue>
@@ -445,7 +445,7 @@
 1605575818 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
 	"CMenuState.h"
 
-1605943811 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
+1605950049 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
 	"COrthoTileState.h"
 
 1605575848 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
@@ -573,15 +573,15 @@
 
 1602824774 c:\work\cplusworkspace\ermazeengine\include\cgameobject.h
 
-1604396248 source:c:\work\cplusworkspace\ermazeengine\src\cspritegameobject.cpp
+1605949120 source:c:\work\cplusworkspace\ermazeengine\src\cspritegameobject.cpp
 	"CSpriteGameObject.h"
 
-1605944542 c:\work\cplusworkspace\ermazeengine\include\cspritegameobject.h
+1605948710 c:\work\cplusworkspace\ermazeengine\include\cspritegameobject.h
 	<CGameObject.h>
 	<CSprite.h>
 	<CCamera2D.h>
 
-1604367817 source:c:\work\cplusworkspace\ermazeengine\src\c2dgamescene.cpp
+1605944337 source:c:\work\cplusworkspace\ermazeengine\src\c2dgamescene.cpp
 	"C2DGameScene.h"
 	<iostream>
 
@@ -629,11 +629,12 @@
 1603978461 c:\work\cplusworkspace\ermazeengine\include\ctransferarea.h
 	<common_struct.h>
 
-1604383236 source:c:\work\cplusworkspace\ermazeengine\src\cnpcgameobject.cpp
+1605949027 source:c:\work\cplusworkspace\ermazeengine\src\cnpcgameobject.cpp
 	"CNPCGameObject.h"
 
-1604383291 c:\work\cplusworkspace\ermazeengine\include\cnpcgameobject.h
+1605947769 c:\work\cplusworkspace\ermazeengine\include\cnpcgameobject.h
 	<CSpriteGameObject.h>
+	<IDefaultActionEventProcess.h>
 
 1605436579 source:c:\work\cplusworkspace\ermazeengine\src\cgamewindow.cpp
 	"CGameWindow.h"
@@ -654,7 +655,7 @@
 1605601455 source:c:\work\cplusworkspace\ermazeengine\src\ceventmanager.cpp
 	"CEventManager.h"
 
-1605607544 c:\work\cplusworkspace\ermazeengine\include\ceventmanager.h
+1605950097 c:\work\cplusworkspace\ermazeengine\include\ceventmanager.h
 	<vector>
 	<map>
 	<string>
@@ -663,7 +664,7 @@
 1605526442 source:c:\work\cplusworkspace\ermazeengine\src\cgameevent.cpp
 	"CGameEvent.h"
 
-1605575611 c:\work\cplusworkspace\ermazeengine\include\cgameevent.h
+1605950929 c:\work\cplusworkspace\ermazeengine\include\cgameevent.h
 	"common_struct.h"
 
 1605575587 source:c:\work\cplusworkspace\ermazeengine\src\cinputevent.cpp
@@ -681,7 +682,7 @@
 1605602400 source:c:\work\cplusworkspace\ermazeengine\src\cguidedog.cpp
 	"CGuideDog.h"
 
-1605606030 c:\work\cplusworkspace\ermazeengine\include\cguidedog.h
+1605951087 c:\work\cplusworkspace\ermazeengine\include\cguidedog.h
 	<CHandler.h>
 
 1605602657 source:c:\work\cplusworkspace\ermazeengine\src\idefaulteventprocess.cpp
@@ -717,4 +718,16 @@
 	<CAdvDialog.h>
 	<CSdlGameContext.h>
 	<IDefaultEventProcess.h>
+
+1605951157 source:c:\work\cplusworkspace\ermazeengine\src\cactionevent.cpp
+	"CActionEvent.h"
+
+1605951153 c:\work\cplusworkspace\ermazeengine\include\cactionevent.h
+	<CGameEvent.h>
+
+1605947734 c:\work\cplusworkspace\ermazeengine\include\idefaultactioneventprocess.h
+	<CActionEvent.h>
+
+1605947606 source:c:\work\cplusworkspace\ermazeengine\src\idefaultactioneventprocess.cpp
+	"IDefaultActionEventProcess.h"
 

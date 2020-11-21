@@ -52,6 +52,7 @@ class CSpriteGameObject  : public CGameObject
         void Step(){m_step++;};
         bool CheckCollision(const CSpriteGameObject& other);
         std::string GetCurrentAction()const{return m_current_action;};
+        int GetCurrentOrientation()const;
     protected:
         CSprite* m_sprite;
         int m_frame_idx=0;

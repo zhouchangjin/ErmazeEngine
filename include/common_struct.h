@@ -114,6 +114,14 @@ struct ge_adv_color
     int a;
 };
 
+enum action_source{
+    NO,
+    FACE_UP,
+    FACE_DOWN,
+    FACE_LEFT,
+    FACE_RIGHT
+};
+
 enum action_type
 {
     NO_MOVE,

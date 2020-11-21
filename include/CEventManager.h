@@ -45,6 +45,15 @@ public:
         handlers->push_back(new CGuideDog<GameObject,EventType>(object,Handle));
     }
 
+    template<class EventType>
+    void ClearSubscriber(EventType eventType){
+        std::string typen=typeid(EventType).name();
+        Handlers * handlers = m_guidedogs[typen];
+        if(handlers!=nullptr){
+           handlers->clear();
+        }
+
+    }
 
 
 protected:

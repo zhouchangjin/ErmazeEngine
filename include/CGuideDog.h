@@ -17,6 +17,13 @@ public:
     ~CGuideDog(){
     };
     void Call(CGameEvent* event){
+          bool flag=event->IsInstanceEvent();
+          if(flag){
+            void* target=event->GetTarget();
+            if((void*)m_object!=target){
+                return;
+            }
+          }
          //通过指针进行类型转换，但不传指针防止大量的new操作
           EventType* type=static_cast<EventType*>(event);
          (m_object->*m_handle)(*type);
