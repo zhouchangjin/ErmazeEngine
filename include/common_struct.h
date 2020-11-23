@@ -205,6 +205,16 @@ struct dialog_tree_node{
     exp_node expression;
     std::vector<dialog_tree_node*> children; //可以不用指针，用指针安全
 
+    ~dialog_tree_node(){
+        GE_LOG("delete node");
+        for(size_t i=0;i<children.size();i++){
+            dialog_tree_node* node=children[i];
+            delete node;
+            node=nullptr;
+        }
+        children.clear();
+    }
+
     int get_size(){
         return node_text.size();
     }

@@ -13,7 +13,7 @@
 #include <CInputEvent.h>
 #include <CPCSpriteGameObject.h>
 #include <CGameUISystem.h>
-
+#include <SceneFileLoader.h>
 class COrthoTileState : public CGameState
 {
     public:
@@ -58,6 +58,7 @@ class COrthoTileState : public CGameState
         //private function
         void LoadScene();
         void LoadPlayer();
+        void LoadSubState();
         CNPCGameObject* CheckInteract(CSpriteGameObject* object);
         bool CheckCollisionObject(CSpriteGameObject* object);
         bool CheckTransfer(CSpriteGameObject* object);

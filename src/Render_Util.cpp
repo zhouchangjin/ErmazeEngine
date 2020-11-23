@@ -243,6 +243,7 @@ ge_common_struct::ge_rect LoadWindowRect(CGameContext* p_context)
 void DrawDialog(CGameContext* p_context,CGameDialog& dialog)
 {
     DrawWindow(p_context,dialog);
+
     int line=dialog.GetCurrentDialogLineCharCnt();
     std::string text=dialog.GetText();
     int pos=dialog.GetCurrentPos();
@@ -262,7 +263,7 @@ void DrawDialog(CGameContext* p_context,CGameDialog& dialog)
     {
         DrawPointDownTriangle(p_context,tx,ty,dialog.GetHeight()/20,dialog.GetBorderColor());
     }
-
+    dialog.TextUpdate();
 }
 
 void DrawChoiceDialog(CGameContext* p_context,CChoiceDialog& dialog){
@@ -284,8 +285,8 @@ void DrawAdvDialog(CGameContext* p_context,CAdvDialog& dialog)
     DrawDialog(p_context,dialog);
     if(dialog.IsChoiceActive())
     {
-        CChoiceDialog choice_dialog=dialog.GetChoiceDialog();
-        DrawChoiceDialog(p_context,choice_dialog);
+        CChoiceDialog* choice_dialog=dialog.GetChoiceDialog();
+        DrawChoiceDialog(p_context,*choice_dialog);
     }
 }
 

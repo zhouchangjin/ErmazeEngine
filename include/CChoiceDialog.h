@@ -14,19 +14,20 @@ class CChoiceDialog : public CGameWindow
         int GetBtnMargin()const{return m_btm_margin;};
         int GetLeftMargin()const{return m_left_margin;};
         int GetLineHeight()const{return m_lineheight;};
-        int GetSelection()const{return m_current_selection;};
+        size_t GetSelection()const{return m_current_selection;};
 
         void ClearChoice(){m_choices.clear();};
         int GetChoiceCnt(){return m_choices.size();};
         std::string GetChoice(int index){return m_choices[index];};
         void AddChoice(std::string choice){m_choices.push_back(choice);};
-
+        void ChoiceUp();
+        void ChoiceDown();
         ge_common_struct::ge_triangle GetIndicator();
         int GetChoiceTextYStart();
         int GetChoiceTextXStart();
 
     protected:
-        int m_current_selection=0;
+        size_t m_current_selection=0;
         std::vector<std::string> m_choices;
         int m_left_margin=10;
         int m_top_margin=5;

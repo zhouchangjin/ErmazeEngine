@@ -33,7 +33,11 @@ void C2DGameScene::ClearScene()
     }
     for(size_t i=0; i<m_npcs.size(); i++)
     {
-        delete m_npcs[i];
+        CNPCGameObject* npc_obj=m_npcs[i];
+        ge_common_struct::dialog_tree_node* dn=npc_obj->GetDialogTree();
+        delete dn;
+        delete npc_obj;
+        npc_obj=nullptr;
         m_npcs[i]=nullptr;
     }
     m_npcs.clear();

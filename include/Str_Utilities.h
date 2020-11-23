@@ -19,6 +19,8 @@ namespace ge_str_utilities{
     std::vector<std::string> SplitByUTF8CharPos(const std::string& input,
                                             int line,int pos);
 
+    void replaceAll(std::string& str, const std::string& from, const std::string& to);
+
 }
 
 

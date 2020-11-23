@@ -18,7 +18,7 @@ class CAdvDialog : public CGameDialog
         bool IsChoiceActive(){return m_choicebox_active;};
         void ShowChoice(){m_choicebox_active=true;};
         void HideChoice(){m_choicebox_active=false;};
-        CChoiceDialog GetChoiceDialog()const{return m_choice_dialog;};
+        CChoiceDialog* GetChoiceDialog(){return &m_choice_dialog;};
         void initChoice(std::vector<std::string> choices);
     protected:
         CChoiceDialog m_choice_dialog;

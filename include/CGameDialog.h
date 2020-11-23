@@ -20,6 +20,8 @@ class CGameDialog: public CGameWindow
         int GetIndicatorX();
         int GetIndicatorY();
         bool GetShowIndicator()const{return m_show_indicator;};
+        void ShowIndicator(){m_show_indicator=true;};
+        void HideIndicator(){m_show_indicator=false;};
     protected:
         std::string m_text;
         int m_display_speed=100;

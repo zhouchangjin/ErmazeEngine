@@ -5,40 +5,55 @@ std::string TrimStr(std::string input)
 {
     std::string::size_type start_pos = input.find_first_not_of(' ');
     std::string::size_type end_pos = input.find_last_not_of(' ');
-    std::string res = input.substr(start_pos == std::string::npos ? 0 : start_pos,end_pos == std::string::npos ? input.length() - 1 : end_pos - start_pos + 1);
+    std::string res = input.substr(start_pos == std::string::npos ? 0
+                                   : start_pos,end_pos == std::string::npos
+                                   ? input.length() - 1
+                                   : end_pos - start_pos + 1);
     return res;
 }
 
 std::vector<std::string> SplitByUTF8CharPos(const std::string& input,
-                                            int line,int pos)
+        int line,int pos)
 {
     std::vector<std::string> lines;
     size_t ps=0;
     int cCnt=0;
     size_t cSize=input.length();
-    for(;ps<cSize;cCnt++){
-         if(cCnt>pos){
+    for(; ps<cSize; cCnt++)
+    {
+        if(cCnt>pos)
+        {
             break;
-         }
-         int col=cCnt%line;
-         int row=cCnt/line;
-        if(col==0){
+        }
+        int col=cCnt%line;
+        int row=cCnt/line;
+        if(col==0)
+        {
             lines.push_back("");
         }
         int c=(unsigned char)input[ps];
-        if(c>=0 && c<=127){
+        if(c>=0 && c<=127)
+        {
             lines[row]+=input.substr(ps,1);
             ps++;
-        }else if((c & 0xE0) == 0xC0){
+        }
+        else if((c & 0xE0) == 0xC0)
+        {
             lines[row]+=input.substr(ps,2);
             ps+=2;
-        }else if ((c & 0xF0) == 0xE0){
+        }
+        else if ((c & 0xF0) == 0xE0)
+        {
             lines[row]+=input.substr(ps,3);
             ps+=3;
-        }else if ((c & 0xF8) == 0xF0){
+        }
+        else if ((c & 0xF8) == 0xF0)
+        {
             lines[row]+=input.substr(ps,4);
             ps+=4;
-        }else{
+        }
+        else
+        {
             return lines;
         }
     }
@@ -108,5 +123,20 @@ int utf8_strlen(const std::string& str)
     return q;
 
 }
+
+void replaceAll(std::string& str, const std::string& from,
+                const std::string& to)
+{
+    if(from.empty())
+        return;
+    size_t start_pos = 0;
+    while((start_pos = str.find(from, start_pos)) != std::string::npos)
+    {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+    }
+}
+
+
 
 }

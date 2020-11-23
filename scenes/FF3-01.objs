@@ -15,24 +15,39 @@
 		<object type="character" x="528" y="400" layer="1" direction="2" refid="p2">
 			<dialogtree>
 			
-			   <root>
-					<condition>true</condition>
-					<children type="dialog">
-						<dialog>
-							<condition>true</condition>
+			   <node>
+					<children>
+						<node>
 							<text>
 								<line>
-								xxxxxxxxx
+								你好xxxxxxxxx
 								</line>								
 								<line>
 								xxxxxxxxx
 								</line>
 							</text>
-							<children type="option">
-								<option>
-									<text>xxxxxxxxx</text>
-									<children type="dialog">
-										<dialog>
+							<children>
+								<node>
+									<option>a</option>
+									<text><line>xxxxxxxxx</line></text>
+									<children>
+										<node>
+											<text>
+												<line>
+												xxxxxxxxx
+												</line>								
+												<line>
+												xxxxxxxxx
+												</line>
+											</text>
+										</node>
+									</children>
+								</node>
+								<node>
+									<option>b</option>
+									<text><line>xxxxxxxxx</line></text>
+									<children>
+										<node>
 											<condition>true</condition>
 											<text>
 												<line>
@@ -42,29 +57,13 @@
 												xxxxxxxxx
 												</line>
 											</text>
-										</dialog>
+										</node>
 									</children>
-								</option>
-								<option>
-									<text>bbbbbbbb</text>
-									<children type="dialog">
-										<dialog>
-											<condition>true</condition>
-											<text>
-												<line>
-												xxxxxxxxx
-												</line>								
-												<line>
-												xxxxxxxxx
-												</line>
-											</text>
-										</dialog>
-									</children>
-								</option>
+								</node>
 							</children>							
-						</dialog>
+						</node>
 					</children>
-			   </root>
+			   </node>
 			</dialogtree>
 			<walkingmode type="halt"></walkingmode>
 		</object>

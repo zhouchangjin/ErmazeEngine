@@ -3,7 +3,6 @@
 CAdvDialog::CAdvDialog()
 {
     //ctor
-
 }
 
 CAdvDialog::~CAdvDialog()

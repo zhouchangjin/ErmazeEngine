@@ -5,7 +5,7 @@
 1605575700 c:\work\cplusworkspace\ermazeengine\include\cgamecontext.h
 	"common_struct.h"
 
-1605948942 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
+1606100543 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
 	<vector>
 	<string>
 	<queue>
@@ -427,7 +427,7 @@
 	<Render_Util.h>
 	<CGameContext.h>
 
-1605888497 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
+1606018219 c:\work\cplusworkspace\ermazeengine\include\corthotilestate.h
 	<CGameState.h>
 	<CSceneData.h>
 	<CSdlGameContext.h>
@@ -438,6 +438,7 @@
 	<CInputEvent.h>
 	<CPCSpriteGameObject.h>
 	<CGameUISystem.h>
+	<SceneFileLoader.h>
 
 1605575806 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
 	"CGameEngine.h"
@@ -445,7 +446,7 @@
 1605575818 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
 	"CMenuState.h"
 
-1605950049 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
+1606019251 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
 	"COrthoTileState.h"
 
 1605575848 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
@@ -490,7 +491,7 @@
 	"SDL_Utilities.h"
 	"common_struct.h"
 
-1605885447 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
+1606022984 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
 	"Render_Util.h"
 	"CSdlGameContext.h"
 
@@ -555,11 +556,11 @@
 	<new>
 	<stdint.h>
 
-1605417931 c:\work\cplusworkspace\ermazeengine\include\str_utilities.h
+1606014772 c:\work\cplusworkspace\ermazeengine\include\str_utilities.h
 	<string>
 	<vector>
 
-1605422028 source:c:\work\cplusworkspace\ermazeengine\src\str_utilities.cpp
+1606014820 source:c:\work\cplusworkspace\ermazeengine\src\str_utilities.cpp
 	"Str_Utilities.h"
 
 1602232433 source:c:\work\cplusworkspace\ermazeengine\src\cscenelayers.cpp
@@ -581,7 +582,7 @@
 	<CSprite.h>
 	<CCamera2D.h>
 
-1605944337 source:c:\work\cplusworkspace\ermazeengine\src\c2dgamescene.cpp
+1606100116 source:c:\work\cplusworkspace\ermazeengine\src\c2dgamescene.cpp
 	"C2DGameScene.h"
 	<iostream>
 
@@ -632,20 +633,20 @@
 1605949027 source:c:\work\cplusworkspace\ermazeengine\src\cnpcgameobject.cpp
 	"CNPCGameObject.h"
 
-1605947769 c:\work\cplusworkspace\ermazeengine\include\cnpcgameobject.h
+1605971106 c:\work\cplusworkspace\ermazeengine\include\cnpcgameobject.h
 	<CSpriteGameObject.h>
 	<IDefaultActionEventProcess.h>
 
 1605436579 source:c:\work\cplusworkspace\ermazeengine\src\cgamewindow.cpp
 	"CGameWindow.h"
 
-1605436525 c:\work\cplusworkspace\ermazeengine\include\cgamewindow.h
+1605975573 c:\work\cplusworkspace\ermazeengine\include\cgamewindow.h
 	<common_struct.h>
 
 1605448431 source:c:\work\cplusworkspace\ermazeengine\src\cgamedialog.cpp
 	"CGameDialog.h"
 
-1605448557 c:\work\cplusworkspace\ermazeengine\include\cgamedialog.h
+1606018822 c:\work\cplusworkspace\ermazeengine\include\cgamedialog.h
 	<CGameWindow.h>
 
 1543567862 c:\work\librarycb\mingw\sdl2_gfx-1.0.4\include\sdl2\sdl2_gfxprimitives.h
@@ -698,23 +699,23 @@
 	<CSpriteGameObject.h>
 	<IDefaultEventProcess.h>
 
-1605763821 source:c:\work\cplusworkspace\ermazeengine\src\cadvdialog.cpp
+1606022594 source:c:\work\cplusworkspace\ermazeengine\src\cadvdialog.cpp
 	"CAdvDialog.h"
 
-1605762515 c:\work\cplusworkspace\ermazeengine\include\cadvdialog.h
+1606022896 c:\work\cplusworkspace\ermazeengine\include\cadvdialog.h
 	<CGameDialog.h>
 	<CChoiceDialog.h>
 
-1605763460 source:c:\work\cplusworkspace\ermazeengine\src\cchoicedialog.cpp
+1606099226 source:c:\work\cplusworkspace\ermazeengine\src\cchoicedialog.cpp
 	"CChoiceDialog.h"
 
-1605763396 c:\work\cplusworkspace\ermazeengine\include\cchoicedialog.h
+1606022857 c:\work\cplusworkspace\ermazeengine\include\cchoicedialog.h
 	<CGameWindow.h>
 
-1605884994 source:c:\work\cplusworkspace\ermazeengine\src\cgameuisystem.cpp
+1606100951 source:c:\work\cplusworkspace\ermazeengine\src\cgameuisystem.cpp
 	"CGameUISystem.h"
 
-1605885226 c:\work\cplusworkspace\ermazeengine\include\cgameuisystem.h
+1606100750 c:\work\cplusworkspace\ermazeengine\include\cgameuisystem.h
 	<CAdvDialog.h>
 	<CSdlGameContext.h>
 	<IDefaultEventProcess.h>
@@ -730,4 +731,12 @@
 
 1605947606 source:c:\work\cplusworkspace\ermazeengine\src\idefaultactioneventprocess.cpp
 	"IDefaultActionEventProcess.h"
+
+1606015352 source:c:\work\cplusworkspace\ermazeengine\src\scenefileloader.cpp
+	"SceneFileLoader.h"
+
+1606015192 c:\work\cplusworkspace\ermazeengine\include\scenefileloader.h
+	<common_struct.h>
+	<XML_Utilities.h>
+	<Str_Utilities.h>
 

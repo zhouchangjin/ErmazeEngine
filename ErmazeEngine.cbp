@@ -59,6 +59,7 @@
 			<Add after="XCOPY $(#sdl2)\bin\*.dll $(TARGET_OUTPUT_DIR) /D /Y" />
 		</ExtraCommands>
 		<Unit filename="include/C2DGameScene.h" />
+		<Unit filename="include/CActionEvent.h" />
 		<Unit filename="include/CAdvDialog.h" />
 		<Unit filename="include/CCamera2D.h" />
 		<Unit filename="include/CChoiceDialog.h" />
@@ -73,6 +74,7 @@
 		<Unit filename="include/CGameScene.h" />
 		<Unit filename="include/CGameSettings.h" />
 		<Unit filename="include/CGameState.h" />
+		<Unit filename="include/CGameUISystem.h" />
 		<Unit filename="include/CGameWindow.h" />
 		<Unit filename="include/CGuideDog.h" />
 		<Unit filename="include/CHandler.h" />
@@ -91,9 +93,11 @@
 		<Unit filename="include/CSpriteSheet.h" />
 		<Unit filename="include/CTileLayer.h" />
 		<Unit filename="include/CTransferArea.h" />
+		<Unit filename="include/IDefaultActionEventProcess.h" />
 		<Unit filename="include/IDefaultEventProcess.h" />
 		<Unit filename="include/Render_Util.h" />
 		<Unit filename="include/SDL_Utilities.h" />
+		<Unit filename="include/SceneFileLoader.h" />
 		<Unit filename="include/Str_Utilities.h" />
 		<Unit filename="include/XML_Utilities.h" />
 		<Unit filename="include/common_struct.h" />
@@ -101,6 +105,7 @@
 		<Unit filename="libs/pugixml/pugixml.cpp" />
 		<Unit filename="libs/pugixml/pugixml.hpp" />
 		<Unit filename="src/C2DGameScene.cpp" />
+		<Unit filename="src/CActionEvent.cpp" />
 		<Unit filename="src/CAdvDialog.cpp" />
 		<Unit filename="src/CCamera2D.cpp" />
 		<Unit filename="src/CChoiceDialog.cpp" />
@@ -114,6 +119,7 @@
 		<Unit filename="src/CGameScene.cpp" />
 		<Unit filename="src/CGameSettings.cpp" />
 		<Unit filename="src/CGameState.cpp" />
+		<Unit filename="src/CGameUISystem.cpp" />
 		<Unit filename="src/CGameWindow.cpp" />
 		<Unit filename="src/CHandler.cpp" />
 		<Unit filename="src/CInputEvent.cpp" />
@@ -131,10 +137,12 @@
 		<Unit filename="src/CSpriteSheet.cpp" />
 		<Unit filename="src/CTileLayer.cpp" />
 		<Unit filename="src/CTransferArea.cpp" />
+		<Unit filename="src/IDefaultActionEventProcess.cpp" />
 		<Unit filename="src/IDefaultEventProcess.cpp" />
 		<Unit filename="src/Main.cpp" />
 		<Unit filename="src/Render_Util.cpp" />
 		<Unit filename="src/SDL_Utilities.cpp" />
+		<Unit filename="src/SceneFileLoader.cpp" />
 		<Unit filename="src/Str_Utilities.cpp" />
 		<Unit filename="src/XML_Utilities.cpp" />
 		<Extensions />

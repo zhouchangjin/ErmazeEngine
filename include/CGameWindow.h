@@ -25,6 +25,7 @@ class CGameWindow
         ge_common_struct::ge_color GetFontColor()const{return m_font_color;};
         ge_common_struct::ge_rect GetWindowRect()const;
         ge_common_struct::ge_rect GetTitleRect()const;
+        bool IsShow()const{return m_show;};
 
 
         void SetX(int x){m_window_rect.x=x;};
@@ -39,7 +40,8 @@ class CGameWindow
         void SetBackGroundColor(int red,int green,int blue,int alpha);
         void SetBorderColor(int red,int green,int blue);
         void SetFontColor(int red,int green,int blue);
-
+        void Show(){m_show=true;};
+        void Hide(){m_show=false;};
     protected:
 
         std::string m_title;
@@ -49,6 +51,7 @@ class CGameWindow
         ge_common_struct::ge_adv_color m_bg_color;
         ge_common_struct::ge_color m_bd_color;
         ge_common_struct::ge_color m_font_color;
+        bool m_show=false;
     private:
 };
 

@@ -6,6 +6,7 @@ COrthoTileState::COrthoTileState()
 
 COrthoTileState::COrthoTileState(CGameContext* context):CGameState(context)
 {
+    m_ui_system.SetContext(context);
 }
 
 COrthoTileState::~COrthoTileState()
@@ -15,6 +16,7 @@ COrthoTileState::~COrthoTileState()
 void COrthoTileState::Init()
 {
     this->m_state_value=0;
+    m_event_manager.EventSubscribe(&m_ui_system,CGameUISystem::ProcessInput);
 
 }
 
@@ -81,6 +83,7 @@ void COrthoTileState::Draw()
 
         }
     }
+    m_ui_system.Draw();
     sdlutil2::RenderPresent(m_context);
 }
 
@@ -95,8 +98,10 @@ void COrthoTileState::HandleEvent(ge_common_struct::input_event event)
     {
         return;
     }
+
     if(event!=ge_common_struct::input_event::NO_EVENT)
     {
+        LoadSubState();
         CInputEvent inputevent;
         inputevent.SetEventType(event);
         inputevent.SetCurrentSubState(m_sub_state);
@@ -165,15 +170,22 @@ void COrthoTileState::Update()
 
             }
             player->MoveUpdate();
-        }else if(player->IsActive()){
+        }
+        else if(player->IsActive())
+        {
             player->ComsumeAction();
             CNPCGameObject* tnpc=CheckInteract(player);
-            if(tnpc!=nullptr){
+            if(tnpc!=nullptr)
+            {
                 CActionEvent talkevent;
                 talkevent.SetAction(CActionEvent::action_type::TALK
-                                ,player->GetCurrentOrientation());
+                                    ,player->GetCurrentOrientation());
                 talkevent.SetTarget((void*)tnpc);
                 m_event_manager.EventPublish(talkevent);
+                if(tnpc->GetDialogTree()){
+                   m_ui_system.SetDialogTree(tnpc->GetDialogTree());
+                   m_ui_system.ShowDialog();
+                }
 
             }
         }
@@ -822,6 +834,7 @@ void COrthoTileState::LoadScene()
                                 ,layer,direction);
             m_event_manager.EventSubscribe(npc,CNPCGameObject::OnAction);
             xmlutils::MyXMLNode w_node=obj_node.Child("walkingmode");
+            xmlutils::MyXMLNode dialog_node=obj_node.Child("dialogtree");
             if(w_node)
             {
                 std::string mode=w_node.StrAttribute("type");
@@ -837,6 +850,14 @@ void COrthoTileState::LoadScene()
                 {
                     npc->SetWalkingMode(ge_common_struct::npc_move_type::NPC_STILL);
                 }
+            }
+
+            if(dialog_node)
+            {
+                xmlutils::MyXMLNode tree_root=dialog_node.Child("node");
+                ge_common_struct::dialog_tree_node* tree_node=ge_fileutil
+                        ::parse_dialog_tree(tree_root);
+                npc->SetDialogTree(tree_node);
             }
 
         }
@@ -877,23 +898,43 @@ bool COrthoTileState::CheckCollisionObject(CSpriteGameObject* object)
     return collision;
 }
 
-CNPCGameObject* COrthoTileState::CheckInteract(CSpriteGameObject* object){
+void COrthoTileState::LoadSubState(){
+    if(m_ui_system.EventLock()){
+        m_sub_state=substate::DIALOG_STATE;
+    }else{
+        m_sub_state=substate::TILE_STATE;
+    }
+}
+
+CNPCGameObject* COrthoTileState::CheckInteract(CSpriteGameObject* object)
+{
     CNPCGameObject* npc_capture=nullptr;
     std::string action_name=object->GetCurrentAction();
-    int ray_x=0;int ray_y=0;
-    if(action_name.compare("upward")==0){
+    int ray_x=0;
+    int ray_y=0;
+    if(action_name.compare("upward")==0)
+    {
         ray_y=-1;
-    }else if(action_name.compare("downward")==0){
+    }
+    else if(action_name.compare("downward")==0)
+    {
         ray_y=1;
-    }else if(action_name.compare("leftward")==0){
+    }
+    else if(action_name.compare("leftward")==0)
+    {
         ray_x=-1;
-    }else if(action_name.compare("rightward")==0){
+    }
+    else if(action_name.compare("rightward")==0)
+    {
         ray_x=1;
-    }else{
+    }
+    else
+    {
         return nullptr;
     }
     int npccnt=m_game_scene.GetNpcCnt();
-    for(int i=0;i<npccnt;i++){
+    for(int i=0; i<npccnt; i++)
+    {
         CNPCGameObject* npc=m_game_scene.GetNpc(i);
         int x=npc->GetX();
         int y=npc->GetY();
@@ -901,7 +942,8 @@ CNPCGameObject* COrthoTileState::CheckInteract(CSpriteGameObject* object){
         int px=object->GetX();
         int py=object->GetY();
         ge_common_struct::ge_point coor=m_game_scene.GetGridCoor(px,py);
-        if(coor.x+ray_x==coor_npc.x && coor.y+ray_y==coor_npc.y){
+        if(coor.x+ray_x==coor_npc.x && coor.y+ray_y==coor_npc.y)
+        {
             GE_LOG("talking to npc\n");
             npc_capture=npc;
             break;
