@@ -18,6 +18,9 @@ CGameEngine::~CGameEngine()
 
 void CGameEngine::Init(){
 
+    CSimpleGameDB* db=new CSimpleGameDB();
+    CServiceLocator::Register(CServiceLocator::DATABASE,db);
+
     m_game_context=new CSdlGameContext();
     LoadSetting();
     m_game_context->Init(m_game_setting.GetWindowWidth(),m_game_setting.GetWindowHeight());

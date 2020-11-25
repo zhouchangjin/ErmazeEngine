@@ -13,6 +13,13 @@ CGameUISystem::~CGameUISystem()
     //dtor
 }
 
+void CGameUISystem::LoadDatabase(){
+
+    m_database=CServiceLocator::
+                            GetService<CGameDatabase>
+                            (CServiceLocator::ServiceID::DATABASE);
+}
+
 bool CGameUISystem::EventLock()
 {
     if(m_dialog.IsShow())
@@ -54,11 +61,86 @@ void CGameUISystem::Draw()
     }
 }
 
-void CGameUISystem::SelChoice(){
+void CGameUISystem::SelChoice()
+{
     size_t sel_id=m_dialog.GetChoiceDialog()->GetSelection();
     m_cursor_node=m_cursor_node->children[sel_id];
     m_line_no=0;
     LoadNextLine();
+}
+
+bool CGameUISystem::ConditionCheck(ge_common_struct::exp_node* exp)
+{
+    if(exp->left==nullptr){
+       //is roof
+       int db_value=-1;
+       std::string attribute_name=exp->cond.attribute_name;
+       size_t current=attribute_name.find(".");
+       if(current!=std::string::npos){
+         std::string obj_name=attribute_name.substr(0,current);
+         std::string prop_name=attribute_name.substr(current+1);
+         int obj_id=m_database->GetObjectId(obj_name);
+         db_value=m_database->GetObjectData(obj_id,prop_name);
+       }else{
+         db_value=m_database->GetIntData(exp->cond.attribute_name);
+       }
+       ge_common_struct::condition_type type=exp->cond.type;
+       if(type==ge_common_struct::condition_type::EQUAL){
+            return db_value==exp->cond.attribute_value;
+       }else if(type==ge_common_struct::condition_type::GREATER){
+            return db_value>exp->cond.attribute_value;
+       }else if(type==ge_common_struct::condition_type::LESS){
+            return db_value<exp->cond.attribute_value;
+       }else if(type==ge_common_struct::condition_type::EQUAL_GREATER){
+            return db_value>=exp->cond.attribute_value;
+       }else if(type==ge_common_struct::condition_type::EQUAL_LESS){
+            return db_value<=exp->cond.attribute_value;
+       }else if(type==ge_common_struct::condition_type::UNEQUAL){
+            return db_value!=exp->cond.attribute_value;
+       }else{
+            //TODO ERROR
+            return true;
+       }
+    }else{
+        ge_common_struct::exp_node_type node_type=exp->type;
+        if(node_type==ge_common_struct::exp_node_type::AND){
+            if(exp->left && exp->right){
+               return (ConditionCheck(exp->left) && ConditionCheck(exp->right));
+            }else{
+                //TODO error
+                return true;
+            }
+
+        }else if(node_type==ge_common_struct::exp_node_type::OR){
+
+            if(exp->left && exp->right){
+               return (ConditionCheck(exp->left) || ConditionCheck(exp->right));
+            }else{
+                //TODO error
+                return true;
+            }
+
+        }else{
+            //TODO error
+            return true;
+        }
+    }
+}
+
+bool CGameUISystem::ConditionCheck(ge_common_struct::dialog_tree_node* node)
+{
+    if(!m_database){
+        LoadDatabase();
+    }
+    ge_common_struct::exp_node exp=node->expression;
+    if(exp.type==ge_common_struct::exp_node_type::NO_CONDITION)
+    {
+        return true;
+    }
+    else
+    {
+        return ConditionCheck(&exp);
+    }
 }
 
 void CGameUISystem::LoadNextLine()
@@ -79,22 +161,46 @@ void CGameUISystem::LoadNextLine()
             //hide dialog;
             m_dialog.Hide();
         }
-        else if(childcnt==1)
+        else if(childcnt>0)
         {
-            m_cursor_node=m_cursor_node->children[0];
-            m_line_no=0;
-            LoadNextLine();
-        }
-        else if(childcnt>1)
-        {
-            m_dialog.ShowChoice();
-            ge_common_struct::StringList choices;
-            for(size_t i=0; i<m_cursor_node->children.size(); i++)
+            if(m_cursor_node->has_options)
             {
-                std::string  opname=m_cursor_node->children[i]->option_name;
-                choices.push_back(opname);
+
+                m_dialog.ShowChoice();
+                ge_common_struct::StringList choices;
+                for(size_t i=0; i<m_cursor_node->children.size(); i++)
+                {
+                    std::string  opname=m_cursor_node->children[i]->option_name;
+                    choices.push_back(opname);
+                }
+                m_dialog.initChoice(choices);
+
             }
-            m_dialog.initChoice(choices);
+            else
+            {
+                bool found=false;
+                for(size_t i=0; i<m_cursor_node->children.size(); i++)
+                {
+                    ge_common_struct::dialog_tree_node* child_node=
+                        m_cursor_node->children[i];
+                    if(ConditionCheck(child_node))
+                    {
+                        m_cursor_node=child_node;
+                        m_line_no=0;
+                        found=true;
+                        break;
+                    }
+                }
+                if(found)
+                {
+                    LoadNextLine();
+                }
+                else
+                {
+                    m_dialog.Hide();
+                }
+
+            }
         }
     }
 }

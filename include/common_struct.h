@@ -57,7 +57,9 @@ enum condition_type{
     EQUAL,
     UNEQUAL,
     GREATER,
-    LESS
+    EQUAL_GREATER,
+    LESS,
+    EQUAL_LESS
 };
 
 enum exp_node_type{
@@ -195,11 +197,22 @@ struct exp_node{
     condition cond;
     exp_node* left=nullptr;//必须用指针，不用指针就是无限死循环。
     exp_node* right=nullptr;//必须用指针
+    ~exp_node(){
+        if(left){
+            delete left;
+            left=nullptr;
+        }
+        if(right){
+            delete right;
+            right=nullptr;
+        }
+    }
 };
 
 struct dialog_tree_node{
     int id;
     bool root_node;
+    bool has_options;
     std::string option_name;
     StringList node_text;
     exp_node expression;

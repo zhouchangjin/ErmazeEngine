@@ -67,6 +67,7 @@
 		<Unit filename="include/CGame.h" />
 		<Unit filename="include/CGameContext.h" />
 		<Unit filename="include/CGameData.h" />
+		<Unit filename="include/CGameDatabase.h" />
 		<Unit filename="include/CGameDialog.h" />
 		<Unit filename="include/CGameEngine.h" />
 		<Unit filename="include/CGameEvent.h" />
@@ -112,6 +113,7 @@
 		<Unit filename="src/CGame.cpp" />
 		<Unit filename="src/CGameContext.cpp" />
 		<Unit filename="src/CGameData.cpp" />
+		<Unit filename="src/CGameDatabase.cpp" />
 		<Unit filename="src/CGameDialog.cpp" />
 		<Unit filename="src/CGameEngine.cpp" />
 		<Unit filename="src/CGameEvent.cpp" />

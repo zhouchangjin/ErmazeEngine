@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 
+#include "CServiceLocator.h"
 #include "CGameSettings.h"
 #include "CGameState.h"
 #include "CGameContext.h"
@@ -12,6 +13,7 @@
 #include "COrthoTileState.h"
 #include "CSdlGameContext.h"
 #include "CRPGGameData.h"
+#include "CSimpleGameDB.h"
 
 class CGameEngine
 {
