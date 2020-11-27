@@ -20,14 +20,16 @@ class CGameUISystem :public IDefaultEventProcess
         void ShowDialog(){m_dialog.Show();};
         bool EventLock();
         void LoadDatabase();
+        void SetDialogStyle(ge_common_struct::dialog_style_node style);
     protected:
         CGameDatabase* m_database=nullptr;
         CGameContext* m_context;
         CAdvDialog  m_dialog;
         ge_common_struct::dialog_tree_node* m_dialog_tree=nullptr;
         ge_common_struct::dialog_tree_node* m_cursor_node=nullptr;
+        ge_common_struct::dialog_style_node m_dialog_style;
         size_t m_line_no;
-        void InitDialog();
+        void UpdateDialogStyle();
         void LoadNextLine();
         void SelChoice();
         bool ConditionCheck(ge_common_struct::dialog_tree_node* node);

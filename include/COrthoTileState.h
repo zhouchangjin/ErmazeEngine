@@ -13,7 +13,7 @@
 #include <CInputEvent.h>
 #include <CPCSpriteGameObject.h>
 #include <CGameUISystem.h>
-#include <SceneFileLoader.h>
+#include <GameFileLoader.h>
 class COrthoTileState : public CGameState
 {
     public:
@@ -56,6 +56,7 @@ class COrthoTileState : public CGameState
         std::vector<CPCSpriteGameObject*> m_player_two;
 
         //private function
+        void LoadUI();
         void LoadScene();
         void LoadPlayer();
         void LoadSubState();

@@ -1,0 +1,15 @@
+<ui>
+<window id="guide_menu" x="0" y="0" width="300" height="200" border_width="5">
+<background_color r="0" g="0" b="0" a="80"/>
+<border_color r="255" g="255" b="255" round_radius="0"/>
+<font_color r="255" g="255" b="255"/>
+<gridlayout row="3" col="2">
+<button action="package_window">包裹</button>
+<button action="equip_menu">装备</button>
+<button action="strong_window">强度</button>
+<button action="border_window">乘降</button>
+<button action="skill_window">特技</button>
+<button action="guide_window">向导</button>
+</gridlayout>
+</window>
+</ui>

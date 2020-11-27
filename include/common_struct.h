@@ -245,6 +245,24 @@ struct dialog_tree_node{
     }
 };
 
+struct window_style{
+    bool is_percentage=false;
+    bool is_round_box=false;
+    ge_rect client_rect;
+    ge_adv_color background_color;
+    ge_color border_color;
+    ge_color font_color;
+    int border_width;
+};
+
+struct dialog_style_node{
+    window_style main_window;
+    window_style choice_window;
+    window_style title_window;
+};
+
+
+
 
 }
 

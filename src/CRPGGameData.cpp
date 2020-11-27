@@ -60,7 +60,8 @@ CSceneData CRPGGameData::GetCurrentScene()
     return m_scene_list[m_current_scene];
 }
 
-void CRPGGameData::SetCurrentScene(std::string scene){
+void CRPGGameData::SetCurrentScene(std::string scene)
+{
     m_current_scene=scene;
 }
 
@@ -76,14 +77,18 @@ CSpriteSheet* CRPGGameData::GetSpriteSheet(std::string id)
     return m_sprite_sheets[id];
 }
 
-void CRPGGameData::SetStartPoint(ge_common_struct::start_point2d point){
+void CRPGGameData::SetStartPoint(ge_common_struct::start_point2d point)
+{
     m_startpoint=point;
 }
 
 void CRPGGameData::ParseGameDataByXMLDoc(xmlutils::MyXMLDoc* document)
 {
 
-
+    xmlutils::MyXMLNode dialog_node=document->GetNode("/ermaze/game/dialog");
+    ge_common_struct::dialog_style_node style=ge_fileutil
+            ::parse_dialog_style(dialog_node);
+    m_dialog_style=style;
     xmlutils::MyXMLNode start_node=document->GetNode("/ermaze/game/startpoint");
     ge_common_struct::start_point2d start_point;
     m_current_scene=start_node.StrAttribute("scene");
@@ -110,7 +115,7 @@ void CRPGGameData::ParseGameDataByXMLDoc(xmlutils::MyXMLDoc* document)
     }
 
     xmlutils::MyXMLNode character_node=document->
-                                GetNode("/ermaze/game/characters/character");
+                                       GetNode("/ermaze/game/characters/character");
 
     for(; character_node; character_node=character_node.NextSlibing("character"))
     {

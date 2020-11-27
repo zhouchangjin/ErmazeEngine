@@ -4,10 +4,11 @@
 #include <string>
 #include <map>
 
-#include <CGameData.h>
-#include <CSceneData.h>
+#include <GameFileLoader.h>
 #include <XML_Utilities.h>
 #include <Str_Utilities.h>
+#include <CGameData.h>
+#include <CSceneData.h>
 #include <CSprite.h>
 
 class CRPGGameData : public CGameData
@@ -37,6 +38,7 @@ class CRPGGameData : public CGameData
         int GetStartLayer(){return m_startpoint.layer;};
         std::string GetStartScene(){return m_startpoint.start_scene;};
         std::string GetStartDirection(){return m_startpoint.direction;};
+        ge_common_struct::dialog_style_node GetDialogStyle(){return m_dialog_style;};
     protected:
 
     private:
@@ -46,7 +48,7 @@ class CRPGGameData : public CGameData
         std::map<std::string,CSprite*> m_sprites;
         std::vector<std::string> m_player_one;
         ge_common_struct::start_point2d m_startpoint;
-
+        ge_common_struct::dialog_style_node m_dialog_style;
 
 };
 

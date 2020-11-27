@@ -213,8 +213,13 @@ void COrthoTileState::PrepareData()
 {
     LoadPlayer();
     LoadScene();
+    LoadUI();
 }
 
+void COrthoTileState::LoadUI(){
+    CRPGGameData* gamedata=(CRPGGameData*)m_game_data;
+    m_ui_system.SetDialogStyle(gamedata->GetDialogStyle());
+}
 
 void COrthoTileState::LoadPlayer()
 {

@@ -39,6 +39,7 @@ class CGameWindow
         void SetTitle(std::string title){m_title=title;};
         void SetBackGroundColor(int red,int green,int blue,int alpha);
         void SetBorderColor(int red,int green,int blue);
+        void SetBorderWidth(int width){m_border_width=width;};
         void SetFontColor(int red,int green,int blue);
         void Show(){m_show=true;};
         void Hide(){m_show=false;};

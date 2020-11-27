@@ -13,6 +13,23 @@ CGameUISystem::~CGameUISystem()
     //dtor
 }
 
+void CGameUISystem::SetDialogStyle(ge_common_struct::dialog_style_node style){
+    m_dialog_style=style;
+    ge_common_struct::ge_adv_color c=m_dialog_style.main_window.background_color;
+    ge_common_struct::ge_color fc=m_dialog_style.main_window.font_color;
+    ge_common_struct::ge_color bc=m_dialog_style.main_window.border_color;
+    int bw=style.main_window.border_width;
+    //m_dialog.SetBackGroundColor(0,0,0,200);
+    //m_dialog.SetFontColor(255,255,255);
+    m_dialog.SetBackGroundColor(c.r,c.g,c.b,c.a);
+    m_dialog.SetFontColor(fc.r,fc.g,fc.b);
+    m_dialog.SetBorderColor(bc.r,bc.g,bc.b);
+    m_dialog.SetBorderWidth(bw);
+    m_dialog.SetDisplaySpeed(3);
+    m_dialog.ShowIndicator();//永远显示提示指针比较方便
+
+}
+
 void CGameUISystem::LoadDatabase(){
 
     m_database=CServiceLocator::
@@ -33,28 +50,37 @@ bool CGameUISystem::EventLock()
 }
 
 
-void CGameUISystem::InitDialog()
+void CGameUISystem::UpdateDialogStyle()
 {
+    ge_common_struct::ge_rect r=m_dialog_style.main_window.client_rect;
     ge_common_struct::ge_rect fullWindow=sdlutil2::LoadWindowRect(m_context);
-    m_dialog.SetX(fullWindow.x);
-    m_dialog.SetY(fullWindow.h*2/3);
-    m_dialog.SetWidth(fullWindow.w);
-    m_dialog.SetHeight(fullWindow.h/3);
-    m_dialog.SetBackGroundColor(0,0,0,200);
-    m_dialog.SetTitleHeight(50);
-    m_dialog.SetTitleWidth(200);
-    m_dialog.SetTitleX(fullWindow.x);
-    m_dialog.SetTitleY(m_dialog.GetY()-m_dialog.GetTitleHeight()
-                       +m_dialog.GetBorderWidth());
-    m_dialog.SetFontColor(255,255,255);
+    int dialog_x=0,dialog_y=0,dialog_w=0,dialog_h=0;
+    if(m_dialog_style.main_window.is_percentage){
+        dialog_x=fullWindow.x+(fullWindow.w*r.x/100);
+        dialog_y=fullWindow.y+(fullWindow.h*r.y/100);
+        dialog_w=fullWindow.w*r.w/100;
+        dialog_h=fullWindow.h*r.h/100;
+    }else{
+        dialog_x=fullWindow.x+r.x;
+        dialog_y=fullWindow.y+r.y;
+        dialog_w=r.w;
+        dialog_h=r.h;
+    }
+    m_dialog.SetX(dialog_x);
+    m_dialog.SetY(dialog_y);
+    m_dialog.SetWidth(dialog_w);
+    m_dialog.SetHeight(dialog_h);
+    //m_dialog.SetTitleHeight(50);
+    //m_dialog.SetTitleWidth(200);
+    //m_dialog.SetTitleX(fullWindow.x);
+    //m_dialog.SetTitleY(m_dialog.GetY()-m_dialog.GetTitleHeight()
+    //                   +m_dialog.GetBorderWidth());
     m_dialog.InitResponseByDialog();
-    m_dialog.SetDisplaySpeed(3);
-    m_dialog.ShowIndicator();//永远显示提示指针比较方便
 }
 
 void CGameUISystem::Draw()
 {
-    InitDialog();
+    UpdateDialogStyle();
     if(m_dialog.IsShow())
     {
         sdlutil2::DrawAdvDialog(m_context,m_dialog);

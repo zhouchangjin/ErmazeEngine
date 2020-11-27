@@ -16,7 +16,7 @@ class CChoiceDialog : public CGameWindow
         int GetLineHeight()const{return m_lineheight;};
         size_t GetSelection()const{return m_current_selection;};
 
-        void ClearChoice(){m_choices.clear();};
+        void ClearChoice(){m_current_selection=0;m_choices.clear();};
         int GetChoiceCnt(){return m_choices.size();};
         std::string GetChoice(int index){return m_choices[index];};
         void AddChoice(std::string choice){m_choices.push_back(choice);};

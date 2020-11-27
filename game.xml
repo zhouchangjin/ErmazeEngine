@@ -13,10 +13,43 @@
 		<menuitem>退出游戏</menuitem>
      </menu>
     </menustate>
+	
 	<tilemapstate type="orth">
-  
+		<hud>
+		</hud>
+		<windows>
+			<window id="guide_menu" key="ENTER">
+			</window>	
+		</windows>
 	</tilemapstate>
+	
+	<canvasstate>
+	
+	</canvasstate>
   </gamestate>
+  <dialog>
+	<window type="main">
+		<rect x="0" y="66" w="100" h="34" num_type="percentage">
+			<background color="(0,0,0,200)" />			
+			<border type="box" width="5" color="(255,255,255)"/>
+			<font color="(255,255,255)"/>
+		</rect>
+	</window>
+	<window type="choice">
+		<rect>
+			<background color="(0,0,0,0)" />			
+			<border type="box" width="5" color="(0,0,0)"/>
+			<font color="(0,0,0)"/>
+		</rect>
+	</window>
+	<window type="title">
+		<rect>
+			<background color="(0,0,0,0)" />			
+			<border type="box" width="5" color="(0,0,0)"/>
+			<font color="(0,0,0)"/>
+		</rect>
+	</window>	
+  </dialog>
   <spritesheets>
 	 <spritesheet  id="1" path="sprites.png" width="16" height="16" col="8" row="10" />
   </spritesheets>
