@@ -169,11 +169,12 @@ ge_common_struct::dialog_tree_node* parse_dialog_tree(xmlutils::MyXMLNode dialog
 }
 
 
-ge_common_struct::window_style parse_window_style(xmlutils::MyXMLNode
+
+ge_common_struct::box_style parse_window_style(xmlutils::MyXMLNode
         window_style_node)
 {
     xmlutils::MyXMLNode rect_node=window_style_node.Child("rect");
-    ge_common_struct::window_style window_style;
+    ge_common_struct::box_style window_style;
     std::string num_type=rect_node.StrAttribute("num_type");
     int x=rect_node.IntAttribute("x");
     int y=rect_node.IntAttribute("y");
@@ -205,7 +206,9 @@ ge_common_struct::window_style parse_window_style(xmlutils::MyXMLNode
         std::string type=border_node.StrAttribute("type");
         std::string colorStr=border_node.StrAttribute("color");
         ge_common_struct::ge_color color=parse_color(colorStr);
-        window_style.border_color=color;
+        window_style.border_color.r=color.r;
+        window_style.border_color.g=color.g;
+        window_style.border_color.b=color.b;
     }
     if(font_node){
         std::string colorStr=font_node.StrAttribute("color");
@@ -224,7 +227,7 @@ ge_common_struct::dialog_style_node parse_dialog_style(xmlutils::MyXMLNode
     for(; window; window=window.NextSlibing("window"))
     {
         std::string type=window.StrAttribute("type");
-        ge_common_struct::window_style window_style=parse_window_style(window);
+        ge_common_struct::box_style window_style=parse_window_style(window);
         if(type.compare("main")==0){
             style_node.main_window=window_style;
         }else if(type.compare("choice")==0){

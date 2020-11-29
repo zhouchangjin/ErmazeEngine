@@ -290,6 +290,40 @@ void DrawAdvDialog(CGameContext* p_context,CAdvDialog& dialog)
     }
 }
 
+void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node node){
+
+    ge_common_struct::box_style style=node.style;
+    if(!style.visibility){
+        return;
+    }
+    ge_common_struct::ge_adv_color border_color=style.border_color;
+    ge_common_struct::ge_adv_color bg_color=style.background_color;
+    size_t child_cnt=node.children.size();
+    if(style.is_round_box){
+       //圆角矩形
+
+    }else{
+        //正方形
+        //borer
+        FillRect(p_context,style.client_rect,border_color.r
+                 ,border_color.g,border_color.b,border_color.a);
+        ge_common_struct::ge_rect rect;
+        rect.x=style.client_rect.x+style.border_width;
+        rect.y=style.client_rect.y+style.border_width;
+        rect.w=style.client_rect.w-2*style.border_width;
+        rect.h=style.client_rect.h-2*style.border_width;
+        FillRect(p_context,rect,bg_color.r,bg_color.g,bg_color.b,bg_color.a);
+        if(child_cnt>0){
+            std::vector<ge_common_struct::dom_node> children=node.children;
+            for(size_t i=0;i<child_cnt;i++){
+                DrawDomNode(p_context,children[i]);
+            }
+        }else{
+
+        }
+    }
+}
+
 void DrawWindow(CGameContext* p_context,CGameWindow& window)
 {
     std::string title=window.GetTitle();

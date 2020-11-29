@@ -29,6 +29,8 @@ class CGameUISystem :public IDefaultEventProcess
         ge_common_struct::dialog_tree_node* m_cursor_node=nullptr;
         ge_common_struct::dialog_style_node m_dialog_style;
         size_t m_line_no;
+
+
         void UpdateDialogStyle();
         void LoadNextLine();
         void SelChoice();

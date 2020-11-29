@@ -17,7 +17,7 @@ void CGameUISystem::SetDialogStyle(ge_common_struct::dialog_style_node style){
     m_dialog_style=style;
     ge_common_struct::ge_adv_color c=m_dialog_style.main_window.background_color;
     ge_common_struct::ge_color fc=m_dialog_style.main_window.font_color;
-    ge_common_struct::ge_color bc=m_dialog_style.main_window.border_color;
+    ge_common_struct::ge_adv_color bc=m_dialog_style.main_window.border_color;
     int bw=style.main_window.border_width;
     //m_dialog.SetBackGroundColor(0,0,0,200);
     //m_dialog.SetFontColor(255,255,255);

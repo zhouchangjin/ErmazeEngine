@@ -21,6 +21,37 @@ typedef std::vector<int> ROW_IDX;
 
 typedef std::vector<ROW_IDX> LAYER_IDX;
 
+enum text_align{
+    LEFT,
+    CENTER,
+    RIGHT
+};
+
+
+enum action_source{
+    NO,
+    FACE_UP,
+    FACE_DOWN,
+    FACE_LEFT,
+    FACE_RIGHT
+};
+
+enum action_type
+{
+    NO_MOVE,
+    MOVE_UP,
+    MOVE_DOWN,
+    MOVE_LEFT,
+    MOVE_RIGHT,
+};
+
+enum npc_move_type
+{
+    NPC_STILL,
+    NPC_HALT,
+    NPC_RANDOM
+};
+
 enum layer_type
 {
     OBJECT_LAYER,
@@ -116,29 +147,6 @@ struct ge_adv_color
     int a;
 };
 
-enum action_source{
-    NO,
-    FACE_UP,
-    FACE_DOWN,
-    FACE_LEFT,
-    FACE_RIGHT
-};
-
-enum action_type
-{
-    NO_MOVE,
-    MOVE_UP,
-    MOVE_DOWN,
-    MOVE_LEFT,
-    MOVE_RIGHT,
-};
-
-enum npc_move_type
-{
-    NPC_STILL,
-    NPC_HALT,
-    NPC_RANDOM
-};
 
 struct action_log
 {
@@ -245,20 +253,33 @@ struct dialog_tree_node{
     }
 };
 
-struct window_style{
+
+struct box_style{
     bool is_percentage=false;
     bool is_round_box=false;
+    bool visibility=true;
     ge_rect client_rect;
+    ge_rect padding_rect;
     ge_adv_color background_color;
-    ge_color border_color;
+    ge_adv_color border_color;
     ge_color font_color;
     int border_width;
+    int texture_id=-1;
+    text_align align=text_align::LEFT;
 };
 
+struct dom_node{
+    std::string node_id;
+    box_style style;
+    std::string text;
+    std::vector<dom_node> children;
+};
+
+
 struct dialog_style_node{
-    window_style main_window;
-    window_style choice_window;
-    window_style title_window;
+    box_style main_window;
+    box_style choice_window;
+    box_style title_window;
 };
 
 

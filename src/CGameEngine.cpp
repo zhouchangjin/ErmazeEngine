@@ -84,6 +84,7 @@ void CGameEngine::Delay(){
     int diff=FrameDiff();
     if(m_cap_frame && diff<min_frametime){
         unsigned int time= min_frametime-(unsigned int)diff;
+        //GE_LOG("%u==%u=%u=\n",time,min_frametime,diff);
         m_game_context->DelayTime(time);
     }
 }
