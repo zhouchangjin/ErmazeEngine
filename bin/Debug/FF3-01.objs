@@ -1,0 +1,95 @@
+<scene>
+
+<characters>
+	 <character id="p2" sheet_id="1">
+		<actions>
+			<action name="upward" ids="2,3"  />
+			<action name="downward" ids="0,1" />
+			<action name="leftward" ids="4,5" />
+			<action name="rightward" ids="6,7" />
+		</actions>
+	 </character>
+</characters>
+
+<objects>
+		<object type="character" x="528" y="400" layer="1" direction="2" refid="p2">
+			<dialogtree>
+			   <node>
+					<children>
+						<node>
+							<text>
+								<line>
+								你好玩家
+								</line>								
+								<line>
+								选一个吧
+								</line>
+							</text>
+							<children type="options">
+								<node>
+									<option>A</option>
+									<text><line>选A是吧</line></text>
+									<children>
+										<node>
+											<text>
+												<line>
+												  你选了A
+												</line>								
+												<line>
+												   好棒啊
+												</line>
+											</text>
+										</node>
+									</children>
+								</node>
+								<node>
+									<option>B</option>
+									<text><line>你选了B</line></text>
+									<children>
+										<node>
+											<condition>true</condition>
+											<text>
+												<line>
+												B也不错
+												</line>								
+												<line>
+												好棒啊
+												</line>
+											</text>
+										</node>
+									</children>
+								</node>
+							</children>							
+						</node>
+					</children>
+			   </node>
+			</dialogtree>
+			<walkingmode type="halt"></walkingmode>
+		</object>
+		<object type="character" x="464" y="480" layer="1" direction="2" refid="p2">
+			<walkingmode type="random"></walkingmode>
+			<dialogtree>
+				<node>
+					<children>
+						<node>
+							<exp>
+								<type>EQUAL</type>
+								<name>tmp</name>
+								<value>1</value>
+							</exp>
+							<text>
+								<line>满足条件a</line>
+							</text>
+						</node>
+						<node>
+							<text>
+								<line>满足条件b</line>
+							</text>
+						</node>
+					</children>
+				</node>				
+			</dialogtree>
+		</object>
+</objects>
+
+</scene>

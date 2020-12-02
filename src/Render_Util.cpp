@@ -217,7 +217,7 @@ void FillTriangle(CGameContext* p_context,
                   ge_common_struct::ge_color color)
 {
     SDL_Renderer * renderer=GetRenderer(p_context);
-    sdlutil::DrawTrangle(renderer,triangle.p0.x,triangle.p0.y,
+    sdlutil::FillTrangle(renderer,triangle.p0.x,triangle.p0.y,
                          triangle.p1.x,triangle.p1.y,
                          triangle.p2.x,triangle.p2.y,color.r,color.g,color.b);
 }
@@ -266,18 +266,19 @@ void DrawDialog(CGameContext* p_context,CGameDialog& dialog)
     dialog.TextUpdate();
 }
 
-void DrawChoiceDialog(CGameContext* p_context,CChoiceDialog& dialog){
+void DrawChoiceDialog(CGameContext* p_context,CChoiceDialog& dialog)
+{
     DrawWindow(p_context,dialog);
     ge_common_struct::ge_triangle triangle=dialog.GetIndicator();
     sdlutil2::FillTriangle(p_context,triangle,dialog.GetFontColor());
     for(int i=0; i<dialog.GetChoiceCnt(); i++)
-        {
-            int x=dialog.GetChoiceTextXStart();
-            int y=dialog.GetChoiceTextYStart()
-                  +i*dialog.GetLineHeight();
-            sdlutil2::RenderText(p_context,p_context->GetFont(),x,y,
-                                 dialog.GetChoice(i),dialog.GetFontColor());
-        }
+    {
+        int x=dialog.GetChoiceTextXStart();
+        int y=dialog.GetChoiceTextYStart()
+              +i*dialog.GetLineHeight();
+        sdlutil2::RenderText(p_context,p_context->GetFont(),x,y,
+                             dialog.GetChoice(i),dialog.GetFontColor());
+    }
 }
 
 void DrawAdvDialog(CGameContext* p_context,CAdvDialog& dialog)
@@ -290,38 +291,213 @@ void DrawAdvDialog(CGameContext* p_context,CAdvDialog& dialog)
     }
 }
 
-void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node node){
+void UpdateDomRect(ge_common_struct::dom_node& node,
+                   ge_common_struct::ge_rect parent_rect,
+                   int &offsetx,int &offsety)
+{
+    ge_common_struct::ui_layout layout;
+    if(node.parent_node==nullptr)
+    {
+        layout=ge_common_struct::ui_layout::NULL_LAYOUT;
+    }
+    else
+    {
+        layout=node.parent_node->child_layout;
+    }
+    if(layout==ge_common_struct::ui_layout::NULL_LAYOUT)
+    {
+        ge_common_struct::ge_rect rc=node.style.client_rect;
+        if(!node.style.position_is_absolute)
+        {
+            if(node.style.is_percentage)
+            {
+                node.box.x=parent_rect.x+rc.x*parent_rect.w/100;
+                node.box.y=parent_rect.y+rc.y*parent_rect.h/100;
+                node.box.w=parent_rect.w*rc.w/100;
+                node.box.h=parent_rect.h*rc.h/100;
+            }
+            else
+            {
+                node.box.x=parent_rect.x+rc.x;
+                node.box.y=parent_rect.y+rc.y;
+                node.box.w=rc.w;
+                node.box.h=rc.h;
+            }
+        }
+        else
+        {
+            if(node.style.is_percentage)
+            {
+                node.box.x=rc.x*parent_rect.w/100;
+                node.box.y=rc.y*parent_rect.h/100;
+                node.box.w=rc.w*parent_rect.w/100;
+                node.box.h=rc.h*parent_rect.h/100;
+            }
+            else
+            {
+                node.box.x=rc.x;
+                node.box.y=rc.y;
+                node.box.w=rc.w;
+                node.box.h=rc.h;
+            }
+        }
+
+    }
+    else
+    {
+        ge_common_struct::ge_rect rc=node.style.client_rect;
+        if(node.style.is_percentage)
+        {
+            node.box.w=rc.w*parent_rect.w/100;
+            node.box.h=rc.h*parent_rect.h/100;
+
+        }
+        else
+        {
+            node.box.w=rc.w;
+            node.box.h=rc.h;
+        }
+
+        node.box.x=parent_rect.x+offsetx;
+
+        if(node.box.x+node.box.w>parent_rect.x+parent_rect.w)
+        {
+            node.box.x=parent_rect.x;
+            offsetx=node.box.w;
+            offsety+=node.box.h;
+            node.box.y=parent_rect.y+offsety;
+        }
+        else
+        {
+            offsetx=node.box.x+node.box.w-parent_rect.x;
+            node.box.y=parent_rect.y+offsety;
+        }
+        //TODO
+        if(node.box.w==0)
+        {
+            //根据layout和Text内容推断
+        }
+        if(node.box.h==0)
+        {
+            //根据layout和Text内容推测
+        }
+    }
+
+    size_t child_cnt=node.children.size();
+    int off_x=0; //创建新的offset
+    int off_y=0; //创建新的offset
+    for(size_t j=0; j<child_cnt; j++)
+    {
+        ge_common_struct::dom_node& cnode=node.children[j];
+        ge_common_struct::ge_rect p_rectnew;
+        p_rectnew.x=node.box.x+node.style.border_width;
+        p_rectnew.y=node.box.y+node.style.border_width;
+        p_rectnew.w=node.box.w-node.style.border_width*2;
+        p_rectnew.h=node.box.h-node.style.border_width*2;
+        if(j==0)
+        {
+            UpdateDomRect(cnode,p_rectnew,off_x,off_y);
+        }
+        else
+        {
+            ge_common_struct::dom_node last=node.children[j-1];
+            UpdateDomRect(cnode,p_rectnew,off_x,off_y);
+        }
+
+    }
+
+
+}
+
+void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node node)
+{
 
     ge_common_struct::box_style style=node.style;
-    if(!style.visibility){
+    if(!style.visibility)
+    {
         return;
     }
     ge_common_struct::ge_adv_color border_color=style.border_color;
     ge_common_struct::ge_adv_color bg_color=style.background_color;
+    ge_common_struct::ge_color f_color=style.font_color;
+    int font_size=style.font_size;
+    int line_height=style.line_height;
     size_t child_cnt=node.children.size();
-    if(style.is_round_box){
-       //圆角矩形
 
+    //
+    ge_common_struct::ge_rect box_rect=node.box;
+    if(style.out_radius>0){
+        FillRoundRect(p_context,box_rect,style.out_radius,border_color);
+        if(style.draw_shape){
+            ge_common_struct::ge_adv_color scolor={0,0,0,255};
+            DrawRoundRect(p_context,box_rect,style.out_radius,scolor);
+        }
     }else{
-        //正方形
-        //borer
-        FillRect(p_context,style.client_rect,border_color.r
-                 ,border_color.g,border_color.b,border_color.a);
-        ge_common_struct::ge_rect rect;
-        rect.x=style.client_rect.x+style.border_width;
-        rect.y=style.client_rect.y+style.border_width;
-        rect.w=style.client_rect.w-2*style.border_width;
-        rect.h=style.client_rect.h-2*style.border_width;
-        FillRect(p_context,rect,bg_color.r,bg_color.g,bg_color.b,bg_color.a);
-        if(child_cnt>0){
-            std::vector<ge_common_struct::dom_node> children=node.children;
-            for(size_t i=0;i<child_cnt;i++){
-                DrawDomNode(p_context,children[i]);
-            }
-        }else{
 
+        FillRect(p_context,box_rect,border_color.r
+             ,border_color.g,border_color.b,border_color.a);
+    }
+    ge_common_struct::ge_rect rect;
+    rect.x=box_rect.x+style.border_width;
+    rect.y=box_rect.y+style.border_width;
+    rect.w=box_rect.w-2*style.border_width;
+    rect.h=box_rect.h-2*style.border_width;
+    if(node.child_layout!=ge_common_struct::ui_layout::GRID_LAYOUT)
+    {
+        FillRect(p_context,rect,bg_color.r,bg_color.g,bg_color.b,bg_color.a);
+    }
+    if(child_cnt>0)
+    {
+        std::vector<ge_common_struct::dom_node> children=node.children;
+        for(size_t i=0; i<child_cnt; i++)
+        {
+            DrawDomNode(p_context,children[i]);
         }
     }
+    else
+    {
+        ge_common_struct::ge_sides padding=style.padding;
+        ge_common_struct::ge_rect actual_rect;
+        actual_rect.x=rect.x+padding.left;
+        actual_rect.y=rect.y+padding.top;
+        actual_rect.w=rect.w-padding.left-padding.right;
+        actual_rect.h=rect.h-padding.top-padding.bottom;
+        ge_common_struct::text_align align=style.align;
+        //TODO 当文字超过一行
+        if(align==ge_common_struct::text_align::LEFT)
+        {
+            int x=actual_rect.x;
+            int y=actual_rect.y;
+            RenderText(p_context,p_context->GetFont(),
+                       x,y,node.text,f_color);
+        }
+        else if(align==ge_common_struct::text_align::CENTER)
+        {
+            int charcnt=ge_str_utilities::utf8_strlen(node.text);
+            int margin_l=(actual_rect.w-charcnt*font_size)/2;
+            int margin_t=line_height-font_size;
+            if(margin_t<0)
+            {
+                margin_t=0;
+            }
+            if(margin_l<0)
+            {
+                margin_l=0;
+            }
+            int x=actual_rect.x+margin_l;
+            int y=actual_rect.y+margin_t;
+            RenderText(p_context,p_context->GetFont(),
+                       x,y,node.text,f_color);
+        }
+        else if(align==ge_common_struct::text_align::RIGHT)
+        {
+            int charcnt=ge_str_utilities::utf8_strlen(node.text);
+            int x=actual_rect.x+actual_rect.w-font_size*charcnt;
+            int y=actual_rect.y;
+            RenderText(p_context,p_context->GetFont(),x,y,node.text,f_color);
+        }
+    }
+
 }
 
 void DrawWindow(CGameContext* p_context,CGameWindow& window)
@@ -455,7 +631,23 @@ void DrawPointDownTriangle(CGameContext* p_context,int x,int y,int height,
     int x2=x+height/2;
     int y1=y-height;
     int y2=y1;
-    sdlutil::DrawTrangle(renderer,x,y,x1,y1,x2,y2,color.r,color.g,color.b);
+    sdlutil::FillTrangle(renderer,x,y,x1,y1,x2,y2,color.r,color.g,color.b);
+}
+
+void FillRoundRect(CGameContext* p_context,ge_common_struct::ge_rect rect,
+                   int radius,ge_common_struct::ge_adv_color color)
+{
+    SDL_Renderer * renderer=GetRenderer(p_context);
+    sdlutil::FillRoundRect(renderer,rect.x,rect.y,rect.w,rect.h,radius,
+                           color.r,color.g,color.b,color.a);
+}
+
+void DrawRoundRect(CGameContext* p_context,ge_common_struct::ge_rect rect,
+                   int radius,ge_common_struct::ge_adv_color color){
+
+    SDL_Renderer * renderer=GetRenderer(p_context);
+    sdlutil::DrawRoundRect(renderer,rect.x,rect.y,rect.w,rect.h,radius,
+                           color.r,color.g,color.b,color.a);
 }
 
 }

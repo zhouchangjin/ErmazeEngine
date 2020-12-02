@@ -23,11 +23,15 @@ public:
     {
         m_node=node;
     };
+    bool HasAttribute(std::string attname);
+    MyXMLNode FirstChild();
+    MyXMLNode NextSlibing();
     MyXMLNode Child(std::string nodename);
     MyXMLNode NextSlibing(std::string slibingname);
     int IntAttribute(std::string attributename);
     std::string StrAttribute(std::string attributename);
     std::string valueStr();
+    std::string Name(){return m_node.name();};
     explicit operator bool();
 
 private:

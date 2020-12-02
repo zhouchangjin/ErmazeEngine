@@ -21,7 +21,12 @@ namespace sdlutil{
 
     void SetTextureAlpha(SDL_Texture* texture,int alpha);
 
-    void DrawTrangle(SDL_Renderer* renderer,int x,int y,int x1,int y1,int x2,int y2,int r,int g,int b);
+    void FillTrangle(SDL_Renderer* renderer,int x,int y,int x1,int y1,int x2,int y2,int r,int g,int b);
+
+    void FillRoundRect(SDL_Renderer* renderer,int x,int y,int w,int h,int radius,int r,int g,int b,int a);
+
+    void DrawRoundRect(SDL_Renderer* renderer,int x,int y,int w,int h,int radius,int r,int g,int b,int a);
+
 
 }
 

@@ -8,6 +8,22 @@ namespace xmlutils{
         return m_node;
     }
 
+    bool MyXMLNode::HasAttribute(std::string attname){
+        return m_node.attribute(attname.c_str());
+    }
+
+    MyXMLNode MyXMLNode::FirstChild(){
+        MyXMLNode node;
+        node.SetNode(m_node.first_child());
+        return node;
+    }
+
+    MyXMLNode MyXMLNode::NextSlibing(){
+        MyXMLNode node;
+        node.SetNode(m_node.next_sibling());
+        return node;
+    }
+
     MyXMLNode MyXMLNode::Child(std::string nodename){
         MyXMLNode node;
         node.SetNode(m_node.child(nodename.c_str()));

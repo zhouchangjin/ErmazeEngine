@@ -97,12 +97,30 @@ void SetTextureAlpha(SDL_Texture* texture,int alpha)
     SDL_SetTextureAlphaMod(texture,alpha);
 }
 
-void DrawTrangle(SDL_Renderer* renderer,int x,int y,
+void FillTrangle(SDL_Renderer* renderer,int x,int y,
                  int x1,int y1,int x2,int y2,int r,int g,int b)
 {
     filledTrigonRGBA(renderer,x,y,x1,y1,x2,y2,r,g,b,255);
 }
 
+void FillRoundRect(SDL_Renderer* renderer,
+                   int x,int y,
+                   int w,int h,
+                   int radius,
+                   int r,int g,int b,int a)
+{
+    roundedBoxRGBA(renderer,x,y,x+w,y+h,radius,r,g,b,a);
+}
+
+void DrawRoundRect(SDL_Renderer* renderer,
+                   int x,int y,
+                   int w,int h,
+                   int radius,
+                   int r,int g,int b,int a)
+{
+    roundedRectangleRGBA(renderer,x,y,x+w,y+h,radius,r,g,b,a);
+
+}
 
 
 }

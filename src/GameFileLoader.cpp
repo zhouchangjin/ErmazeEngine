@@ -2,43 +2,54 @@
 namespace ge_fileutil
 {
 
-std::vector<int> parse_color_to_vector(std::string colorStr){
+std::vector<int> parse_color_to_vector(std::string colorStr)
+{
     size_t start_pos=colorStr.find("(");
     size_t end_pos=colorStr.find(")");
-    if(start_pos!=std::string::npos && end_pos!=std::string::npos){
-       std::string substring=colorStr.substr(start_pos+1,end_pos-1);
-       //GE_LOG("color=%s\n",substring.c_str());
-       std::vector<int> colors=ge_str_utilities::SplitStrToIntArray(substring,',');
-       return colors;
-    }else{
+    if(start_pos!=std::string::npos && end_pos!=std::string::npos)
+    {
+        std::string substring=colorStr.substr(start_pos+1,end_pos-1);
+        //GE_LOG("color=%s\n",substring.c_str());
+        std::vector<int> colors=ge_str_utilities::SplitStrToIntArray(substring,',');
+        return colors;
+    }
+    else
+    {
         std::vector<int> colors;
         return colors;
     }
 
 }
 
-ge_common_struct::ge_color parse_color(std::string colorStr){
+ge_common_struct::ge_color parse_color(std::string colorStr)
+{
 
     ge_common_struct::ge_color color;
     std::vector<int> colors=parse_color_to_vector(colorStr);
-    if(colors.size()==3){
+    if(colors.size()==3)
+    {
         color.r=colors[0];
         color.g=colors[1];
         color.b=colors[2];
     }
     return color;
 }
-ge_common_struct::ge_adv_color parse_rgba_color(std::string colorStr){
+ge_common_struct::ge_adv_color parse_rgba_color(std::string colorStr)
+{
     ge_common_struct::ge_adv_color color;
     std::vector<int> colors=parse_color_to_vector(colorStr);
-    if(colors.size()>=3){
+    if(colors.size()>=3)
+    {
         color.r=colors[0];
         color.g=colors[1];
         color.b=colors[2];
     }
-    if(colors.size()==4){
+    if(colors.size()==4)
+    {
         color.a=colors[3];
-    }else{
+    }
+    else
+    {
         color.a=255;
     }
     return color;
@@ -171,51 +182,151 @@ ge_common_struct::dialog_tree_node* parse_dialog_tree(xmlutils::MyXMLNode dialog
 
 
 ge_common_struct::box_style parse_window_style(xmlutils::MyXMLNode
-        window_style_node)
+        window_style_node,ge_common_struct::dom_node* parent=nullptr)
 {
-    xmlutils::MyXMLNode rect_node=window_style_node.Child("rect");
     ge_common_struct::box_style window_style;
-    std::string num_type=rect_node.StrAttribute("num_type");
-    int x=rect_node.IntAttribute("x");
-    int y=rect_node.IntAttribute("y");
-    int h=rect_node.IntAttribute("h");
-    int w=rect_node.IntAttribute("w");
-    if(num_type.compare("percentage")==0){
-        window_style.is_percentage=true;
-    }else{
-        window_style.is_percentage=false;
+    if(parent)
+    {
+        ge_common_struct::box_style parent_style=parent->style;
+        window_style.background_color=parent_style.background_color;
+        window_style.font_color=parent_style.font_color;
+        window_style.border_color=parent_style.border_color;
+        if(parent->child_layout==ge_common_struct::ui_layout::VERVICAL_LAYOUT)
+        {
+            //只是为了初始化(y,w无意义,h有意义),是百分比还是数无所谓
+            window_style.client_rect.x=0; //relative;
+            window_style.client_rect.y=0;
+            window_style.client_rect.w=100;
+            window_style.is_percentage=true;
+            window_style.position_is_absolute=false;
+        }
+        else if(parent->child_layout==ge_common_struct::ui_layout::HORIZONTAL_LAYOUT)
+        {
+            window_style.client_rect.x=0;
+            window_style.client_rect.y=0; //relative;
+            window_style.client_rect.h=100;
+            window_style.is_percentage=true;
+            window_style.position_is_absolute=false;
+        }
+        else if(parent->child_layout==ge_common_struct::ui_layout::GRID_LAYOUT)
+        {
+            //x,y,w,h都在绘画时才能确定，且无法设置
+            window_style.position_is_absolute=false;
+            window_style.is_percentage=true;
+            window_style.client_rect.x=0;
+            window_style.client_rect.y=0;
+            int row=parent->grid_row;
+            int col=parent->grid_col;
+            window_style.client_rect.w=100/col;
+            window_style.client_rect.h=100/row;
+        }
+        else if(parent->child_layout==ge_common_struct::ui_layout::FLOW_LAYOUT)
+        {
+            //w,h都是读取的
+            window_style.position_is_absolute=false;
+            window_style.is_percentage=false;
+        }
+        else if(parent->child_layout==ge_common_struct::ui_layout::BORDER_LAYOUT)
+        {
+            //x,y无用只有width和height有用
+            window_style.position_is_absolute=false;
+            window_style.is_percentage=false;
+        }
+        else if(parent->child_layout==ge_common_struct::ui_layout::NULL_LAYOUT)
+        {
+            window_style.position_is_absolute=false;
+            window_style.is_percentage=false;
+        }
     }
-    window_style.client_rect.x=x;
-    window_style.client_rect.y=y;
-    window_style.client_rect.h=h;
-    window_style.client_rect.w=w;
+    xmlutils::MyXMLNode rect_node=window_style_node.Child("rect");
+    if(rect_node)
+    {
+        if(rect_node.HasAttribute("num_type"))
+        {
+            std::string num_type=rect_node.StrAttribute("num_type");
+            if(num_type.compare("percentage")==0)
+            {
+                window_style.is_percentage=true;
+            }
+            else
+            {
+                window_style.is_percentage=false;
+            }
 
-    xmlutils::MyXMLNode background_node=rect_node.Child("background");
-    xmlutils::MyXMLNode border_node=rect_node.Child("border");
-    xmlutils::MyXMLNode font_node=rect_node.Child("font");
+        }
+        if(rect_node.HasAttribute("radius")){
+            int radius= rect_node.IntAttribute("radius");
+            if(radius>0){
+                window_style.out_radius=radius;
+                window_style.draw_shape=true;
+            }
+        }
+        if(rect_node.HasAttribute("x"))
+        {
+            int x=rect_node.IntAttribute("x");
+            window_style.client_rect.x=x;
+        }
+        if(rect_node.HasAttribute("y"))
+        {
+            int y=rect_node.IntAttribute("y");
+            window_style.client_rect.y=y;
+        }
+        if(rect_node.HasAttribute("h"))
+        {
+            int h=rect_node.IntAttribute("h");
+            window_style.client_rect.h=h;
+        }
+        if(rect_node.HasAttribute("w"))
+        {
+            int w=rect_node.IntAttribute("w");
+            window_style.client_rect.w=w;
+        }
 
-    if(background_node){
+        xmlutils::MyXMLNode background_node=rect_node.Child("background");
+        xmlutils::MyXMLNode border_node=rect_node.Child("border");
+        xmlutils::MyXMLNode font_node=rect_node.Child("font");
 
-        std::string colorStr=background_node.StrAttribute("color");
-        ge_common_struct::ge_adv_color color=parse_rgba_color(colorStr);
-        window_style.background_color=color;
+        if(background_node)
+        {
+            if(background_node.HasAttribute("color"))
+            {
+                std::string colorStr=background_node.StrAttribute("color");
+                ge_common_struct::ge_adv_color color=parse_rgba_color(colorStr);
+                window_style.background_color=color;
+            }
+        }
+        if(border_node)
+        {
+            int border_width=border_node.IntAttribute("width");
+            window_style.border_width=border_width;
+            std::string type=border_node.StrAttribute("type");
+            std::string colorStr=border_node.StrAttribute("color");
+            ge_common_struct::ge_adv_color color=parse_rgba_color(colorStr);
+            window_style.border_color=color;
+        }
+        if(font_node)
+        {
+            if(font_node.HasAttribute("color"))
+            {
+
+                std::string colorStr=font_node.StrAttribute("color");
+                ge_common_struct::ge_color color=parse_color(colorStr);
+                window_style.font_color=color;
+            }
+        }
+
     }
-    if(border_node){
-        int border_width=border_node.IntAttribute("width");
-        window_style.border_width=border_width;
-        std::string type=border_node.StrAttribute("type");
-        std::string colorStr=border_node.StrAttribute("color");
-        ge_common_struct::ge_color color=parse_color(colorStr);
-        window_style.border_color.r=color.r;
-        window_style.border_color.g=color.g;
-        window_style.border_color.b=color.b;
-    }
-    if(font_node){
-        std::string colorStr=font_node.StrAttribute("color");
-        ge_common_struct::ge_color color=parse_color(colorStr);
-        window_style.font_color=color;
-    }
 
+    //后面去掉
+    std::string node_name=window_style_node.Name();
+    if(node_name.compare("button")==0){
+        window_style.align=ge_common_struct::text_align::CENTER;
+        window_style.border_width=2;
+        window_style.border_color.r=255;
+        window_style.border_color.g=255;
+        window_style.border_color.b=255;
+        window_style.border_color.a=80;
+    }
     return window_style;
 }
 
@@ -228,16 +339,77 @@ ge_common_struct::dialog_style_node parse_dialog_style(xmlutils::MyXMLNode
     {
         std::string type=window.StrAttribute("type");
         ge_common_struct::box_style window_style=parse_window_style(window);
-        if(type.compare("main")==0){
+        if(type.compare("main")==0)
+        {
             style_node.main_window=window_style;
-        }else if(type.compare("choice")==0){
+        }
+        else if(type.compare("choice")==0)
+        {
             style_node.choice_window=window_style;
-        }else if(type.compare("title")==0){
+        }
+        else if(type.compare("title")==0)
+        {
             style_node.choice_window=window_style;
         }
     }
     return style_node;
 }
 
+
+ge_common_struct::dom_node parse_dom(xmlutils::MyXMLNode xml_node,
+                                     ge_common_struct::dom_node* parent)
+{
+    ge_common_struct::dom_node node;
+    node.parent_node=parent;
+    if(xml_node.HasAttribute("id"))
+    {
+        node.node_id=xml_node.StrAttribute("id");
+    }
+    ge_common_struct::box_style style=parse_window_style(xml_node,parent);
+    node.style=style;
+
+    xmlutils::MyXMLNode children_node=xml_node.Child("rect").Child("container");
+    std::string layout=children_node.StrAttribute("layout");
+    if(layout.compare("grid")==0)
+    {
+        node.child_layout=ge_common_struct::ui_layout::GRID_LAYOUT;
+        int row=children_node.IntAttribute("row");
+        int col=children_node.IntAttribute("col");
+        node.grid_row=row;
+        node.grid_col=col;
+    }
+    else if(layout.compare("border")==0)
+    {
+        node.child_layout=ge_common_struct::ui_layout::BORDER_LAYOUT;
+    }
+    else if(layout.compare("flow")==0)
+    {
+        node.child_layout=ge_common_struct::ui_layout::FLOW_LAYOUT;
+    }
+    else if(layout.compare("horizontal")==0)
+    {
+        node.child_layout=ge_common_struct::ui_layout::HORIZONTAL_LAYOUT;
+    }
+    else if(layout.compare("vertical")==0)
+    {
+        node.child_layout=ge_common_struct::ui_layout::VERVICAL_LAYOUT;
+    }
+    if(children_node)
+    {
+        xmlutils::MyXMLNode child=children_node.FirstChild();
+        for(; child; child=child.NextSlibing())
+        {
+            ge_common_struct::dom_node child_node=parse_dom(child,&node);
+            node.children.push_back(child_node);
+        }
+    }
+    else
+    {
+        node.text=xml_node.valueStr();
+        ge_str_utilities::replaceAll(node.text,"\t","");
+        ge_str_utilities::replaceAll(node.text,"\n","");
+    }
+    return node;
+}
 
 }

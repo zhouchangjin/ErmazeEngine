@@ -32,6 +32,10 @@ namespace sdlutil2{
 
     void FillRect(CGameContext* p_context,ge_common_struct::ge_rect rect,int r,int g,int b,int a=255);
 
+    void FillRoundRect(CGameContext* p_context,ge_common_struct::ge_rect rect,int radius,ge_common_struct::ge_adv_color color);
+
+    void DrawRoundRect(CGameContext* p_context,ge_common_struct::ge_rect rect,int radius,ge_common_struct::ge_adv_color color);
+
     ge_common_struct::ge_rect LoadWindowRect(CGameContext* p_context);
 
     void DrawRect(CGameContext* p_context,ge_common_struct::ge_rect rect,int r,int g,int b,int a);
@@ -51,6 +55,10 @@ namespace sdlutil2{
     void DrawChoiceDialog(CGameContext* p_context,CChoiceDialog& dialog);
 
     void DrawPointDownTriangle(CGameContext* p_context,int x,int y,int height,ge_common_struct::ge_color color);
+
+    void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node node);
+
+    void UpdateDomRect(ge_common_struct::dom_node& node,ge_common_struct::ge_rect parent_rect,int& offsetx,int& offsety);
 
 }
 

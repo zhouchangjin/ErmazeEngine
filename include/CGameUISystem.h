@@ -1,6 +1,8 @@
 #ifndef CGAMEUISYSTEM_H
 #define CGAMEUISYSTEM_H
 
+#include "XML_Utilities.h"
+#include "GameFileLoader.h"
 #include <CGameDatabase.h>
 #include <CServiceLocator.h>
 #include <CAdvDialog.h>
@@ -19,6 +21,7 @@ class CGameUISystem :public IDefaultEventProcess
         void Draw();
         void ShowDialog(){m_dialog.Show();};
         bool EventLock();
+        void LoadUI();
         void LoadDatabase();
         void SetDialogStyle(ge_common_struct::dialog_style_node style);
     protected:
@@ -30,6 +33,7 @@ class CGameUISystem :public IDefaultEventProcess
         ge_common_struct::dialog_style_node m_dialog_style;
         size_t m_line_no;
 
+        std::map<std::string,ge_common_struct::dom_node> m_panels;
 
         void UpdateDialogStyle();
         void LoadNextLine();

@@ -27,6 +27,15 @@ enum text_align{
     RIGHT
 };
 
+enum ui_layout{
+    VERVICAL_LAYOUT,
+    HORIZONTAL_LAYOUT,
+    GRID_LAYOUT,
+    BORDER_LAYOUT,
+    FLOW_LAYOUT,
+    NULL_LAYOUT,
+};
+
 
 enum action_source{
     NO,
@@ -119,6 +128,13 @@ struct ge_rect
     int h;
 };
 
+struct ge_sides{
+    int top=0;
+    int left=0;
+    int bottom=0;
+    int right=0;
+};
+
 struct ge_triangle
 {
     ge_point p0;
@@ -144,7 +160,7 @@ struct ge_adv_color
     int r;
     int g;
     int b;
-    int a;
+    int a=255;
 };
 
 
@@ -227,7 +243,7 @@ struct dialog_tree_node{
     std::vector<dialog_tree_node*> children; //可以不用指针，用指针安全
 
     ~dialog_tree_node(){
-        GE_LOG("delete node");
+        //GE_LOG("delete node");
         for(size_t i=0;i<children.size();i++){
             dialog_tree_node* node=children[i];
             delete node;
@@ -255,24 +271,33 @@ struct dialog_tree_node{
 
 
 struct box_style{
+    bool draw_shape=false;
+    bool position_is_absolute=false; //暂时没有用的属性
     bool is_percentage=false;
-    bool is_round_box=false;
+    int out_radius=0;
     bool visibility=true;
     ge_rect client_rect;
-    ge_rect padding_rect;
+    ge_sides padding;
     ge_adv_color background_color;
     ge_adv_color border_color;
     ge_color font_color;
-    int border_width;
+    int border_width=0;
     int texture_id=-1;
+    int font_size=24;
+    int line_height=26;
     text_align align=text_align::LEFT;
 };
 
 struct dom_node{
+    ui_layout child_layout=ui_layout::VERVICAL_LAYOUT;
     std::string node_id;
     box_style style;
     std::string text;
     std::vector<dom_node> children;
+    ge_rect box;
+    int grid_row;
+    int grid_col;
+    dom_node* parent_node=nullptr;
 };
 
 

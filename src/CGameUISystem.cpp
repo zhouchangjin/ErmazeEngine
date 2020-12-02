@@ -30,6 +30,27 @@ void CGameUISystem::SetDialogStyle(ge_common_struct::dialog_style_node style){
 
 }
 
+void CGameUISystem::LoadUI(){
+    xmlutils::MyXMLDoc doc=xmlutils::LoadXML("./ui/menu.ui");
+    xmlutils::MyXMLNode node=doc.GetNode("ui");
+
+    xmlutils::MyXMLNode window=node.Child("window");
+    int id=0;
+    std::string idStr="";
+    for(;window;window=window.NextSlibing("window")){
+        id++;
+        ge_common_struct::dom_node node=ge_fileutil::parse_dom(window);
+        if(window.HasAttribute("id")){
+            idStr=window.StrAttribute("id");
+        }else{
+            idStr+=std::to_string(id);
+        }
+        m_panels[idStr]=node;
+
+    }
+
+}
+
 void CGameUISystem::LoadDatabase(){
 
     m_database=CServiceLocator::
@@ -84,6 +105,12 @@ void CGameUISystem::Draw()
     if(m_dialog.IsShow())
     {
         sdlutil2::DrawAdvDialog(m_context,m_dialog);
+    }else{
+        ge_common_struct::ge_rect fullWindow=sdlutil2::LoadWindowRect(m_context);
+        ge_common_struct::dom_node m_menu=m_panels["guide_menu"];
+        int offsetx=0;int offsety=0;
+        sdlutil2::UpdateDomRect(m_menu,fullWindow,offsetx,offsety);
+        sdlutil2::DrawDomNode(m_context,m_menu);
     }
 }
 
