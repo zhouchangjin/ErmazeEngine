@@ -23,23 +23,23 @@ void CPCSpriteGameObject::ProcessInput(CInputEvent event)
     int state=event.GetCurrentSubState();
     if(state==0)
     {
-        ge_common_struct::input_event type=event.GetEventType();
-        if(type==ge_common_struct::input_event::KEY_LEFT)
+        ge_common_struct::key_event_type type=event.GetInput().get_top_event().event;
+        if(type==ge_common_struct::key_event_type::KEY_LEFT)
         {
             MoveLeftward(16);
         }
-        else if(type==ge_common_struct::input_event::KEY_RIGHT)
+        else if(type==ge_common_struct::key_event_type::KEY_RIGHT)
         {
             MoveRightward(16);
         }
-        else if(type==ge_common_struct::input_event::KEY_UP)
+        else if(type==ge_common_struct::key_event_type::KEY_UP)
         {
             MoveUpward(16);
         }
-        else if(type==ge_common_struct::input_event::KEY_DOWN)
+        else if(type==ge_common_struct::key_event_type::KEY_DOWN)
         {
             MoveDownward(16);
-        }else if(type==ge_common_struct::input_event::KEY_SPACE){
+        }else if(type==ge_common_struct::key_event_type::KEY_SPACE){
             m_action_active=true;
         }
     }

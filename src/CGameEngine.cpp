@@ -22,6 +22,13 @@ void CGameEngine::Init(){
     CServiceLocator::Register(CServiceLocator::DATABASE,db);
 
     m_game_context=new CSdlGameContext();
+    CSdlGameContext* p_context=(CSdlGameContext*)m_game_context;
+    p_context->RegisterKey('j',ge_common_struct::key_event_type::KEY_CONFIRM);
+    p_context->RegisterKey('k',ge_common_struct::key_event_type::KEY_CANCLE);
+    p_context->RegisterKey('w',ge_common_struct::key_event_type::KEY_UP);
+    p_context->RegisterKey('s',ge_common_struct::key_event_type::KEY_DOWN);
+    p_context->RegisterKey('a',ge_common_struct::key_event_type::KEY_LEFT);
+    p_context->RegisterKey('d',ge_common_struct::key_event_type::KEY_RIGHT);
     LoadSetting();
     m_game_context->Init(m_game_setting.GetWindowWidth(),m_game_setting.GetWindowHeight());
     m_current_state=new CMenuState(m_game_context);
@@ -55,10 +62,8 @@ void CGameEngine::Draw(){
 }
 
 void CGameEngine::HandleEvent(){
-
     ge_common_struct::input_event event=m_game_context->EventCatch();
-
-    if(event==ge_common_struct::QUIT){
+    if(event.get_top_event().event==ge_common_struct::QUIT){
         m_running=false;
     }else{
         m_current_state->HandleEvent(event);

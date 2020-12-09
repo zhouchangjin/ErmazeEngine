@@ -23,10 +23,11 @@ class CSdlGameContext : public CGameContext
         unsigned int GetTicks();
         void DelayTime(uint32_t time);
         void* GetFont()const{return (void*)m_font;};
-
+        void RegisterKey(char keyname,ge_common_struct::key_event_type type);
     protected:
 
     private:
+        std::map<int,ge_common_struct::key_event_type> m_key_mapping;
         SDL_Renderer * m_renderer;
         SDL_Window * m_window;
         TTF_Font *m_font = nullptr;

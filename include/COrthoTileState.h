@@ -19,8 +19,7 @@ class COrthoTileState : public CGameState
     public:
         enum substate{
             TILE_STATE,
-            DIALOG_STATE,
-            MENU_STATE
+            UI_STATE
         };
         COrthoTileState();
         COrthoTileState(CGameContext* context);

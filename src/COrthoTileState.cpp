@@ -100,15 +100,15 @@ void COrthoTileState::HandleEvent(ge_common_struct::input_event event)
         return;
     }
 
-    if(event!=ge_common_struct::input_event::NO_EVENT)
+    if(event.get_top_event().event!=ge_common_struct::key_event_type::NO_EVENT)
     {
         LoadSubState();
         CInputEvent inputevent;
-        inputevent.SetEventType(event);
+        inputevent.SetInputEvent(event);
         inputevent.SetCurrentSubState(m_sub_state);
         m_event_manager.EventPublish(inputevent);
     }
-    if(event==ge_common_struct::KEY_ESC)
+    if(event.get_top_event().event==ge_common_struct::key_event_type::KEY_ESC)
     {
         this->m_state_value=1;
     }
@@ -906,7 +906,7 @@ bool COrthoTileState::CheckCollisionObject(CSpriteGameObject* object)
 
 void COrthoTileState::LoadSubState(){
     if(m_ui_system.EventLock()){
-        m_sub_state=substate::DIALOG_STATE;
+        m_sub_state=substate::UI_STATE;
     }else{
         m_sub_state=substate::TILE_STATE;
     }

@@ -1,6 +1,7 @@
 #ifndef COMMON_STRUCT_H_INCLUDED
 #define COMMON_STRUCT_H_INCLUDED
 
+#include <map>
 #include <vector>
 #include <string>
 #include <queue>
@@ -21,13 +22,15 @@ typedef std::vector<int> ROW_IDX;
 
 typedef std::vector<ROW_IDX> LAYER_IDX;
 
-enum text_align{
+enum text_align
+{
     LEFT,
     CENTER,
     RIGHT
 };
 
-enum ui_layout{
+enum ui_layout
+{
     VERVICAL_LAYOUT,
     HORIZONTAL_LAYOUT,
     GRID_LAYOUT,
@@ -37,7 +40,8 @@ enum ui_layout{
 };
 
 
-enum action_source{
+enum action_source
+{
     NO,
     FACE_UP,
     FACE_DOWN,
@@ -79,7 +83,7 @@ enum grid_type
     CUSTOM
 };
 
-enum input_event
+enum key_event_type
 {
     NO_EVENT,
     QUIT,
@@ -89,11 +93,21 @@ enum input_event
     KEY_RIGHT,
     KEY_SPACE,
     KEY_ESC,
-    KEY_ENTER
+    KEY_ENTER,
+    KEY_CONFIRM,
+    KEY_CANCLE
 
 };
 
-enum condition_type{
+enum key_press_type
+{
+    KEY_PRESS,
+    KEY_PRESSED,
+    KEY_RELEASE
+};
+
+enum condition_type
+{
     EQUAL,
     UNEQUAL,
     GREATER,
@@ -102,7 +116,8 @@ enum condition_type{
     EQUAL_LESS
 };
 
-enum exp_node_type{
+enum exp_node_type
+{
     NO_CONDITION,
     CONDITION,
     AND,
@@ -114,7 +129,8 @@ struct ge_point
 {
     int x;
     int y;
-    ge_point(int tx=0,int ty=0){
+    ge_point(int tx=0,int ty=0)
+    {
         x=tx;
         y=ty;
     };
@@ -128,7 +144,8 @@ struct ge_rect
     int h;
 };
 
-struct ge_sides{
+struct ge_sides
+{
     int top=0;
     int left=0;
     int bottom=0;
@@ -210,30 +227,36 @@ struct start_point2d
     }
 };
 
-struct condition{
+struct condition
+{
     condition_type type;
     std::string attribute_name;
     int attribute_value;
 };
 
-struct exp_node{
+struct exp_node
+{
     exp_node_type type=exp_node_type::NO_CONDITION;
     condition cond;
     exp_node* left=nullptr;//必须用指针，不用指针就是无限死循环。
     exp_node* right=nullptr;//必须用指针
-    ~exp_node(){
-        if(left){
+    ~exp_node()
+    {
+        if(left)
+        {
             delete left;
             left=nullptr;
         }
-        if(right){
+        if(right)
+        {
             delete right;
             right=nullptr;
         }
     }
 };
 
-struct dialog_tree_node{
+struct dialog_tree_node
+{
     int id;
     bool root_node;
     bool has_options;
@@ -242,9 +265,11 @@ struct dialog_tree_node{
     exp_node expression;
     std::vector<dialog_tree_node*> children; //可以不用指针，用指针安全
 
-    ~dialog_tree_node(){
+    ~dialog_tree_node()
+    {
         //GE_LOG("delete node");
-        for(size_t i=0;i<children.size();i++){
+        for(size_t i=0; i<children.size(); i++)
+        {
             dialog_tree_node* node=children[i];
             delete node;
             node=nullptr;
@@ -252,25 +277,30 @@ struct dialog_tree_node{
         children.clear();
     }
 
-    int get_size(){
+    int get_size()
+    {
         return node_text.size();
     }
 
-    std::string get_text(int line){
+    std::string get_text(int line)
+    {
         return node_text[line];
     }
 
-    int get_child_size(){
+    int get_child_size()
+    {
         return children.size();
     }
 
-    dialog_tree_node* get_child(int idx){
+    dialog_tree_node* get_child(int idx)
+    {
         return children[idx];
     }
 };
 
 
-struct box_style{
+struct box_style
+{
     bool draw_shape=false;
     bool position_is_absolute=false; //暂时没有用的属性
     bool is_percentage=false;
@@ -288,7 +318,8 @@ struct box_style{
     text_align align=text_align::LEFT;
 };
 
-struct dom_node{
+struct dom_node
+{
     ui_layout child_layout=ui_layout::VERVICAL_LAYOUT;
     std::string node_id;
     box_style style;
@@ -301,14 +332,82 @@ struct dom_node{
 };
 
 
-struct dialog_style_node{
+struct dialog_style_node
+{
     box_style main_window;
     box_style choice_window;
     box_style title_window;
 };
 
+struct key_event
+{
+    key_event_type event=key_event_type::NO_EVENT;
+    key_press_type type;
+    int keycode;
+};
 
+struct input_event
+{
+    std::map<key_event_type,key_event> key_events;
+    key_event get_event(key_event_type key_type)
+    {
+        if(key_events.find(key_type)!=key_events.end())
+        {
 
+            return key_events[key_type];
+        }
+        else
+        {
+            key_event event;
+            event.keycode=-1;
+            return event;
+        }
+
+    };
+
+    key_event get_top_event()
+    {
+        if(key_events.size()>0)
+        {
+            return key_events.begin()->second;
+        }
+        else
+        {
+            key_event event;
+            event.keycode=-1;
+            return event;
+        }
+    }
+
+    key_event_type get_event_type(key_event_type keytype)
+    {
+        if(key_events.find(keytype)!=key_events.end())
+        {
+            return key_events[keytype].event;
+        }
+        else
+        {
+            return key_event_type::NO_EVENT;
+        }
+    }
+
+    void add_event(key_event_type key_type,
+                   key_press_type press_type=key_press_type::KEY_PRESS,
+                   int keycode=-1)
+    {
+        if(key_events.find(key_type)==key_events.end())
+        {
+
+            key_event event= {key_type,press_type,keycode};
+            key_events[key_type]=event;
+        }
+    }
+
+    bool empty()
+    {
+        return key_events.empty();
+    }
+};
 
 }
 

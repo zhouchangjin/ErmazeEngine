@@ -33,6 +33,10 @@ class CGameUISystem :public IDefaultEventProcess
         ge_common_struct::dialog_style_node m_dialog_style;
         size_t m_line_no;
 
+        std::vector<std::string> m_menu_stack;
+
+        std::vector<std::string> m_hud_stack;
+
         std::map<std::string,ge_common_struct::dom_node> m_panels;
 
         void UpdateDialogStyle();

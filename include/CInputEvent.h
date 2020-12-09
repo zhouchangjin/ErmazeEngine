@@ -9,12 +9,12 @@ class CInputEvent : public CGameEvent
     public:
         CInputEvent();
         virtual ~CInputEvent();
-        ge_common_struct::input_event GetEventType()const{return m_event_type;};
-        void SetEventType(ge_common_struct::input_event type){m_event_type=type;};
+        ge_common_struct::input_event GetInput()const{return m_input;};
+        void SetInputEvent(ge_common_struct::input_event input){m_input=input;};
         int GetCurrentSubState()const{return m_current_sub_state;};
         void SetCurrentSubState(int state_value){m_current_sub_state=state_value;};
     protected:
-        ge_common_struct::input_event m_event_type;
+        ge_common_struct::input_event m_input;
         int m_current_sub_state=0;
 
     private:
