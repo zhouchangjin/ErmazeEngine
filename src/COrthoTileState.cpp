@@ -100,7 +100,7 @@ void COrthoTileState::HandleEvent(ge_common_struct::input_event event)
         return;
     }
 
-    if(event.get_top_event().event!=ge_common_struct::key_event_type::NO_EVENT)
+    if(event.get_top_event().key!=ge_common_struct::key_event_type::NO_EVENT)
     {
         LoadSubState();
         CInputEvent inputevent;
@@ -108,7 +108,7 @@ void COrthoTileState::HandleEvent(ge_common_struct::input_event event)
         inputevent.SetCurrentSubState(m_sub_state);
         m_event_manager.EventPublish(inputevent);
     }
-    if(event.get_top_event().event==ge_common_struct::key_event_type::KEY_ESC)
+    if(event.get_top_event().key==ge_common_struct::key_event_type::KEY_ESC)
     {
         this->m_state_value=1;
     }

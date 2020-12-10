@@ -63,7 +63,7 @@ void CGameEngine::Draw(){
 
 void CGameEngine::HandleEvent(){
     ge_common_struct::input_event event=m_game_context->EventCatch();
-    if(event.get_top_event().event==ge_common_struct::QUIT){
+    if(event.get_top_event().key==ge_common_struct::QUIT){
         m_running=false;
     }else{
         m_current_state->HandleEvent(event);

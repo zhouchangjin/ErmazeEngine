@@ -31,13 +31,15 @@ class CGameUISystem :public IDefaultEventProcess
         ge_common_struct::dialog_tree_node* m_dialog_tree=nullptr;
         ge_common_struct::dialog_tree_node* m_cursor_node=nullptr;
         ge_common_struct::dialog_style_node m_dialog_style;
-        size_t m_line_no;
+        unsigned int m_line_no;
+        unsigned int m_el_pointer=0;
 
         std::vector<std::string> m_menu_stack;
 
         std::vector<std::string> m_hud_stack;
 
         std::map<std::string,ge_common_struct::dom_node> m_panels;
+
 
         void UpdateDialogStyle();
         void LoadNextLine();

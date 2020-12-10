@@ -67,9 +67,9 @@ void CMenuState::HandleEvent(ge_common_struct::input_event event)
 {
 
     ge_common_struct::key_event key_event=event.get_top_event();
-    if(key_event.type==ge_common_struct::key_press_type::KEY_PRESS)
+    if(key_event.press==ge_common_struct::key_press_type::KEY_PRESS)
     {
-        ge_common_struct::key_event_type key_type=key_event.event;
+        ge_common_struct::key_event_type key_type=key_event.key;
 
         if(key_type==ge_common_struct::KEY_DOWN)
         {

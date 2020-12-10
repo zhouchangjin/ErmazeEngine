@@ -137,15 +137,10 @@ void CGameUISystem::Draw()
                 ge_common_struct::dom_node menu=m_panels[menu_id];
                 sdlutil2::UpdateDomRect(menu,fullWindow,offsetx,offsety);
                 sdlutil2::DrawDomNode(m_context,menu);
+                //sdlutil2::DrawPointer(m_context,menu,m_el_pointer);
             }
         }
-        //
-        //std::map<std::string,ge_common_struct::dom_node>::iterator it;
-        //for(it=m_panels.begin();it!=m_panels.end();it++){
-        //    ge_common_struct::dom_node dom=it->second;
-        //    sdlutil2::UpdateDomRect(dom,fullWindow,offsetx,offsety);
-        //    sdlutil2::DrawDomNode(m_context,dom);
-        //}
+
     }
 }
 
@@ -327,8 +322,8 @@ void CGameUISystem::LoadNextLine()
 void CGameUISystem::ProcessInput(CInputEvent event)
 {
     ge_common_struct::key_event kevent=event.GetInput().get_top_event();
-    ge_common_struct::key_event_type event_type=kevent.event;
-    ge_common_struct::key_press_type press_type=kevent.type;
+    ge_common_struct::key_event_type event_type=kevent.key;
+    ge_common_struct::key_press_type press_type=kevent.press;
     int state=event.GetCurrentSubState();
     if(press_type==ge_common_struct::key_press_type::KEY_PRESS)
     {

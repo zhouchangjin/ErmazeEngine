@@ -341,8 +341,8 @@ struct dialog_style_node
 
 struct key_event
 {
-    key_event_type event=key_event_type::NO_EVENT;
-    key_press_type type;
+    key_event_type key=key_event_type::NO_EVENT;
+    key_press_type press=key_press_type::KEY_PRESSED;
     int keycode;
 };
 
@@ -383,7 +383,7 @@ struct input_event
     {
         if(key_events.find(keytype)!=key_events.end())
         {
-            return key_events[keytype].event;
+            return key_events[keytype].key;
         }
         else
         {
