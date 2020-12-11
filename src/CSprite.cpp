@@ -23,7 +23,9 @@ ge_common_struct::ge_rect CSprite::GetRectByIdx(int sprite_idx){
 void CSprite::AddAction(std::string action_name,std::vector<int> frames){
     //std::vector<int>* action_frames=new std::vector<int>();
     //action_frames->swap(frames);
-    m_action_map[action_name]=frames;//action_frames;
+    if(frames.size()>0){
+      m_action_map[action_name]=frames;
+    }
 }
 
 int CSprite::PlayAction(std::string action_name,int step){

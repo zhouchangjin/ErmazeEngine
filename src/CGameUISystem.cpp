@@ -11,6 +11,12 @@ CGameUISystem::CGameUISystem(CGameContext* context)
 CGameUISystem::~CGameUISystem()
 {
     //dtor
+    for(size_t i=0; i<m_spritesheets.size(); i++)
+    {
+        CSpriteSheet* sheet=m_spritesheets[i];
+        delete sheet;
+    }
+    m_spritesheets.clear();
 }
 
 void CGameUISystem::SetDialogStyle(ge_common_struct::dialog_style_node style)
@@ -33,6 +39,42 @@ void CGameUISystem::SetDialogStyle(ge_common_struct::dialog_style_node style)
 
 void CGameUISystem::LoadUI()
 {
+    xmlutils::MyXMLDoc icon_doc=xmlutils::LoadXML("./ui/resource.ui");
+    xmlutils::MyXMLNode icon_sheet_node=icon_doc.
+                                        GetNode("/ui/spritesheets");
+    xmlutils::MyXMLNode icon_node=icon_doc.GetNode("/ui/icons");
+
+    std::map<std::string,ge_common_struct::image_def> sheets;
+    std::map<std::string,ge_common_struct::icon_def> icons;
+    ge_fileutil::parse_sheets(icon_sheet_node,sheets,"./ui/res/");
+    ge_fileutil::parse_icons(icon_node,icons);
+
+    std::map<std::string,ge_common_struct::image_def>::iterator it;
+    std::map<std::string,ge_common_struct::icon_def>::iterator it_icon;
+    for(it=sheets.begin(); it!=sheets.end(); it++)
+    {
+        ge_common_struct::image_def image=it->second;
+        CSpriteSheet* sprite_sheet=new CSpriteSheet(image.path,image.width,
+                image.height,
+                image.col,image.row);
+        m_spritesheets.push_back(sprite_sheet);
+        CTiledIcon tile_icon(sprite_sheet);
+        m_icons[image.id]=tile_icon;
+    }
+
+    for(it_icon=icons.begin(); it_icon!=icons.end(); it_icon++)
+    {
+        ge_common_struct::icon_def icon=it_icon->second;
+        std::string sheet_id=icon.resource_id;
+        std::string icon_name=icon.icon_name;
+        int icon_idx=icon.id;
+        if(m_icons.find(sheet_id)!=m_icons.end())
+        {
+            m_icons[sheet_id].AddIcon(icon_name,icon_idx);
+            m_icon_sheet_map[icon_name]=sheet_id;
+        }
+    }
+
     xmlutils::MyXMLDoc doc=xmlutils::LoadXML("./ui/menu.ui");
     xmlutils::MyXMLNode node=doc.GetNode("ui");
 
@@ -117,6 +159,20 @@ void CGameUISystem::UpdateDialogStyle()
     m_dialog.InitResponseByDialog();
 }
 
+CTiledIcon CGameUISystem::GetTileIcon(std::string icon_name)
+{
+    if(m_icon_sheet_map.find(icon_name)!=m_icon_sheet_map.end())
+    {
+        std::string sheet_id=m_icon_sheet_map[icon_name];
+        CTiledIcon icon=m_icons[sheet_id];
+        return icon;
+    }
+    else
+    {
+        return CTiledIcon(nullptr);
+    }
+}
+
 void CGameUISystem::Draw()
 {
     UpdateDialogStyle();
@@ -137,7 +193,8 @@ void CGameUISystem::Draw()
                 ge_common_struct::dom_node menu=m_panels[menu_id];
                 sdlutil2::UpdateDomRect(menu,fullWindow,offsetx,offsety);
                 sdlutil2::DrawDomNode(m_context,menu);
-                //sdlutil2::DrawPointer(m_context,menu,m_el_pointer);
+                CTiledIcon icon=GetTileIcon(m_menu_pointer);
+                sdlutil2::DrawIcon(m_context,menu,m_el_pointer,icon,m_menu_pointer,-10,0,m_icon_scale);
             }
         }
 
@@ -360,9 +417,50 @@ void CGameUISystem::ProcessInput(CInputEvent event)
             {
                 if(m_menu_stack.size()>0)
                 {
-                    if(event_type==ge_common_struct::key_event_type::KEY_CANCLE)
+                    std::string menu_id=m_menu_stack.back();
+                    if(m_panels.find(menu_id)!=m_panels.end())
                     {
-                        m_menu_stack.pop_back();
+                        ge_common_struct::dom_node node=m_panels[menu_id];
+                        int cnt=node.children.size();
+                        //int row=node.row;
+                        int col=node.col;
+                        ge_common_struct::ui_layout layout=node.child_layout;
+                        if(event_type==ge_common_struct::key_event_type::KEY_CANCLE)
+                        {
+                            m_menu_stack.pop_back();
+                        }
+                        else if(event_type==ge_common_struct::key_event_type::KEY_DOWN)
+                        {
+                            if(layout==ge_common_struct::ui_layout::GRID_LAYOUT)
+                            {
+                                m_el_pointer+=col;
+                            }
+                            else
+                            {
+                                m_el_pointer++;
+                            }
+                            m_el_pointer=m_el_pointer%cnt;
+                        }
+                        else if(event_type==ge_common_struct::key_event_type::KEY_UP)
+                        {
+                            if(layout==ge_common_struct::ui_layout::GRID_LAYOUT)
+                            {
+                                m_el_pointer-=col;
+                            }
+                            else
+                            {
+                                m_el_pointer--;
+                            }
+                            m_el_pointer=m_el_pointer%cnt;
+                        }
+                        else if(event_type==ge_common_struct::key_event_type::KEY_LEFT){
+                            m_el_pointer--;
+                            m_el_pointer=m_el_pointer%cnt;
+                        }
+                        else if(event_type==ge_common_struct::key_event_type::KEY_RIGHT){
+                            m_el_pointer++;
+                            m_el_pointer=m_el_pointer%cnt;
+                        }
                     }
                 }
 
@@ -372,7 +470,7 @@ void CGameUISystem::ProcessInput(CInputEvent event)
         {
             if(event_type==ge_common_struct::key_event_type::KEY_CONFIRM)
             {
-                m_menu_stack.push_back("guide_menu");
+                m_menu_stack.push_back(m_confirm_menu);
             }
         }
 

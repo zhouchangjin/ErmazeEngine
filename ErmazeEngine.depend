@@ -5,7 +5,7 @@
 1605575700 c:\work\cplusworkspace\ermazeengine\include\cgamecontext.h
 	"common_struct.h"
 
-1607573553 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
+1607683196 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
 	<map>
 	<vector>
 	<string>
@@ -466,7 +466,7 @@
 
 1602069157 c:\work\cplusworkspace\ermazeengine\include\cgamedata.h
 
-1606733595 c:\work\cplusworkspace\ermazeengine\include\crpggamedata.h
+1607591833 c:\work\cplusworkspace\ermazeengine\include\crpggamedata.h
 	<string>
 	<map>
 	<GameFileLoader.h>
@@ -479,10 +479,10 @@
 1606467455 source:c:\work\cplusworkspace\ermazeengine\src\crpggamedata.cpp
 	"CRPGGameData.h"
 
-1603956599 c:\work\cplusworkspace\ermazeengine\include\csprite.h
+1607681496 c:\work\cplusworkspace\ermazeengine\include\csprite.h
 	"CSpriteSheet.h"
 
-1603956590 source:c:\work\cplusworkspace\ermazeengine\src\csprite.cpp
+1607681552 source:c:\work\cplusworkspace\ermazeengine\src\csprite.cpp
 	"CSprite.h"
 
 1592878388 source:c:\work\cplusworkspace\ermazeengine\src\csdlrenderservice.cpp
@@ -492,11 +492,11 @@
 	"SDL_Utilities.h"
 	"common_struct.h"
 
-1606899805 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
+1607682453 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
 	"Render_Util.h"
 	"CSdlGameContext.h"
 
-1606899654 c:\work\cplusworkspace\ermazeengine\include\render_util.h
+1607682417 c:\work\cplusworkspace\ermazeengine\include\render_util.h
 	<string>
 	"SDL_Utilities.h"
 	"Str_Utilities.h"
@@ -506,6 +506,7 @@
 	"CTileLayer.h"
 	"CAdvDialog.h"
 	"CChoiceDialog.h"
+	"CTiledIcon.h"
 
 1603709491 c:\work\cplusworkspace\ermazeengine\include\cspritesheet.h
 	<string>
@@ -713,10 +714,10 @@
 1606383249 c:\work\cplusworkspace\ermazeengine\include\cchoicedialog.h
 	<CGameWindow.h>
 
-1607574603 source:c:\work\cplusworkspace\ermazeengine\src\cgameuisystem.cpp
+1607682948 source:c:\work\cplusworkspace\ermazeengine\src\cgameuisystem.cpp
 	"CGameUISystem.h"
 
-1607574572 c:\work\cplusworkspace\ermazeengine\include\cgameuisystem.h
+1607682159 c:\work\cplusworkspace\ermazeengine\include\cgameuisystem.h
 	"XML_Utilities.h"
 	"GameFileLoader.h"
 	<CGameDatabase.h>
@@ -724,6 +725,7 @@
 	<CAdvDialog.h>
 	<CSdlGameContext.h>
 	<IDefaultEventProcess.h>
+	<CTiledIcon.h>
 
 1605951157 source:c:\work\cplusworkspace\ermazeengine\src\cactionevent.cpp
 	"CActionEvent.h"
@@ -765,10 +767,10 @@
 1606305379 c:\work\cplusworkspace\ermazeengine\include\cservicelocator.h
 	<map>
 
-1606899500 source:c:\work\cplusworkspace\ermazeengine\src\gamefileloader.cpp
+1607683220 source:c:\work\cplusworkspace\ermazeengine\src\gamefileloader.cpp
 	"GameFileLoader.h"
 
-1606642466 c:\work\cplusworkspace\ermazeengine\include\gamefileloader.h
+1607666110 c:\work\cplusworkspace\ermazeengine\include\gamefileloader.h
 	<common_struct.h>
 	<XML_Utilities.h>
 	<Str_Utilities.h>
@@ -778,4 +780,10 @@
 
 1606632016 c:\work\cplusworkspace\ermazeengine\include\cdomwindow.h
 	<common_struct.h>
+
+1607681396 source:c:\work\cplusworkspace\ermazeengine\src\ctiledicon.cpp
+	"CTiledIcon.h"
+
+1607681314 c:\work\cplusworkspace\ermazeengine\include\ctiledicon.h
+	<CSprite.h>
 

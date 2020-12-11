@@ -50,14 +50,6 @@
 		</rect>
 	</window>	
   </dialog>
-  <ui>
-	<spritesheets>
-		<spritesheet id="ui01" path="icon.png" width="16" height="16" col="6" row="4"/>
-	</spritesheets>
-	<icons>
-		<icon name="point_right" id="0" direction="left"/>
-	</icons>
-  </ui>
   <spritesheets>
 	 <spritesheet  id="1" path="sprites.png" width="16" height="16" col="8" row="10" />
   </spritesheets>

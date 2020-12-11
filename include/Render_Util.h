@@ -11,6 +11,7 @@
 #include "CTileLayer.h"
 #include "CAdvDialog.h"
 #include "CChoiceDialog.h"
+#include "CTiledIcon.h"
 
 namespace sdlutil2{
 
@@ -59,6 +60,8 @@ namespace sdlutil2{
     void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node node);
 
     void UpdateDomRect(ge_common_struct::dom_node& node,ge_common_struct::ge_rect parent_rect,int& offsetx,int& offsety);
+
+    void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node node,unsigned int pointer_pos,CTiledIcon icon,std::string icon_name,int offsetx=0,int offsety=0,int scale=1);
 
 }
 

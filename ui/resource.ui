@@ -1,0 +1,8 @@
+  <ui>
+	<spritesheets>
+		<spritesheet id="ui01" path="icon.png" width="16" height="16" col="6" row="4"/>
+	</spritesheets>
+	<icons>
+		<icon ref_sheet="ui01" name="point_right" id="0" direction="0"/>
+	</icons>
+  </ui>

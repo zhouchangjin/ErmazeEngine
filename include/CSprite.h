@@ -15,11 +15,10 @@ class CSprite
         int PlayAction(std::string action_name,int step);
         void SetSheet(CSpriteSheet* sheet){m_sprite_sheet=sheet;};
     protected:
-
-    private:
-        int m_frame_idx=0;
-        CSpriteSheet* m_sprite_sheet;
         std::map<std::string,std::vector<int>> m_action_map;
+    private:
+        CSpriteSheet* m_sprite_sheet;
+
 };
 
 #endif // CSPRITE_H

@@ -426,16 +426,20 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node node)
 
     //
     ge_common_struct::ge_rect box_rect=node.box;
-    if(style.out_radius>0){
+    if(style.out_radius>0)
+    {
         FillRoundRect(p_context,box_rect,style.out_radius,border_color);
-        if(style.draw_shape){
-            ge_common_struct::ge_adv_color scolor={0,0,0,255};
+        if(style.draw_shape)
+        {
+            ge_common_struct::ge_adv_color scolor= {0,0,0,255};
             DrawRoundRect(p_context,box_rect,style.out_radius,scolor);
         }
-    }else{
+    }
+    else
+    {
 
         FillRect(p_context,box_rect,border_color.r
-             ,border_color.g,border_color.b,border_color.a);
+                 ,border_color.g,border_color.b,border_color.a);
     }
     ge_common_struct::ge_rect rect;
     rect.x=box_rect.x+style.border_width;
@@ -643,11 +647,29 @@ void FillRoundRect(CGameContext* p_context,ge_common_struct::ge_rect rect,
 }
 
 void DrawRoundRect(CGameContext* p_context,ge_common_struct::ge_rect rect,
-                   int radius,ge_common_struct::ge_adv_color color){
+                   int radius,ge_common_struct::ge_adv_color color)
+{
 
     SDL_Renderer * renderer=GetRenderer(p_context);
     sdlutil::DrawRoundRect(renderer,rect.x,rect.y,rect.w,rect.h,radius,
                            color.r,color.g,color.b,color.a);
 }
+
+void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node node
+              ,unsigned int pointer_pos,CTiledIcon icon,std::string icon_name,
+              int offsetx,int offsety,int scale)
+{
+    if(icon.GetSpriteSheet())
+    {
+        if(pointer_pos<node.children.size()){
+            ge_common_struct::dom_node cnode=node.children[pointer_pos];
+            int screenx=cnode.box.x+offsetx;
+            int screeny=cnode.box.y+offsety;
+            int pos=icon.GetIconPos(icon_name);
+            RenderSprite(p_context,&icon,screenx,screeny,pos,scale);
+        }
+    }
+}
+
 
 }

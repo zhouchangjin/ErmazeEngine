@@ -326,8 +326,8 @@ struct dom_node
     std::string text;
     std::vector<dom_node> children;
     ge_rect box;
-    int grid_row;
-    int grid_col;
+    int row=1;
+    int col=1;
     dom_node* parent_node=nullptr;
 };
 
@@ -407,6 +407,22 @@ struct input_event
     {
         return key_events.empty();
     }
+};
+
+struct image_def{
+    std::string id;
+    std::string path;
+    int width;
+    int height;
+    int row;
+    int col;
+};
+
+struct icon_def{
+    std::string resource_id;
+    std::string icon_name;
+    int id;
+    int direction;
 };
 
 }
