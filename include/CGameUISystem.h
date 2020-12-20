@@ -35,7 +35,7 @@ class CGameUISystem :public IDefaultEventProcess
         ge_common_struct::dialog_style_node m_dialog_style;
 
         unsigned int m_line_no;
-        unsigned int m_el_pointer=0;
+        int m_el_pointer=0;
 
         //HARD CODING
         std::string m_confirm_menu="guide_menu";

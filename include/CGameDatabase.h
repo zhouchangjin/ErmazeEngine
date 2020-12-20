@@ -6,6 +6,11 @@
 class CGameDatabase
 {
 public:
+    enum DataType{
+        INTEGER,
+        TEXT,
+        TEXTURE
+    };
     CGameDatabase();
     virtual ~CGameDatabase();
     virtual void SetIntData(std::string global_prop,int data)=0;
@@ -13,6 +18,9 @@ public:
     virtual void SetObjectData(int obj_id,
                                int prop_id,int data)=0;
     virtual void SetObjectData(int obj_id,std::string prop_name,int data)=0;
+    virtual void SetObjectText(int obj_id,std::string prop_name,
+                               std::string text)=0;
+    virtual std::string GetObjectText(int obj_id,std::string prop_name)=0;
     virtual int GetObjectData(int obj_id,std::string prop_name)=0;
     virtual int GetObjectData(int obj_id,int prop_id)=0;
     virtual int GetPropId(std::string obj_type,std::string prop_name)=0;
@@ -24,7 +32,8 @@ public:
     virtual void StoreObject(std::string obj_name,std::string obj_label,
                              std::string obj_type)=0;
     virtual void AddPropToType(std::string obj_type,std::string prop_name,
-                               std::string prop_lable)=0;
+                               std::string prop_label,
+                               DataType type=DataType::INTEGER)=0;
 protected:
 
 private:

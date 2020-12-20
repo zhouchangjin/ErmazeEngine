@@ -451,11 +451,12 @@ void CGameUISystem::ProcessInput(CInputEvent event)
                             {
                                 m_el_pointer--;
                             }
-                            m_el_pointer=m_el_pointer%cnt;
+                            m_el_pointer=(m_el_pointer+cnt)%cnt;
+
                         }
                         else if(event_type==ge_common_struct::key_event_type::KEY_LEFT){
                             m_el_pointer--;
-                            m_el_pointer=m_el_pointer%cnt;
+                            m_el_pointer=(m_el_pointer+cnt)%cnt;
                         }
                         else if(event_type==ge_common_struct::key_event_type::KEY_RIGHT){
                             m_el_pointer++;

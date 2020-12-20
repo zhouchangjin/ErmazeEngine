@@ -359,9 +359,11 @@ ge_common_struct::dialog_style_node parse_dialog_style(xmlutils::MyXMLNode
 }
 
 void parse_icons(xmlutils::MyXMLNode xml_node,
-                 std::map<std::string,ge_common_struct::icon_def>& icons){
+                 std::map<std::string,ge_common_struct::icon_def>& icons)
+{
     xmlutils::MyXMLNode icon_node=xml_node.Child("icon");
-    for(;icon_node;icon_node=icon_node.NextSlibing("icon")){
+    for(; icon_node; icon_node=icon_node.NextSlibing("icon"))
+    {
         std::string ref_id=icon_node.StrAttribute("ref_sheet");
         std::string name=icon_node.StrAttribute("name");
         int id=icon_node.IntAttribute("id");
@@ -379,7 +381,7 @@ void parse_sheets(xmlutils::MyXMLNode xml_node,
                   std::map<std::string,ge_common_struct::image_def>& images,
                   std::string path)
 {
-     xmlutils::MyXMLNode sheet_node=xml_node.Child("spritesheet");
+    xmlutils::MyXMLNode sheet_node=xml_node.Child("spritesheet");
 
     for(; sheet_node; sheet_node=sheet_node.NextSlibing("spritesheet"))
     {
@@ -417,10 +419,13 @@ ge_common_struct::dom_node parse_dom(xmlutils::MyXMLNode xml_node,
     if(layout.compare("grid")==0)
     {
         node.child_layout=ge_common_struct::ui_layout::GRID_LAYOUT;
-        int row=children_node.IntAttribute("row");
-        int col=children_node.IntAttribute("col");
-        node.row=row;
-        node.col=col;
+        if(children_node.HasAttribute("row") && children_node.HasAttribute("col"))
+        {
+            int row=children_node.IntAttribute("row");
+            int col=children_node.IntAttribute("col");
+            node.row=row;
+            node.col=col;
+        }
     }
     else if(layout.compare("border")==0)
     {

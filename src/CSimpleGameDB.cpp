@@ -51,6 +51,27 @@ void CSimpleGameDB::SetObjectData(int obj_id,int prop_id,int data)
     SetIntData(key_name,data);
 }
 
+std::string CSimpleGameDB::GetObjectText(int obj_id,std::string prop_name)
+{
+    std::string key_name=GetKeyName(obj_id,prop_name);
+    int pos=GetIntData(prop_name);
+    if(pos>=0 && pos<(int)m_text_data.size())
+    {
+        return m_text_data[pos];
+    }else{
+        return "";
+    }
+}
+
+void CSimpleGameDB::SetObjectText(int obj_id,std::string prop_name,
+                                  std::string text)
+{
+    m_text_data.push_back(text);
+    int pos=m_text_data.size();
+    std::string key_name=GetKeyName(obj_id,prop_name);
+    SetIntData(key_name,pos);
+}
+
 void CSimpleGameDB::SetObjectData(int obj_id,std::string prop_name,int data)
 {
     std::string key_name=GetKeyName(obj_id,prop_name);
@@ -126,19 +147,27 @@ void CSimpleGameDB::StoreObject(std::string obj_name,
 }
 
 void CSimpleGameDB::AddPropToType(std::string obj_type,std::string prop_name,
-                                  std::string prop_label)
+                                  std::string prop_label,DataType type)
 {
+    //不支持多线程，一次性载入
     int position;
-    if(m_prop_name.find(obj_type)!=m_prop_name.end()){
+    if(m_prop_name.find(obj_type)!=m_prop_name.end())
+    {
         m_prop_name[obj_type].push_back(prop_name); //map []操作符返回的是引用
         m_prop_label[obj_type].push_back(prop_label); //map[]返回引用可以直接修改
-    }else{
+        m_prop_datatype[obj_type].push_back(type);
+    }
+    else
+    {
         std::vector<std::string> namelist;
         std::vector<std::string> labellist;
+        std::vector<DataType> typelist;
         namelist.push_back(prop_name);
         labellist.push_back(prop_label);
+        typelist.push_back(type);
         m_prop_name[obj_type]=namelist;
         m_prop_label[obj_type]=labellist;
+        m_prop_datatype[obj_type]=typelist;
     }
     position=m_prop_name[obj_type].size()-1;
     std::string key_name=GetPropIntKey(obj_type,prop_name);

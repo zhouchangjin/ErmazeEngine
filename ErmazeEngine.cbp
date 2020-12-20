@@ -96,6 +96,7 @@
 		<Unit filename="include/CSpriteGameObject.h" />
 		<Unit filename="include/CSpriteSheet.h" />
 		<Unit filename="include/CTileLayer.h" />
+		<Unit filename="include/CTiledIcon.h" />
 		<Unit filename="include/CTransferArea.h" />
 		<Unit filename="include/GameFileLoader.h" />
 		<Unit filename="include/IDefaultActionEventProcess.h" />
@@ -144,6 +145,7 @@
 		<Unit filename="src/CSpriteGameObject.cpp" />
 		<Unit filename="src/CSpriteSheet.cpp" />
 		<Unit filename="src/CTileLayer.cpp" />
+		<Unit filename="src/CTiledIcon.cpp" />
 		<Unit filename="src/CTransferArea.cpp" />
 		<Unit filename="src/GameFileLoader.cpp" />
 		<Unit filename="src/IDefaultActionEventProcess.cpp" />
