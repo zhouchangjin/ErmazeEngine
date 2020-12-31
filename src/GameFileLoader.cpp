@@ -59,7 +59,7 @@ void parse_exp_node(xmlutils::MyXMLNode& xml_node,ge_common_struct::exp_node* ex
 {
     xmlutils::MyXMLNode lexp_node=xml_node.Child("lexp");
     xmlutils::MyXMLNode rexp_node=xml_node.Child("rexp");
-    std::string typestr=xml_node.Child("type").valueStr();
+    std::string typestr=xml_node.Child("type").ValueStr();
     if(lexp_node && rexp_node)
     {
         if(typestr.compare("AND")==0)
@@ -87,8 +87,8 @@ void parse_exp_node(xmlutils::MyXMLNode& xml_node,ge_common_struct::exp_node* ex
     else
     {
         exp_node->type=ge_common_struct::exp_node_type::CONDITION;
-        std::string attname=xml_node.Child("name").valueStr();
-        std::string valueStr=xml_node.Child("value").valueStr();
+        std::string attname=xml_node.Child("name").ValueStr();
+        std::string valueStr=xml_node.Child("value").ValueStr();
         exp_node->cond.attribute_name=attname;
         exp_node->cond.attribute_value=atoi(valueStr.c_str());
         if(typestr.compare("EQUAL")==0)
@@ -135,15 +135,15 @@ void parse_dialog_node(xmlutils::MyXMLNode xmlnode,ge_common_struct::dialog_tree
         xmlutils::MyXMLNode line_node=text_node.Child("line");
         for(; line_node; line_node=line_node.NextSlibing("line"))
         {
-            std::string line=line_node.valueStr();
-            ge_str_utilities::replaceAll(line,"\t","");
-            ge_str_utilities::replaceAll(line,"\n","");
+            std::string line=line_node.ValueStr();
+            ge_str_utilities::ReplaceAll(line,"\t","");
+            ge_str_utilities::ReplaceAll(line,"\n","");
             node->node_text.push_back(line);
         }
     }
     if(opt_node)
     {
-        node->option_name=opt_node.valueStr();
+        node->option_name=opt_node.ValueStr();
     }
     if(children_node)
     {
@@ -193,7 +193,7 @@ ge_common_struct::box_style parse_window_style(xmlutils::MyXMLNode
         window_style.border_color=parent_style.border_color;
         if(parent->child_layout==ge_common_struct::ui_layout::VERVICAL_LAYOUT)
         {
-            //Ö»ÊÇÎªÁË³õÊ¼»¯(y,wÎÞÒâÒå,hÓÐÒâÒå),ÊÇ°Ù·Ö±È»¹ÊÇÊýÎÞËùÎ½
+            //åªæ˜¯ä¸ºäº†åˆå§‹åŒ–(y,wæ— æ„ä¹‰,hæœ‰æ„ä¹‰),æ˜¯ç™¾åˆ†æ¯”è¿˜æ˜¯æ•°æ— æ‰€è°“
             window_style.client_rect.x=0; //relative;
             window_style.client_rect.y=0;
             window_style.client_rect.w=100;
@@ -210,7 +210,7 @@ ge_common_struct::box_style parse_window_style(xmlutils::MyXMLNode
         }
         else if(parent->child_layout==ge_common_struct::ui_layout::GRID_LAYOUT)
         {
-            //x,y,w,h¶¼ÔÚ»æ»­Ê±²ÅÄÜÈ·¶¨£¬ÇÒÎÞ·¨ÉèÖÃ
+            //x,y,w,héƒ½åœ¨ç»˜ç”»æ—¶æ‰èƒ½ç¡®å®šï¼Œä¸”æ— æ³•è®¾ç½®
             window_style.position_is_absolute=false;
             window_style.is_percentage=true;
             window_style.client_rect.x=0;
@@ -222,13 +222,13 @@ ge_common_struct::box_style parse_window_style(xmlutils::MyXMLNode
         }
         else if(parent->child_layout==ge_common_struct::ui_layout::FLOW_LAYOUT)
         {
-            //w,h¶¼ÊÇ¶ÁÈ¡µÄ
+            //w,héƒ½æ˜¯è¯»å–çš„
             window_style.position_is_absolute=false;
             window_style.is_percentage=false;
         }
         else if(parent->child_layout==ge_common_struct::ui_layout::BORDER_LAYOUT)
         {
-            //x,yÎÞÓÃÖ»ÓÐwidthºÍheightÓÐÓÃ
+            //x,yæ— ç”¨åªæœ‰widthå’Œheightæœ‰ç”¨
             window_style.position_is_absolute=false;
             window_style.is_percentage=false;
         }
@@ -319,7 +319,7 @@ ge_common_struct::box_style parse_window_style(xmlutils::MyXMLNode
 
     }
 
-    //ºóÃæÈ¥µô
+    //åŽé¢åŽ»æŽ‰
     std::string node_name=window_style_node.Name();
     if(node_name.compare("button")==0)
     {
@@ -402,63 +402,91 @@ void parse_sheets(xmlutils::MyXMLNode xml_node,
     }
 }
 
-ge_common_struct::dom_node parse_dom(xmlutils::MyXMLNode xml_node,
+ge_common_struct::dom_node* parse_dom(xmlutils::MyXMLNode xml_node,
                                      ge_common_struct::dom_node* parent)
 {
-    ge_common_struct::dom_node node;
-    node.parent_node=parent;
+    ge_common_struct::dom_node* node=new ge_common_struct::dom_node();
+    node->parent_node=parent;
+    std::string elename=xml_node.Name();
+    node->ele_name=elename;
     if(xml_node.HasAttribute("id"))
     {
-        node.node_id=xml_node.StrAttribute("id");
+        node->node_id=xml_node.StrAttribute("id");
     }
     ge_common_struct::box_style style=parse_window_style(xml_node,parent);
-    node.style=style;
+    node->style=style;
 
     xmlutils::MyXMLNode children_node=xml_node.Child("rect").Child("container");
-    std::string layout=children_node.StrAttribute("layout");
-    if(layout.compare("grid")==0)
-    {
-        node.child_layout=ge_common_struct::ui_layout::GRID_LAYOUT;
-        if(children_node.HasAttribute("row") && children_node.HasAttribute("col"))
-        {
-            int row=children_node.IntAttribute("row");
-            int col=children_node.IntAttribute("col");
-            node.row=row;
-            node.col=col;
-        }
-    }
-    else if(layout.compare("border")==0)
-    {
-        node.child_layout=ge_common_struct::ui_layout::BORDER_LAYOUT;
-    }
-    else if(layout.compare("flow")==0)
-    {
-        node.child_layout=ge_common_struct::ui_layout::FLOW_LAYOUT;
-    }
-    else if(layout.compare("horizontal")==0)
-    {
-        node.child_layout=ge_common_struct::ui_layout::HORIZONTAL_LAYOUT;
-    }
-    else if(layout.compare("vertical")==0)
-    {
-        node.child_layout=ge_common_struct::ui_layout::VERVICAL_LAYOUT;
-    }
+    xmlutils::MyXMLNode template_node=xml_node.Child("template");
     if(children_node)
     {
+        std::string layoutstr=children_node.StrAttribute("layout");
+        ge_common_struct::ui_layout layout=str_to_layout(layoutstr);
+        if(children_node.HasAttribute("row")){
+            node->row=children_node.IntAttribute("row");
+        }else{
+            node->row=1;
+        }
+        if(children_node.HasAttribute("col")){
+            node->col=children_node.IntAttribute("col");
+        }else{
+            node->col=1;
+        }
+        node->child_layout=layout;
         xmlutils::MyXMLNode child=children_node.FirstChild();
         for(; child; child=child.NextSlibing())
         {
-            ge_common_struct::dom_node child_node=parse_dom(child,&node);
-            node.children.push_back(child_node);
+            ge_common_struct::dom_node* child_node=parse_dom(child,node);
+            node->children.push_back(child_node);
+        }
+
+    }
+    if(template_node){
+        ge_common_struct::dom_node* template_dom=new ge_common_struct::dom_node();
+        std::string list_name=xml_node.StrAttribute("list");
+        template_dom->ele_name="template_"+list_name;
+        template_dom->list_name=list_name;
+        template_dom->parent_node=node;
+        node->list_template=template_dom;
+        std::string layoutstr=template_node.StrAttribute("layout");
+        ge_common_struct::ui_layout layout=str_to_layout(layoutstr);
+        template_dom->child_layout=layout;
+        xmlutils::MyXMLNode child=template_node.FirstChild();
+        for(;child;child=child.NextSlibing()){
+            ge_common_struct::dom_node* child_node=parse_dom(child,template_dom);
+            template_dom->children.push_back(child_node);
         }
     }
-    else
+    if(!children_node && !template_node)
     {
-        node.text=xml_node.valueStr();
-        ge_str_utilities::replaceAll(node.text,"\t","");
-        ge_str_utilities::replaceAll(node.text,"\n","");
+        std::string value=xml_node.ValueStr();
+        ge_str_utilities::ReplaceAll(value,"\t","");
+        ge_str_utilities::ReplaceAll(value,"\n","");
+        if(ge_str_utilities::Contains(value,"{")){
+            node->use_template=true;
+            node->template_text=value;
+        }else{
+           node->use_template=false;
+           node->text=value;
+        }
     }
     return node;
+}
+
+ge_common_struct::ui_layout str_to_layout(std::string layoutstr){
+    if(layoutstr.compare("grid")==0){
+        return ge_common_struct::ui_layout::GRID_LAYOUT;
+    }else if(layoutstr.compare("border")==0){
+        return ge_common_struct::ui_layout::BORDER_LAYOUT;
+    }else if(layoutstr.compare("flow")==0){
+        return ge_common_struct::ui_layout::FLOW_LAYOUT;
+    }else if(layoutstr.compare("horizontal")==0){
+        return ge_common_struct::ui_layout::HORIZONTAL_LAYOUT;
+    }else if(layoutstr.compare("vertical")==0){
+        return ge_common_struct::ui_layout::VERVICAL_LAYOUT;
+    }else{
+        return ge_common_struct::ui_layout::NULL_LAYOUT;
+    }
 }
 
 }

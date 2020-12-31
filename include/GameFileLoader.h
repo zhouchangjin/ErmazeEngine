@@ -12,7 +12,8 @@ namespace ge_fileutil{
     ge_common_struct::dialog_style_node parse_dialog_style(xmlutils::MyXMLNode dialog_node);
     ge_common_struct::ge_adv_color parse_rgba_color(std::string colorStr);
     ge_common_struct::ge_color parse_color(std::string colorStr);
-    ge_common_struct::dom_node parse_dom(xmlutils::MyXMLNode dom_node,ge_common_struct::dom_node* parent=nullptr);
+    ge_common_struct::dom_node* parse_dom(xmlutils::MyXMLNode dom_node,ge_common_struct::dom_node* parent=nullptr);
+    ge_common_struct::ui_layout str_to_layout(std::string layoutstr);
 }
 
 

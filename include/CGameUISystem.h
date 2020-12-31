@@ -38,7 +38,7 @@ class CGameUISystem :public IDefaultEventProcess
         int m_el_pointer=0;
 
         //HARD CODING
-        std::string m_confirm_menu="guide_menu";
+        std::string m_confirm_menu="equip_menu";//"equip_menu";//"guide_menu";
         std::string m_menu_pointer="point_right";
         int m_icon_scale=2;
 
@@ -47,7 +47,7 @@ class CGameUISystem :public IDefaultEventProcess
         std::vector<CSpriteSheet*> m_spritesheets;
         std::map<std::string,CTiledIcon> m_icons;
         std::map<std::string,std::string> m_icon_sheet_map;
-        std::map<std::string,ge_common_struct::dom_node> m_panels;
+        std::map<std::string,ge_common_struct::dom_node*> m_panels;
 
         CTiledIcon GetTileIcon(std::string icon_name);
         void UpdateDialogStyle();
@@ -55,6 +55,8 @@ class CGameUISystem :public IDefaultEventProcess
         void SelChoice();
         bool ConditionCheck(ge_common_struct::dialog_tree_node* node);
         bool ConditionCheck(ge_common_struct::exp_node* exp);
+        void UpdateDomContent(ge_common_struct::dom_node* node,int context_obj=-1);
+        ge_common_struct::dom_node* CreateDomNode(ge_common_struct::dom_node* temp,ge_common_struct::dom_node* parent,int context_obj);
     private:
 };
 

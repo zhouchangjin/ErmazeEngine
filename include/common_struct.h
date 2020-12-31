@@ -124,6 +124,12 @@ enum exp_node_type
     OR
 };
 
+enum val_type{
+    INT_VAL,
+    DECIMAL_VAL,
+    STRING_VAL
+};
+
 
 struct ge_point
 {
@@ -238,8 +244,8 @@ struct exp_node
 {
     exp_node_type type=exp_node_type::NO_CONDITION;
     condition cond;
-    exp_node* left=nullptr;//±ØĞëÓÃÖ¸Õë£¬²»ÓÃÖ¸Õë¾ÍÊÇÎŞÏŞËÀÑ­»·¡£
-    exp_node* right=nullptr;//±ØĞëÓÃÖ¸Õë
+    exp_node* left=nullptr;//å¿…é¡»ç”¨æŒ‡é’ˆï¼Œä¸ç”¨æŒ‡é’ˆå°±æ˜¯æ— é™æ­»å¾ªç¯ã€‚
+    exp_node* right=nullptr;//å¿…é¡»ç”¨æŒ‡é’ˆ
     ~exp_node()
     {
         if(left)
@@ -263,7 +269,7 @@ struct dialog_tree_node
     std::string option_name;
     StringList node_text;
     exp_node expression;
-    std::vector<dialog_tree_node*> children; //¿ÉÒÔ²»ÓÃÖ¸Õë£¬ÓÃÖ¸Õë°²È«
+    std::vector<dialog_tree_node*> children; //å¯ä»¥ä¸ç”¨æŒ‡é’ˆï¼Œç”¨æŒ‡é’ˆå®‰å…¨
 
     ~dialog_tree_node()
     {
@@ -298,11 +304,20 @@ struct dialog_tree_node
     }
 };
 
+struct attribute{
+    std::string attribute_name;
+    val_type val_type;
+    int int_value;
+    float f_value;
+    std::string str_value;
+};
+
+typedef std::map<std::string,attribute> AttMap;
 
 struct box_style
 {
     bool draw_shape=false;
-    bool position_is_absolute=false; //ÔİÊ±Ã»ÓĞÓÃµÄÊôĞÔ
+    bool position_is_absolute=false; //æš‚æ—¶æ²¡æœ‰ç”¨çš„å±æ€§
     bool is_percentage=false;
     int out_radius=0;
     bool visibility=true;
@@ -322,13 +337,22 @@ struct dom_node
 {
     ui_layout child_layout=ui_layout::VERVICAL_LAYOUT;
     std::string node_id;
+    std::string ele_name;
     box_style style;
     std::string text;
-    std::vector<dom_node> children;
-    ge_rect box;
+    std::string template_text;
+    std::vector<dom_node*> children;
+    AttMap attributes;
+    ge_rect box;  //çœŸå®box
     int row=1;
     int col=1;
-    dom_node* parent_node=nullptr;
+    dom_node* parent_node=nullptr; //ç»è¿‡å¤åˆ¶ä¹‹åå°±æ˜¯æ— æ•ˆçš„å±æ€§äº†
+    dom_node* list_template=nullptr; //ç»è¿‡å¤åˆ¶åè¿˜æ˜¯æœ‰æ•ˆçš„
+    std::string list_name;
+    int child_seq_no=-1;
+    int obj_id=-1;
+    bool use_template=false;
+    bool is_icon=false;
 };
 
 
@@ -424,6 +448,10 @@ struct icon_def{
     int id;
     int direction;
 };
+
+void FreeDomNode(dom_node* node);
+
+void FreeDomVector(std::vector<dom_node*>& nodes);
 
 }
 

@@ -58,7 +58,9 @@ std::string CSimpleGameDB::GetObjectText(int obj_id,std::string prop_name)
     if(pos>=0 && pos<(int)m_text_data.size())
     {
         return m_text_data[pos];
-    }else{
+    }
+    else
+    {
         return "";
     }
 }
@@ -88,6 +90,10 @@ int CSimpleGameDB::GetObjectData(int obj_id,std::string prop_name)
 {
     std::string key_name=GetKeyName(obj_id,prop_name);
     return GetIntData(key_name);
+}
+std::string CSimpleGameDB::GetObjectType(int obj_id)
+{
+    return m_object_type[obj_id];
 }
 
 int CSimpleGameDB::GetPropId(std::string obj_type,std::string prop_name)
@@ -137,13 +143,16 @@ std::string CSimpleGameDB::GetPropLabel(std::string obj_type,int prop_id)
     return "";
 }
 
-void CSimpleGameDB::StoreObject(std::string obj_name,
+int CSimpleGameDB::StoreObject(std::string obj_name,
                                 std::string obj_lable,std::string obj_type)
 {
+    //不支持多线程
     m_object_name.push_back(obj_name);
     m_object_label.push_back(obj_lable);
     m_object_type.push_back(obj_type);
-    m_object_id[obj_name]=m_object_name.size();
+    int obj_id=m_object_name.size()-1;
+    m_object_id[obj_name]=obj_id;
+    return obj_id;
 }
 
 void CSimpleGameDB::AddPropToType(std::string obj_type,std::string prop_name,
@@ -172,4 +181,69 @@ void CSimpleGameDB::AddPropToType(std::string obj_type,std::string prop_name,
     position=m_prop_name[obj_type].size()-1;
     std::string key_name=GetPropIntKey(obj_type,prop_name);
     m_prop_id[key_name]=position;
+}
+
+CSimpleGameDB::DataType CSimpleGameDB::GetPropType(std::string obj_type
+        ,int prop_id)
+{
+
+    if(m_prop_datatype.find(obj_type)!=m_prop_datatype.end())
+    {
+
+        return m_prop_datatype[obj_type][prop_id];
+    }
+    else
+    {
+        return CSimpleGameDB::DataType::UNKNOWN;
+    }
+}
+
+CGameDatabase::DataType CSimpleGameDB::GetPropType(std::string obj_type
+        ,std::string prop_name)
+{
+    if(m_prop_name.find(obj_type)!=m_prop_name.end())
+    {
+        std::vector<std::string> names=m_prop_name[obj_type];
+        for(size_t i=0; i<names.size(); i++)
+        {
+            if(prop_name.compare(names[i])==0)
+            {
+                return GetPropType(obj_type,i);
+            }
+        }
+        return CSimpleGameDB::DataType::UNKNOWN;
+
+    }
+    else
+    {
+        return CSimpleGameDB::DataType::UNKNOWN;
+    }
+}
+
+void CSimpleGameDB::CreateList(std::string list_name){
+    if(m_object_list.find(list_name)!=m_object_list.end()){
+            return;
+    }else{
+        std::vector<int> objlist;
+        m_object_list[list_name]=objlist;
+    }
+}
+
+void CSimpleGameDB::AddObjectToList(std::string list_name,int obj_id){
+    if(m_object_list.find(list_name)!=m_object_list.end()){
+            m_object_list[list_name].push_back(obj_id);
+    }else{
+        std::vector<int> objlist;
+        m_object_list[list_name]=objlist;
+        m_object_list[list_name].push_back(obj_id);
+    }
+}
+
+std::vector<int> CSimpleGameDB::GetListObjectIds(std::string list_name){
+    if(m_object_list.find(list_name)!=m_object_list.end()){
+        return m_object_list[list_name];
+    }else{
+        std::vector<int> tmplist;
+        return tmplist;
+    }
 }

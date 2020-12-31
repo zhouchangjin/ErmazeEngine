@@ -30,7 +30,7 @@ public:
     MyXMLNode NextSlibing(std::string slibingname);
     int IntAttribute(std::string attributename);
     std::string StrAttribute(std::string attributename);
-    std::string valueStr();
+    std::string ValueStr();
     std::string Name(){return m_node.name();};
     explicit operator bool();
 

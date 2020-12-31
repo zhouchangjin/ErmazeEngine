@@ -57,11 +57,11 @@ namespace sdlutil2{
 
     void DrawPointDownTriangle(CGameContext* p_context,int x,int y,int height,ge_common_struct::ge_color color);
 
-    void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node node);
+    void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node);
 
-    void UpdateDomRect(ge_common_struct::dom_node& node,ge_common_struct::ge_rect parent_rect,int& offsetx,int& offsety);
+    void UpdateDomRect(ge_common_struct::dom_node* node,ge_common_struct::ge_rect parent_rect);
 
-    void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node node,unsigned int pointer_pos,CTiledIcon icon,std::string icon_name,int offsetx=0,int offsety=0,int scale=1);
+    void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node* node,unsigned int pointer_pos,CTiledIcon icon,std::string icon_name,int offsetx=0,int offsety=0,int scale=1);
 
 }
 

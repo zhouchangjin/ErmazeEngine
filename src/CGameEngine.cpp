@@ -19,6 +19,28 @@ CGameEngine::~CGameEngine()
 void CGameEngine::Init(){
 
     CSimpleGameDB* db=new CSimpleGameDB();
+    //demo db
+    //db->SetIntData("tmp",9); //demo
+    db->CreateList("players");
+    db->CreateList("tanks");
+    int id1=db->StoreObject("pro_1","wolf","player");
+    int id2=db->StoreObject("pro_2","fish","player");
+    int id3=db->StoreObject("pro_3","bear","player");
+    int id4=db->StoreObject("pro_4","dog","player");
+
+    int tid1=db->StoreObject("t_1","tank1","tank");
+    int tid2=db->StoreObject("t_2","tank2","tank");
+    int tid3=db->StoreObject("t_3","tank3","tank");
+
+    db->AddObjectToList("players",id1);
+    db->AddObjectToList("players",id2);
+    db->AddObjectToList("players",id3);
+    db->AddObjectToList("players",id4);
+
+    db->AddObjectToList("tanks",tid1);
+    db->AddObjectToList("tanks",tid2);
+    db->AddObjectToList("tanks",tid3);
+
     CServiceLocator::Register(CServiceLocator::DATABASE,db);
 
     m_game_context=new CSdlGameContext();

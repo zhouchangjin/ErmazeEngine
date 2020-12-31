@@ -7,6 +7,7 @@ COrthoTileState::COrthoTileState()
 COrthoTileState::COrthoTileState(CGameContext* context):CGameState(context)
 {
     m_ui_system.SetContext(context);
+    m_ui_system.LoadDatabase();
     m_ui_system.LoadUI();
 }
 
@@ -676,8 +677,8 @@ void COrthoTileState::LoadScene()
     for(; node; node=node.NextSlibing("layer"))
     {
         CTileLayer* tiled_layer=new CTileLayer;
-        std::string csvdata=node.Child("data").valueStr();
-        std::vector<std::string> lines=ge_str_utilities::Splitstr(csvdata,'\n');
+        std::string csvdata=node.Child("data").ValueStr();
+        std::vector<std::string> lines=ge_str_utilities::SplitStr(csvdata,'\n');
         for(size_t s=0; s<lines.size(); s++)
         {
             std::string l=ge_str_utilities::TrimStr(lines[s]);

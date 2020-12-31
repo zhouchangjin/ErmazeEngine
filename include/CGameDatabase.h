@@ -1,15 +1,20 @@
 #ifndef CGAMEDATABASE_H
 #define CGAMEDATABASE_H
 
+#include <vector>
+#include <map>
 #include <string>
 
 class CGameDatabase
 {
 public:
     enum DataType{
+        UNKNOWN,
         INTEGER,
         TEXT,
-        TEXTURE
+        OBJECT_ID,
+        TEXTURE_ID,
+        ICON_ID
     };
     CGameDatabase();
     virtual ~CGameDatabase();
@@ -23,17 +28,23 @@ public:
     virtual std::string GetObjectText(int obj_id,std::string prop_name)=0;
     virtual int GetObjectData(int obj_id,std::string prop_name)=0;
     virtual int GetObjectData(int obj_id,int prop_id)=0;
+    virtual std::string GetObjectType(int obj_id)=0;
     virtual int GetPropId(std::string obj_type,std::string prop_name)=0;
     virtual int GetObjectId(std::string object_name)=0;
     virtual std::string GetObjectName(int object_id)=0;
     virtual std::string GetPropName(std::string obj_type,int prop_id)=0;
+    virtual DataType GetPropType(std::string obj_type,std::string prop_name)=0;
+    virtual DataType GetPropType(std::string obj_type,int prop_id)=0;
     virtual std::string GetObjectLabel(int object_id)=0;
     virtual std::string GetPropLabel(std::string obj_type,int prop_id)=0;
-    virtual void StoreObject(std::string obj_name,std::string obj_label,
+    virtual int StoreObject(std::string obj_name,std::string obj_label,
                              std::string obj_type)=0;
     virtual void AddPropToType(std::string obj_type,std::string prop_name,
                                std::string prop_label,
                                DataType type=DataType::INTEGER)=0;
+    virtual void CreateList(std::string list_name)=0;
+    virtual void AddObjectToList(std::string list_name,int obj_id)=0;
+    virtual std::vector<int> GetListObjectIds(std::string list_name)=0;
 protected:
 
 private:

@@ -47,7 +47,7 @@ namespace xmlutils{
        return value;
     }
 
-    std::string MyXMLNode::valueStr(){
+    std::string MyXMLNode::ValueStr(){
         std::string value=m_node.text().as_string();
         return value;
     }

@@ -60,7 +60,7 @@ std::vector<std::string> SplitByUTF8CharPos(const std::string& input,
     return lines;
 }
 
-std::vector<std::string> Splitstr(const std::string& input,char delim)
+std::vector<std::string> SplitStr(const std::string& input,char delim)
 {
     std::string str=TrimStr(input);
     std::vector<std::string> splitarray;
@@ -108,7 +108,7 @@ std::vector<int> SplitStrToIntArray(const std::string& input,char delim)
     return splitarray;
 }
 
-int utf8_strlen(const std::string& str)
+int Utf8Strlen(const std::string& str)
 {
     int c,i,ix,q;
     for (q=0, i=0, ix=str.length(); i < ix; i++, q++)
@@ -124,7 +124,7 @@ int utf8_strlen(const std::string& str)
 
 }
 
-void replaceAll(std::string& str, const std::string& from,
+void ReplaceAll(std::string& str, const std::string& from,
                 const std::string& to)
 {
     if(from.empty())
@@ -137,6 +137,14 @@ void replaceAll(std::string& str, const std::string& from,
     }
 }
 
+bool Contains(const std::string& original,std::string sub)
+{
+    if(original.find(sub)!=std::string::npos){
 
+        return true;
+    }else{
+        return false;
+    }
+}
 
 }

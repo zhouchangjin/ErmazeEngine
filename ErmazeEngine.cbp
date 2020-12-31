@@ -155,6 +155,7 @@
 		<Unit filename="src/SDL_Utilities.cpp" />
 		<Unit filename="src/Str_Utilities.cpp" />
 		<Unit filename="src/XML_Utilities.cpp" />
+		<Unit filename="src/common_struct.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

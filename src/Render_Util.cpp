@@ -1,5 +1,5 @@
 #include "Render_Util.h"
-//¸Ã¹¤¾ß·½·¨¿ÉÒÔ±»ÃæÏò¶ÔÏóµÄServiceÀàÈ¡´ú
+//è¯¥å·¥å…·æ–¹æ³•å¯ä»¥è¢«é¢å‘å¯¹è±¡çš„Serviceç±»å–ä»£
 #include "CSdlGameContext.h"
 namespace sdlutil2
 {
@@ -291,128 +291,136 @@ void DrawAdvDialog(CGameContext* p_context,CAdvDialog& dialog)
     }
 }
 
-void UpdateDomRect(ge_common_struct::dom_node& node,
+
+void UpdateDomRect(ge_common_struct::dom_node* node,
                    ge_common_struct::ge_rect parent_rect,
-                   int &offsetx,int &offsety)
+                   int &offsetx,int &offsety,int &paint_height)
 {
     ge_common_struct::ui_layout layout;
-    if(node.parent_node==nullptr)
+    if(node->parent_node==nullptr)
     {
         layout=ge_common_struct::ui_layout::NULL_LAYOUT;
     }
     else
     {
-        layout=node.parent_node->child_layout;
+        layout=node->parent_node->child_layout;
     }
     if(layout==ge_common_struct::ui_layout::NULL_LAYOUT)
     {
-        ge_common_struct::ge_rect rc=node.style.client_rect;
-        if(!node.style.position_is_absolute)
+        ge_common_struct::ge_rect rc=node->style.client_rect;
+        if(!node->style.position_is_absolute)
         {
-            if(node.style.is_percentage)
+            if(node->style.is_percentage)
             {
-                node.box.x=parent_rect.x+rc.x*parent_rect.w/100;
-                node.box.y=parent_rect.y+rc.y*parent_rect.h/100;
-                node.box.w=parent_rect.w*rc.w/100;
-                node.box.h=parent_rect.h*rc.h/100;
+                node->box.x=parent_rect.x+rc.x*parent_rect.w/100;
+                node->box.y=parent_rect.y+rc.y*parent_rect.h/100;
+                node->box.w=parent_rect.w*rc.w/100;
+                node->box.h=parent_rect.h*rc.h/100;
             }
             else
             {
-                node.box.x=parent_rect.x+rc.x;
-                node.box.y=parent_rect.y+rc.y;
-                node.box.w=rc.w;
-                node.box.h=rc.h;
+                node->box.x=parent_rect.x+rc.x;
+                node->box.y=parent_rect.y+rc.y;
+                node->box.w=rc.w;
+                node->box.h=rc.h;
             }
         }
         else
         {
-            if(node.style.is_percentage)
+            if(node->style.is_percentage)
             {
-                node.box.x=rc.x*parent_rect.w/100;
-                node.box.y=rc.y*parent_rect.h/100;
-                node.box.w=rc.w*parent_rect.w/100;
-                node.box.h=rc.h*parent_rect.h/100;
+                node->box.x=rc.x*parent_rect.w/100;
+                node->box.y=rc.y*parent_rect.h/100;
+                node->box.w=rc.w*parent_rect.w/100;
+                node->box.h=rc.h*parent_rect.h/100;
             }
             else
             {
-                node.box.x=rc.x;
-                node.box.y=rc.y;
-                node.box.w=rc.w;
-                node.box.h=rc.h;
+                node->box.x=rc.x;
+                node->box.y=rc.y;
+                node->box.w=rc.w;
+                node->box.h=rc.h;
             }
+        }
+
+        if(node->box.h>paint_height){
+            paint_height=node->box.h;
         }
 
     }
     else
     {
-        ge_common_struct::ge_rect rc=node.style.client_rect;
-        if(node.style.is_percentage)
+        ge_common_struct::ge_rect rc=node->style.client_rect;
+        if(node->style.is_percentage)
         {
-            node.box.w=rc.w*parent_rect.w/100;
-            node.box.h=rc.h*parent_rect.h/100;
+            node->box.w=rc.w*parent_rect.w/100;
+            node->box.h=rc.h*parent_rect.h/100;
 
         }
         else
         {
-            node.box.w=rc.w;
-            node.box.h=rc.h;
+            node->box.w=rc.w;
+            node->box.h=rc.h;
         }
 
-        node.box.x=parent_rect.x+offsetx;
+        node->box.x=parent_rect.x+offsetx;
 
-        if(node.box.x+node.box.w>parent_rect.x+parent_rect.w)
+        if(node->box.x+node->box.w>parent_rect.x+parent_rect.w)
         {
-            node.box.x=parent_rect.x;
-            offsetx=node.box.w;
-            offsety+=node.box.h;
-            node.box.y=parent_rect.y+offsety;
+            node->box.x=parent_rect.x;
+            offsetx=node->box.w;
+            offsety+=paint_height;
+            node->box.y=parent_rect.y+offsety;
+            paint_height=node->box.h;
         }
         else
         {
-            offsetx=node.box.x+node.box.w-parent_rect.x;
-            node.box.y=parent_rect.y+offsety;
-        }
-        //TODO
-        if(node.box.w==0)
-        {
-            //¸ù¾İlayoutºÍTextÄÚÈİÍÆ¶Ï
-        }
-        if(node.box.h==0)
-        {
-            //¸ù¾İlayoutºÍTextÄÚÈİÍÆ²â
+            offsetx=node->box.x+node->box.w-parent_rect.x;
+            node->box.y=parent_rect.y+offsety;
+            if(node->box.h>paint_height){
+                paint_height=node->box.h;
+            }
         }
     }
 
-    size_t child_cnt=node.children.size();
-    int off_x=0; //´´½¨ĞÂµÄoffset
-    int off_y=0; //´´½¨ĞÂµÄoffset
+    size_t child_cnt=node->children.size();
+    int offx_new=0;
+    int offy_new=0;
+    int paint_h_new=0;
     for(size_t j=0; j<child_cnt; j++)
     {
-        ge_common_struct::dom_node& cnode=node.children[j];
-        ge_common_struct::ge_rect p_rectnew;
-        p_rectnew.x=node.box.x+node.style.border_width;
-        p_rectnew.y=node.box.y+node.style.border_width;
-        p_rectnew.w=node.box.w-node.style.border_width*2;
-        p_rectnew.h=node.box.h-node.style.border_width*2;
-        if(j==0)
-        {
-            UpdateDomRect(cnode,p_rectnew,off_x,off_y);
-        }
-        else
-        {
-            ge_common_struct::dom_node last=node.children[j-1];
-            UpdateDomRect(cnode,p_rectnew,off_x,off_y);
-        }
-
+        ge_common_struct::dom_node* cnode=node->children[j];
+        ge_common_struct::ge_rect p_rectnew; //p_rectå¿…é¡»æ˜¯éç™¾åˆ†æ¯”çš„å‚æ•°
+        //å¾®è½¯çš„ç›’æ¨¡å‹ borderè®¡ç®—å…¥å®½é«˜çš„ä¸€éƒ¨åˆ†
+        p_rectnew.x=node->box.x+node->style.border_width;
+        p_rectnew.y=node->box.y+node->style.border_width;
+        p_rectnew.w=node->box.w-node->style.border_width*2;
+        p_rectnew.h=node->box.h-node->style.border_width*2;
+        UpdateDomRect(cnode,p_rectnew,offx_new,offy_new,paint_h_new);
     }
-
+    int actual_height=offy_new+paint_h_new;
+    if(node->box.h==0){
+        node->box.h=actual_height;
+        if(node->box.h>paint_height){
+            paint_height=node->box.h;
+        }
+    }
 
 }
 
-void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node node)
+void UpdateDomRect(ge_common_struct::dom_node* node,
+                   ge_common_struct::ge_rect parent_rect)
+{
+    int offsetx=0;
+    int offsety=0;
+    int paint_height=0;
+    UpdateDomRect(node,parent_rect,offsetx,offsety,paint_height);
+}
+
+void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node)
 {
 
-    ge_common_struct::box_style style=node.style;
+    ge_common_struct::box_style style=node->style;
     if(!style.visibility)
     {
         return;
@@ -422,10 +430,10 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node node)
     ge_common_struct::ge_color f_color=style.font_color;
     int font_size=style.font_size;
     int line_height=style.line_height;
-    size_t child_cnt=node.children.size();
+    size_t child_cnt=node->children.size();
 
     //
-    ge_common_struct::ge_rect box_rect=node.box;
+    ge_common_struct::ge_rect box_rect=node->box;
     if(style.out_radius>0)
     {
         FillRoundRect(p_context,box_rect,style.out_radius,border_color);
@@ -446,13 +454,13 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node node)
     rect.y=box_rect.y+style.border_width;
     rect.w=box_rect.w-2*style.border_width;
     rect.h=box_rect.h-2*style.border_width;
-    if(node.child_layout!=ge_common_struct::ui_layout::GRID_LAYOUT)
+    if(node->child_layout!=ge_common_struct::ui_layout::GRID_LAYOUT)
     {
         FillRect(p_context,rect,bg_color.r,bg_color.g,bg_color.b,bg_color.a);
     }
     if(child_cnt>0)
     {
-        std::vector<ge_common_struct::dom_node> children=node.children;
+        std::vector<ge_common_struct::dom_node*> children=node->children;
         for(size_t i=0; i<child_cnt; i++)
         {
             DrawDomNode(p_context,children[i]);
@@ -467,17 +475,17 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node node)
         actual_rect.w=rect.w-padding.left-padding.right;
         actual_rect.h=rect.h-padding.top-padding.bottom;
         ge_common_struct::text_align align=style.align;
-        //TODO µ±ÎÄ×Ö³¬¹ıÒ»ĞĞ
+        //TODO å½“æ–‡å­—è¶…è¿‡ä¸€è¡Œ
         if(align==ge_common_struct::text_align::LEFT)
         {
             int x=actual_rect.x;
             int y=actual_rect.y;
             RenderText(p_context,p_context->GetFont(),
-                       x,y,node.text,f_color);
+                       x,y,node->text,f_color);
         }
         else if(align==ge_common_struct::text_align::CENTER)
         {
-            int charcnt=ge_str_utilities::utf8_strlen(node.text);
+            int charcnt=ge_str_utilities::Utf8Strlen(node->text);
             int margin_l=(actual_rect.w-charcnt*font_size)/2;
             int margin_t=line_height-font_size;
             if(margin_t<0)
@@ -491,14 +499,14 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node node)
             int x=actual_rect.x+margin_l;
             int y=actual_rect.y+margin_t;
             RenderText(p_context,p_context->GetFont(),
-                       x,y,node.text,f_color);
+                       x,y,node->text,f_color);
         }
         else if(align==ge_common_struct::text_align::RIGHT)
         {
-            int charcnt=ge_str_utilities::utf8_strlen(node.text);
+            int charcnt=ge_str_utilities::Utf8Strlen(node->text);
             int x=actual_rect.x+actual_rect.w-font_size*charcnt;
             int y=actual_rect.y;
-            RenderText(p_context,p_context->GetFont(),x,y,node.text,f_color);
+            RenderText(p_context,p_context->GetFont(),x,y,node->text,f_color);
         }
     }
 
@@ -507,7 +515,7 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node node)
 void DrawWindow(CGameContext* p_context,CGameWindow& window)
 {
     std::string title=window.GetTitle();
-    int length=ge_str_utilities::utf8_strlen(title);
+    int length=ge_str_utilities::Utf8Strlen(title);
     bool showTitle=true;
     if(length==0)
     {
@@ -600,7 +608,7 @@ void RenderSceneLayer(CGameContext* p_context,C2DGameScene& scene,
                     continue;
                 }
 
-                int idx=row[i]-1; //×¢ÒâÕâÀïÊÇÒòÎªÔ­À´tmxÎÄ¼şÊÇ´Ó1¿ªÊ¼µÄ±àºÅµÄ
+                int idx=row[i]-1; //æ³¨æ„è¿™é‡Œæ˜¯å› ä¸ºåŸæ¥tmxæ–‡ä»¶æ˜¯ä»1å¼€å§‹çš„ç¼–å·çš„
 
                 int tileset_row_num=idx/tileset_cols;
                 int tileset_col_num=idx%tileset_cols;
@@ -655,16 +663,17 @@ void DrawRoundRect(CGameContext* p_context,ge_common_struct::ge_rect rect,
                            color.r,color.g,color.b,color.a);
 }
 
-void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node node
+void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node* node
               ,unsigned int pointer_pos,CTiledIcon icon,std::string icon_name,
               int offsetx,int offsety,int scale)
 {
     if(icon.GetSpriteSheet())
     {
-        if(pointer_pos<node.children.size()){
-            ge_common_struct::dom_node cnode=node.children[pointer_pos];
-            int screenx=cnode.box.x+offsetx;
-            int screeny=cnode.box.y+offsety;
+        if(pointer_pos<node->children.size())
+        {
+            ge_common_struct::dom_node* cnode=node->children[pointer_pos];
+            int screenx=cnode->box.x+offsetx;
+            int screeny=cnode->box.y+offsety;
             int pos=icon.GetIconPos(icon_name);
             RenderSprite(p_context,&icon,screenx,screeny,pos,scale);
         }
