@@ -11,7 +11,7 @@
 #include "CTileLayer.h"
 #include "CAdvDialog.h"
 #include "CChoiceDialog.h"
-#include "CTiledIcon.h"
+#include "CImageDB.h"
 
 namespace sdlutil2{
 
@@ -57,11 +57,15 @@ namespace sdlutil2{
 
     void DrawPointDownTriangle(CGameContext* p_context,int x,int y,int height,ge_common_struct::ge_color color);
 
-    void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node);
+    void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImageDB& imagedb);
 
     void UpdateDomRect(ge_common_struct::dom_node* node,ge_common_struct::ge_rect parent_rect);
 
     void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node* node,unsigned int pointer_pos,CTiledIcon icon,std::string icon_name,int offsetx=0,int offsety=0,int scale=1);
+
+    void DrawIcon2(CGameContext* p_context,ge_common_struct::ge_rect rect,CIcon icon,int scale=1);
+
+    void DrawBorder(CGameContext* context,ge_common_struct::ge_rect rect,ge_common_struct::ge_adv_color color,ge_common_struct::ge_sides border);
 
 }
 

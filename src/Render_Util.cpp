@@ -305,9 +305,42 @@ void UpdateDomRect(ge_common_struct::dom_node* node,
     {
         layout=node->parent_node->child_layout;
     }
+    ge_common_struct::ge_rect rc=node->style.client_rect;
+    int actual_width=0;
+    if(rc.w==0)
+    {
+        //宽度受内容限制
+        if(node->children.size()==0)
+        {
+            if(node->style.is_icon)
+            {
+
+            }
+            else
+            {
+                std::string text=node->text;
+                int word_cnt=ge_str_utilities::Utf8Strlen(text);
+                actual_width=node->style.font_size*word_cnt;
+            }
+        }
+        else
+        {
+            if(node->parent_node!=nullptr)
+            {
+                if(node->style.is_percentage)
+                {
+                    rc.w=100;
+                }
+                else
+                {
+                    actual_width=parent_rect.w;
+                }
+            }
+        }
+    }
     if(layout==ge_common_struct::ui_layout::NULL_LAYOUT)
     {
-        ge_common_struct::ge_rect rc=node->style.client_rect;
+
         if(!node->style.position_is_absolute)
         {
             if(node->style.is_percentage)
@@ -321,7 +354,7 @@ void UpdateDomRect(ge_common_struct::dom_node* node,
             {
                 node->box.x=parent_rect.x+rc.x;
                 node->box.y=parent_rect.y+rc.y;
-                node->box.w=rc.w;
+                node->box.w=rc.w==0?actual_width:rc.w;
                 node->box.h=rc.h;
             }
         }
@@ -338,19 +371,21 @@ void UpdateDomRect(ge_common_struct::dom_node* node,
             {
                 node->box.x=rc.x;
                 node->box.y=rc.y;
-                node->box.w=rc.w;
+                node->box.w=rc.w==0?actual_width:rc.w;
+                //node->box.w=rc.w;
                 node->box.h=rc.h;
             }
         }
 
-        if(node->box.h>paint_height){
+        if(node->box.h>paint_height)
+        {
             paint_height=node->box.h;
         }
 
     }
     else
     {
-        ge_common_struct::ge_rect rc=node->style.client_rect;
+        //ge_common_struct::ge_rect rc=node->style.client_rect;
         if(node->style.is_percentage)
         {
             node->box.w=rc.w*parent_rect.w/100;
@@ -359,7 +394,8 @@ void UpdateDomRect(ge_common_struct::dom_node* node,
         }
         else
         {
-            node->box.w=rc.w;
+            node->box.w=rc.w==0?actual_width:rc.w;
+            //node->box.w=rc.w;
             node->box.h=rc.h;
         }
 
@@ -377,7 +413,8 @@ void UpdateDomRect(ge_common_struct::dom_node* node,
         {
             offsetx=node->box.x+node->box.w-parent_rect.x;
             node->box.y=parent_rect.y+offsety;
-            if(node->box.h>paint_height){
+            if(node->box.h>paint_height)
+            {
                 paint_height=node->box.h;
             }
         }
@@ -398,10 +435,12 @@ void UpdateDomRect(ge_common_struct::dom_node* node,
         p_rectnew.h=node->box.h-node->style.border_width*2;
         UpdateDomRect(cnode,p_rectnew,offx_new,offy_new,paint_h_new);
     }
-    int actual_height=offy_new+paint_h_new;
-    if(node->box.h==0){
+    int actual_height=offy_new+paint_h_new+node->style.border_width*2;
+    if(node->box.h<=0)
+    {
         node->box.h=actual_height;
-        if(node->box.h>paint_height){
+        if(node->box.h>paint_height)
+        {
             paint_height=node->box.h;
         }
     }
@@ -417,9 +456,8 @@ void UpdateDomRect(ge_common_struct::dom_node* node,
     UpdateDomRect(node,parent_rect,offsetx,offsety,paint_height);
 }
 
-void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node)
+void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImageDB& imagedb)
 {
-
     ge_common_struct::box_style style=node->style;
     if(!style.visibility)
     {
@@ -436,6 +474,7 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node)
     ge_common_struct::ge_rect box_rect=node->box;
     if(style.out_radius>0)
     {
+        border_color.a=border_color.a*bg_color.a/255;
         FillRoundRect(p_context,box_rect,style.out_radius,border_color);
         if(style.draw_shape)
         {
@@ -445,9 +484,9 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node)
     }
     else
     {
-
-        FillRect(p_context,box_rect,border_color.r
-                 ,border_color.g,border_color.b,border_color.a);
+        //FillRect(p_context,box_rect,border_color.r,border_color.g,border_color.b,border_color.a);
+        DrawBorder(p_context,box_rect,border_color,
+                   ge_common_struct::ge_sides(style.border_width));
     }
     ge_common_struct::ge_rect rect;
     rect.x=box_rect.x+style.border_width;
@@ -463,7 +502,7 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node)
         std::vector<ge_common_struct::dom_node*> children=node->children;
         for(size_t i=0; i<child_cnt; i++)
         {
-            DrawDomNode(p_context,children[i]);
+            DrawDomNode(p_context,children[i],imagedb);
         }
     }
     else
@@ -475,39 +514,50 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node)
         actual_rect.w=rect.w-padding.left-padding.right;
         actual_rect.h=rect.h-padding.top-padding.bottom;
         ge_common_struct::text_align align=style.align;
-        //TODO 当文字超过一行
-        if(align==ge_common_struct::text_align::LEFT)
+        if(node->style.is_icon)
         {
-            int x=actual_rect.x;
-            int y=actual_rect.y;
-            RenderText(p_context,p_context->GetFont(),
-                       x,y,node->text,f_color);
+            std::string icon_name=node->text;
+            CIcon icon=imagedb.GetIcon(icon_name);
+            DrawIcon2(p_context,actual_rect,icon);
         }
-        else if(align==ge_common_struct::text_align::CENTER)
+        else
         {
-            int charcnt=ge_str_utilities::Utf8Strlen(node->text);
-            int margin_l=(actual_rect.w-charcnt*font_size)/2;
-            int margin_t=line_height-font_size;
-            if(margin_t<0)
+            //TODO 当文字超过一行
+            if(align==ge_common_struct::text_align::LEFT)
             {
-                margin_t=0;
+                int x=actual_rect.x;
+                int y=actual_rect.y;
+                RenderText(p_context,p_context->GetFont(),
+                           x,y,node->text,f_color);
             }
-            if(margin_l<0)
+            else if(align==ge_common_struct::text_align::CENTER)
             {
-                margin_l=0;
+                int charcnt=ge_str_utilities::Utf8Strlen(node->text);
+                int margin_l=(actual_rect.w-charcnt*font_size)/2;
+                int margin_t=line_height-font_size;
+                if(margin_t<0)
+                {
+                    margin_t=0;
+                }
+                if(margin_l<0)
+                {
+                    margin_l=0;
+                }
+                int x=actual_rect.x+margin_l;
+                int y=actual_rect.y+margin_t;
+                RenderText(p_context,p_context->GetFont(),
+                           x,y,node->text,f_color);
             }
-            int x=actual_rect.x+margin_l;
-            int y=actual_rect.y+margin_t;
-            RenderText(p_context,p_context->GetFont(),
-                       x,y,node->text,f_color);
+            else if(align==ge_common_struct::text_align::RIGHT)
+            {
+                int charcnt=ge_str_utilities::Utf8Strlen(node->text);
+                int x=actual_rect.x+actual_rect.w-font_size*charcnt;
+                int y=actual_rect.y;
+                RenderText(p_context,p_context->GetFont(),x,y,node->text,f_color);
+            }
+
         }
-        else if(align==ge_common_struct::text_align::RIGHT)
-        {
-            int charcnt=ge_str_utilities::Utf8Strlen(node->text);
-            int x=actual_rect.x+actual_rect.w-font_size*charcnt;
-            int y=actual_rect.y;
-            RenderText(p_context,p_context->GetFont(),x,y,node->text,f_color);
-        }
+
     }
 
 }
@@ -663,6 +713,16 @@ void DrawRoundRect(CGameContext* p_context,ge_common_struct::ge_rect rect,
                            color.r,color.g,color.b,color.a);
 }
 
+void DrawIcon2(CGameContext* p_context,ge_common_struct::ge_rect rect
+               ,CIcon icon,int scale){
+    CTiledIcon* ti=icon.GetTiledIcon();
+    if(ti){
+        int idx=icon.GetIdx();
+        RenderSprite(p_context,ti,rect.x,rect.y,idx,scale);
+    }
+
+}
+
 void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node* node
               ,unsigned int pointer_pos,CTiledIcon icon,std::string icon_name,
               int offsetx,int offsety,int scale)
@@ -680,5 +740,19 @@ void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node* node
     }
 }
 
+void DrawBorder(CGameContext* context,ge_common_struct::ge_rect rect,
+                ge_common_struct::ge_adv_color color,
+                ge_common_struct::ge_sides border)
+{
+    ge_common_struct::ge_rect top_rect=GetBorderTop(rect,border.top);
+    FillRect(context,top_rect,color.r,color.g,color.b,color.a);
+    ge_common_struct::ge_rect bottom_rect=GetBorderBottom(rect,border.bottom);
+    FillRect(context,bottom_rect,color.r,color.g,color.b,color.a);
+    ge_common_struct::ge_rect left_rect=GetBorderLeft(rect,border.left);
+    FillRect(context,left_rect,color.r,color.g,color.b,color.a);
+    ge_common_struct::ge_rect right_rect=GetBorderRight(rect,border.right);
+    FillRect(context,right_rect,color.r,color.g,color.b,color.a);
+
+}
 
 }

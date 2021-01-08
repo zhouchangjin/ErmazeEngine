@@ -23,6 +23,8 @@ void CGameEngine::Init(){
     //db->SetIntData("tmp",9); //demo
     db->CreateList("players");
     db->CreateList("tanks");
+    db->AddPropToType("player","icon","icon",CGameDatabase::DataType::ICON_ID);
+    db->AddPropToType("tank","icon","icon",CGameDatabase::DataType::ICON_ID);
     int id1=db->StoreObject("pro_1","wolf","player");
     int id2=db->StoreObject("pro_2","fish","player");
     int id3=db->StoreObject("pro_3","bear","player");
@@ -31,6 +33,16 @@ void CGameEngine::Init(){
     int tid1=db->StoreObject("t_1","tank1","tank");
     int tid2=db->StoreObject("t_2","tank2","tank");
     int tid3=db->StoreObject("t_3","tank3","tank");
+
+
+    db->SetObjectText(id1,"icon","point_right");
+    db->SetObjectText(id2,"icon","point_right");
+    db->SetObjectText(id3,"icon","point_right");
+    db->SetObjectText(id4,"icon","point_right");
+
+    db->SetObjectText(tid1,"icon","point_right");
+    db->SetObjectText(tid2,"icon","point_right");
+    db->SetObjectText(tid3,"icon","point_right");
 
     db->AddObjectToList("players",id1);
     db->AddObjectToList("players",id2);

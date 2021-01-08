@@ -11,13 +11,14 @@ CGameUISystem::CGameUISystem(CGameContext* context)
 CGameUISystem::~CGameUISystem()
 {
     //dtor
+    /*
     for(size_t i=0; i<m_spritesheets.size(); i++)
     {
         CSpriteSheet* sheet=m_spritesheets[i];
         delete sheet;
     }
     m_spritesheets.clear();
-
+    */
     std::map<std::string,ge_common_struct::dom_node*>::iterator it;
     for(it=m_panels.begin(); it!=m_panels.end(); it++)
     {
@@ -65,9 +66,10 @@ void CGameUISystem::LoadUI()
         CSpriteSheet* sprite_sheet=new CSpriteSheet(image.path,image.width,
                 image.height,
                 image.col,image.row);
-        m_spritesheets.push_back(sprite_sheet);
-        CTiledIcon tile_icon(sprite_sheet);
-        m_icons[image.id]=tile_icon;
+        m_imagedb.AddSpriteSheet(sprite_sheet,image.id);
+        //m_spritesheets.push_back(sprite_sheet);
+        //CTiledIcon tile_icon(sprite_sheet);
+        //m_icons[image.id]=tile_icon;
     }
 
     for(it_icon=icons.begin(); it_icon!=icons.end(); it_icon++)
@@ -76,10 +78,11 @@ void CGameUISystem::LoadUI()
         std::string sheet_id=icon.resource_id;
         std::string icon_name=icon.icon_name;
         int icon_idx=icon.id;
-        if(m_icons.find(sheet_id)!=m_icons.end())
+        if(m_imagedb.ContainsSheet(sheet_id))
         {
-            m_icons[sheet_id].AddIcon(icon_name,icon_idx);
-            m_icon_sheet_map[icon_name]=sheet_id;
+            m_imagedb.AddIconSheet(sheet_id,icon_name,icon_idx);
+            //m_icons[sheet_id].AddIcon(icon_name,icon_idx);
+            //m_icon_sheet_map[icon_name]=sheet_id;
         }
     }
 
@@ -169,16 +172,7 @@ void CGameUISystem::UpdateDialogStyle()
 
 CTiledIcon CGameUISystem::GetTileIcon(std::string icon_name)
 {
-    if(m_icon_sheet_map.find(icon_name)!=m_icon_sheet_map.end())
-    {
-        std::string sheet_id=m_icon_sheet_map[icon_name];
-        CTiledIcon icon=m_icons[sheet_id];
-        return icon;
-    }
-    else
-    {
-        return CTiledIcon(nullptr);
-    }
+   return m_imagedb.GetTiledIcon(icon_name);
 }
 
 void CGameUISystem::Draw()
@@ -198,7 +192,7 @@ void CGameUISystem::Draw()
             {
                 ge_common_struct::dom_node* menu=m_panels[menu_id];
                 sdlutil2::UpdateDomRect(menu,fullWindow);
-                sdlutil2::DrawDomNode(m_context,menu);
+                sdlutil2::DrawDomNode(m_context,menu,m_imagedb);
                 CTiledIcon icon=GetTileIcon(m_menu_pointer);
                 sdlutil2::DrawIcon(m_context,menu,m_el_pointer,icon,m_menu_pointer,-10,0,m_icon_scale);
             }
@@ -478,7 +472,6 @@ void CGameUISystem::ProcessInput(CInputEvent event)
                 m_menu_stack.push_back(m_confirm_menu);
                 ge_common_struct::dom_node* menu=m_panels[m_confirm_menu];
                 UpdateDomContent(menu);
-                //DomMemoryTest(menu);
             }
         }
 
@@ -519,6 +512,8 @@ void CGameUISystem::UpdateDomContent(ge_common_struct::dom_node* node
             list_item->child_seq_no=j;
             list_item->child_layout=ge_common_struct::
                                     ui_layout::HORIZONTAL_LAYOUT;
+            list_item->style.border_color.a=0;
+            list_item->style.background_color.a=0;
             list_item->parent_node=node;
             for(size_t i=0; i<children.size(); i++)
             {
@@ -528,7 +523,7 @@ void CGameUISystem::UpdateDomContent(ge_common_struct::dom_node* node
             }
         }
     }
-    if(node->obj_id>0)
+    if(node->obj_id>=0)
     {
         context_obj=node->obj_id;
     }
@@ -542,7 +537,7 @@ void CGameUISystem::UpdateDomContent(ge_common_struct::dom_node* node
     }
     else
     {
-        if(node->use_template && context_obj>0)
+        if(node->use_template && context_obj>=0)
         {
             //TODO
             std::string template_text=node->template_text;
@@ -551,9 +546,11 @@ void CGameUISystem::UpdateDomContent(ge_common_struct::dom_node* node
             size_t end_pos=template_text.find("}");
             std::string prop_name=template_text.substr(start_pos+1,end_pos-1);
             std::string obj_type=m_database->GetObjectType(context_obj);
-            //GE_LOG("==%s==%s\n",obj_type.c_str(),prop_name.c_str());
             CGameDatabase::DataType type=m_database->GetPropType(obj_type,prop_name);
-            if(type==CGameDatabase::DataType::INTEGER){
+            if(prop_name.compare("label")==0){
+                std::string label=m_database->GetObjectLabel(context_obj);
+                node->text=label;
+            }else if(type==CGameDatabase::DataType::INTEGER){
                 int value=m_database->GetObjectData(context_obj,prop_name);
                 node->text=""+value;
             }else if(type==CGameDatabase::DataType::TEXT){
@@ -578,7 +575,6 @@ ge_common_struct::dom_node* CGameUISystem::CreateDomNode(
     node->child_layout=temp->child_layout;
     node->col=temp->col;
     node->ele_name=temp->ele_name;
-    node->is_icon=temp->is_icon;
     node->list_name=temp->list_name;
     node->obj_id=context_id;
     node->parent_node=temp->parent_node;

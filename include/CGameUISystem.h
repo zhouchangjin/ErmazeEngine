@@ -8,7 +8,7 @@
 #include <CAdvDialog.h>
 #include <CSdlGameContext.h>
 #include <IDefaultEventProcess.h>
-#include <CTiledIcon.h>
+#include <CImageDB.h>
 
 class CGameUISystem :public IDefaultEventProcess
 {
@@ -44,9 +44,8 @@ class CGameUISystem :public IDefaultEventProcess
 
         std::vector<std::string> m_menu_stack;
         std::vector<std::string> m_hud_stack;
-        std::vector<CSpriteSheet*> m_spritesheets;
-        std::map<std::string,CTiledIcon> m_icons;
-        std::map<std::string,std::string> m_icon_sheet_map;
+
+        CImageDB m_imagedb;
         std::map<std::string,ge_common_struct::dom_node*> m_panels;
 
         CTiledIcon GetTileIcon(std::string icon_name);

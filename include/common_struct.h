@@ -144,10 +144,10 @@ struct ge_point
 
 struct ge_rect
 {
-    int x;
-    int y;
-    int w;
-    int h;
+    int x=0;
+    int y=0;
+    int w=0;
+    int h=0;
 };
 
 struct ge_sides
@@ -156,6 +156,14 @@ struct ge_sides
     int left=0;
     int bottom=0;
     int right=0;
+    ge_sides(){
+    };
+    ge_sides(int width){
+        top=width;
+        left=width;
+        bottom=width;
+        right=width;
+    };
 };
 
 struct ge_triangle
@@ -316,6 +324,7 @@ typedef std::map<std::string,attribute> AttMap;
 
 struct box_style
 {
+    bool is_icon=false;
     bool draw_shape=false;
     bool position_is_absolute=false; //暂时没有用的属性
     bool is_percentage=false;
@@ -352,7 +361,6 @@ struct dom_node
     int child_seq_no=-1;
     int obj_id=-1;
     bool use_template=false;
-    bool is_icon=false;
 };
 
 

@@ -329,6 +329,20 @@ ge_common_struct::box_style parse_window_style(xmlutils::MyXMLNode
         window_style.border_color.g=255;
         window_style.border_color.b=255;
         window_style.border_color.a=80;
+    }else if(node_name.compare("icon")==0){
+        if(window_style.client_rect.h==0){
+            window_style.client_rect.h=28;
+            window_style.client_rect.w=68;
+            window_style.padding.top=2;
+            window_style.padding.bottom=2;
+            window_style.padding.left=20;
+            window_style.padding.right=20;
+            window_style.is_icon=true;
+        }
+    }else if(node_name.compare("text")==0){
+        if(window_style.client_rect.h==0){
+            window_style.client_rect.h=window_style.line_height;
+        }
     }
     return window_style;
 }
@@ -447,6 +461,7 @@ ge_common_struct::dom_node* parse_dom(xmlutils::MyXMLNode xml_node,
         template_dom->ele_name="template_"+list_name;
         template_dom->list_name=list_name;
         template_dom->parent_node=node;
+        template_dom->style=node->style;
         node->list_template=template_dom;
         std::string layoutstr=template_node.StrAttribute("layout");
         ge_common_struct::ui_layout layout=str_to_layout(layoutstr);
