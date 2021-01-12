@@ -736,6 +736,19 @@ void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node* node
             int screeny=cnode->box.y+offsety;
             int pos=icon.GetIconPos(icon_name);
             RenderSprite(p_context,&icon,screenx,screeny,pos,scale);
+        }else{
+            size_t cnt=node->children.size();
+            int p_parent=pointer_pos%cnt;
+            ge_common_struct::dom_node* cnode=node->children[p_parent];
+            size_t ccnt=cnode->children.size();
+            size_t idx=pointer_pos/cnt;
+            if(idx<ccnt){
+                ge_common_struct::dom_node* ccnode=cnode->children[idx];
+                int screenx=ccnode->box.x+offsetx;
+                int screeny=ccnode->box.y+offsety;
+                int pos=icon.GetIconPos(icon_name);
+                RenderSprite(p_context,&icon,screenx,screeny,pos,scale);
+            }
         }
     }
 }

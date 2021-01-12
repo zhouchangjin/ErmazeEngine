@@ -417,7 +417,8 @@ void CGameUISystem::ProcessInput(CInputEvent event)
                     if(m_panels.find(menu_id)!=m_panels.end())
                     {
                         ge_common_struct::dom_node* node=m_panels[menu_id];
-                        int cnt=node->children.size();
+                        //int cnt=node->children.size();
+                        int cnt=ge_common_struct::CntDomChild(node);
                         //int row=node.row;
                         int col=node->col;
                         ge_common_struct::ui_layout layout=node->child_layout;

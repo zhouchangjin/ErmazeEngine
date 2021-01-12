@@ -80,6 +80,8 @@
 		<Unit filename="include/CGameWindow.h" />
 		<Unit filename="include/CGuideDog.h" />
 		<Unit filename="include/CHandler.h" />
+		<Unit filename="include/CIcon.h" />
+		<Unit filename="include/CImageDB.h" />
 		<Unit filename="include/CInputEvent.h" />
 		<Unit filename="include/CLayer.h" />
 		<Unit filename="include/CMenuState.h" />
@@ -129,6 +131,8 @@
 		<Unit filename="src/CGameUISystem.cpp" />
 		<Unit filename="src/CGameWindow.cpp" />
 		<Unit filename="src/CHandler.cpp" />
+		<Unit filename="src/CIcon.cpp" />
+		<Unit filename="src/CImageDB.cpp" />
 		<Unit filename="src/CInputEvent.cpp" />
 		<Unit filename="src/CLayer.cpp" />
 		<Unit filename="src/CMenuState.cpp" />

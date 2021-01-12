@@ -461,6 +461,8 @@ void FreeDomNode(dom_node* node);
 
 void FreeDomVector(std::vector<dom_node*>& nodes);
 
+int CntDomChild(dom_node* node);
+
 }
 
 
