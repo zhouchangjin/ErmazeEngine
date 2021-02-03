@@ -2,7 +2,7 @@
 #define CSIMPLEGAMEDB_H
 
 #include <CGameDatabase.h>
-
+#include<algorithm>
 
 class CSimpleGameDB : public CGameDatabase
 {
@@ -32,7 +32,13 @@ public:
                        std::string prop_lable,DataType type=DataType::INTEGER);
     void CreateList(std::string list_name);
     void AddObjectToList(std::string list_name,int obj_id);
+    void RemoveObjectFromList(std::string list_name,int obj_id);
     std::vector<int> GetListObjectIds(std::string list_name);
+
+    void CreateInventory(std::string list_name);
+    void AddObjectToInventory(std::string list_name,int obj_type_id);
+    void RemoveObjectFromInventory(std::string list_name,int obj_type_id);
+
 protected:
 
 private:
@@ -53,6 +59,7 @@ private:
     std::vector<std::string> m_text_data;
     //list
     std::map<std::string,std::vector<int>> m_object_list;
+    std::map<std::string,std::map<int,int>> m_inventory;
     //metadata below
     std::map<std::string,int> m_prop_id;
     std::map<std::string,std::vector<std::string>> m_prop_name;

@@ -53,6 +53,8 @@ void CGameEngine::Init(){
     db->AddObjectToList("tanks",tid2);
     db->AddObjectToList("tanks",tid3);
 
+    //db->RemoveObjectFromList("players",id4);
+
     CServiceLocator::Register(CServiceLocator::DATABASE,db);
 
     m_game_context=new CSdlGameContext();

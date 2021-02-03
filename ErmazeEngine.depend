@@ -443,7 +443,7 @@
 	<CGameUISystem.h>
 	<GameFileLoader.h>
 
-1610094821 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
+1612348034 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
 	"CGameEngine.h"
 
 1607567445 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
@@ -492,7 +492,7 @@
 	"SDL_Utilities.h"
 	"common_struct.h"
 
-1610451316 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
+1610620539 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
 	"Render_Util.h"
 	"CSdlGameContext.h"
 
@@ -750,16 +750,17 @@
 1606213111 source:c:\work\cplusworkspace\ermazeengine\src\cgamedatabase.cpp
 	"CGameDatabase.h"
 
-1608630676 c:\work\cplusworkspace\ermazeengine\include\cgamedatabase.h
+1612349390 c:\work\cplusworkspace\ermazeengine\include\cgamedatabase.h
 	<vector>
 	<map>
 	<string>
 
-1609401924 source:c:\work\cplusworkspace\ermazeengine\src\csimplegamedb.cpp
+1612347931 source:c:\work\cplusworkspace\ermazeengine\src\csimplegamedb.cpp
 	"CSimpleGameDB.h"
 
-1608550029 c:\work\cplusworkspace\ermazeengine\include\csimplegamedb.h
+1612349468 c:\work\cplusworkspace\ermazeengine\include\csimplegamedb.h
 	<CGameDatabase.h>
+	<algorithm>
 
 1606305391 source:c:\work\cplusworkspace\ermazeengine\src\cservicelocator.cpp
 	"CServiceLocator.h"

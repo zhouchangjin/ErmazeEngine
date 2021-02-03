@@ -738,6 +738,7 @@ void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node* node
             RenderSprite(p_context,&icon,screenx,screeny,pos,scale);
         }else{
             size_t cnt=node->children.size();
+            //TODO 如果是有行列排列则下面代码才有效
             int p_parent=pointer_pos%cnt;
             ge_common_struct::dom_node* cnode=node->children[p_parent];
             size_t ccnt=cnode->children.size();
