@@ -42,7 +42,7 @@ class CGameUISystem :public IDefaultEventProcess
         int m_el_pointer=0;
 
         //HARD CODING
-        std::string m_confirm_menu="equip_menu";//"equip_menu";//"guide_menu";
+        std::string m_confirm_menu="guide_menu";//"equip_menu";//"guide_menu";
         std::string m_menu_pointer="point_right";
         int m_icon_scale=2;
 

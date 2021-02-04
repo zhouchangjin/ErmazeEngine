@@ -463,16 +463,22 @@ void CGameUISystem::ProcessInput(CInputEvent event)
                         }
                         else if(event_type==ge_common_struct::key_event_type::KEY_CONFIRM)
                         {
+                            ge_common_struct::dom_node* sel
+                            =ge_common_struct::GetDomSelection(node,m_el_pointer);
                             IMenuProcess * process=m_ui_manager.GetMenuInterface(menu_id);
                             if(process)
                             {
-                                ge_common_struct::dom_node* sel=ge_common_struct
-                                                                ::GetDomSelection(node,m_el_pointer);
                                 int obj_id=-1;
                                 if(sel!=nullptr){
                                     obj_id=sel->obj_id;
                                 }
                                 process->Choose(obj_id,m_el_pointer);
+                            }
+                            //GE_LOG("%s\n",sel->action_name.c_str());
+                            if(m_panels.find(sel->action_name)!=m_panels.end()){
+                                m_menu_stack.push_back(sel->action_name);
+                                ge_common_struct::dom_node* menu=m_panels[sel->action_name];
+                                UpdateDomContent(menu);
                             }
                         }
                     }

@@ -360,6 +360,7 @@ struct dom_node
     std::string list_name;
     int child_seq_no=-1;
     int obj_id=-1;
+    std::string action_name; //菜单跳转
     bool use_template=false;
 };
 

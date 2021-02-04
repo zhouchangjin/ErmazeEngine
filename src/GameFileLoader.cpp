@@ -427,6 +427,9 @@ ge_common_struct::dom_node* parse_dom(xmlutils::MyXMLNode xml_node,
     {
         node->node_id=xml_node.StrAttribute("id");
     }
+    if(xml_node.HasAttribute("action")){
+        node->action_name=xml_node.StrAttribute("action");
+    }
     ge_common_struct::box_style style=parse_window_style(xml_node,parent);
     node->style=style;
 
