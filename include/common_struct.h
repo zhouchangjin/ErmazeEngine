@@ -463,6 +463,8 @@ void FreeDomVector(std::vector<dom_node*>& nodes);
 
 int CntDomChild(dom_node* node);
 
+dom_node* GetDomSelection(dom_node* select_root,int selection);
+
 }
 
 

@@ -50,4 +50,29 @@ int CntDomChild(dom_node* node)
     return total;
 }
 
+dom_node* GetDomSelection(dom_node* select_root,int selection){
+    if((size_t)selection<select_root->children.size()){
+        ge_common_struct::dom_node* sel_node=select_root->children[selection];
+        if(sel_node->children.size()==0){
+            return sel_node;
+        }else{
+            return sel_node->children[0];
+        }
+    }else{
+        size_t cnt=select_root->children.size();
+        //TODO 如果是有行列排列则下面代码才有效
+        int p_parent=selection%cnt;
+        ge_common_struct::dom_node* sub_node=select_root->children[p_parent];
+        size_t ccnt=sub_node->children.size();
+        size_t idx=selection/cnt;
+        if(idx<ccnt){
+            ge_common_struct::dom_node* sel_node=sub_node->children[idx];
+            return sel_node;
+        }else{
+            return nullptr;
+        }
+
+    }
+}
+
 }
