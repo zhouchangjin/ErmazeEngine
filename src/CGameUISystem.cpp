@@ -461,6 +461,12 @@ void CGameUISystem::ProcessInput(CInputEvent event)
                             m_el_pointer++;
                             m_el_pointer=m_el_pointer%cnt;
                         }
+                        else if(event_type==ge_common_struct::key_event_type::KEY_CONFIRM){
+                            IMenuProcess * process=m_ui_manager.GetMenuInterface(menu_id);
+                            if(process){
+                              process->Choose(-1,m_el_pointer);
+                            }
+                        }
                     }
                 }
 
@@ -595,4 +601,9 @@ ge_common_struct::dom_node* CGameUISystem::CreateDomNode(
         }
     }
     return node;
+}
+
+void CGameUISystem::LoadActions(){
+    CEquipMenu* equip_menu=new CEquipMenu();
+    m_ui_manager.Register("equip_menu",equip_menu);
 }

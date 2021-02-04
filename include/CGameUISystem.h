@@ -9,6 +9,8 @@
 #include <CSdlGameContext.h>
 #include <IDefaultEventProcess.h>
 #include <CImageDB.h>
+#include <CUIActionManager.h>
+#include <CEquipMenu.h>
 
 class CGameUISystem :public IDefaultEventProcess
 {
@@ -24,8 +26,10 @@ class CGameUISystem :public IDefaultEventProcess
         bool EventLock();
         void LoadUI();
         void LoadDatabase();
+        void LoadActions();
         void SetDialogStyle(ge_common_struct::dialog_style_node style);
     protected:
+        CUIActionManager m_ui_manager;
         CGameContext* m_context;
         CGameDatabase* m_database=nullptr;
         CAdvDialog  m_dialog;
@@ -44,6 +48,7 @@ class CGameUISystem :public IDefaultEventProcess
 
         std::vector<std::string> m_menu_stack;
         std::vector<std::string> m_hud_stack;
+
 
         CImageDB m_imagedb;
         std::map<std::string,ge_common_struct::dom_node*> m_panels;

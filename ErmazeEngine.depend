@@ -443,13 +443,13 @@
 	<CGameUISystem.h>
 	<GameFileLoader.h>
 
-1612348034 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
+1612365753 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
 	"CGameEngine.h"
 
 1607567445 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
 	"CMenuState.h"
 
-1609327994 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
+1612431613 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
 	"COrthoTileState.h"
 
 1607513094 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
@@ -714,10 +714,10 @@
 1606383249 c:\work\cplusworkspace\ermazeengine\include\cchoicedialog.h
 	<CGameWindow.h>
 
-1610360330 source:c:\work\cplusworkspace\ermazeengine\src\cgameuisystem.cpp
+1612431771 source:c:\work\cplusworkspace\ermazeengine\src\cgameuisystem.cpp
 	"CGameUISystem.h"
 
-1610451396 c:\work\cplusworkspace\ermazeengine\include\cgameuisystem.h
+1612431280 c:\work\cplusworkspace\ermazeengine\include\cgameuisystem.h
 	"XML_Utilities.h"
 	"GameFileLoader.h"
 	<CGameDatabase.h>
@@ -726,6 +726,8 @@
 	<CSdlGameContext.h>
 	<IDefaultEventProcess.h>
 	<CImageDB.h>
+	<CUIActionManager.h>
+	<CEquipMenu.h>
 
 1605951157 source:c:\work\cplusworkspace\ermazeengine\src\cactionevent.cpp
 	"CActionEvent.h"
@@ -755,7 +757,7 @@
 	<map>
 	<string>
 
-1612347931 source:c:\work\cplusworkspace\ermazeengine\src\csimplegamedb.cpp
+1612350652 source:c:\work\cplusworkspace\ermazeengine\src\csimplegamedb.cpp
 	"CSimpleGameDB.h"
 
 1612349468 c:\work\cplusworkspace\ermazeengine\include\csimplegamedb.h
@@ -813,4 +815,24 @@
 	<string>
 	<vector>
 	<CIcon.h>
+
+1612428670 source:c:\work\cplusworkspace\ermazeengine\src\imenuprocess.cpp
+	"IMenuProcess.h"
+
+1612429521 c:\work\cplusworkspace\ermazeengine\include\imenuprocess.h
+
+1612430759 c:\work\cplusworkspace\ermazeengine\include\cuiactionmanager.h
+	<map>
+	<string>
+	<IMenuProcess.h>
+
+1612430409 source:c:\work\cplusworkspace\ermazeengine\src\cuiactionmanager.cpp
+	"CUIActionManager.h"
+
+1612431719 source:c:\work\cplusworkspace\ermazeengine\src\cequipmenu.cpp
+	"CEquipMenu.h"
+
+1612431360 c:\work\cplusworkspace\ermazeengine\include\cequipmenu.h
+	<common_struct.h>
+	<IMenuProcess.h>
 

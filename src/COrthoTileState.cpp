@@ -9,6 +9,7 @@ COrthoTileState::COrthoTileState(CGameContext* context):CGameState(context)
     m_ui_system.SetContext(context);
     m_ui_system.LoadDatabase();
     m_ui_system.LoadUI();
+    m_ui_system.LoadActions();
 }
 
 COrthoTileState::~COrthoTileState()
