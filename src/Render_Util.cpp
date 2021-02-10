@@ -517,7 +517,7 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImage
         if(node->style.is_icon)
         {
             std::string icon_name=node->text;
-            CIcon icon=imagedb.GetIcon(icon_name);
+            CTexture icon=imagedb.GetTexture(icon_name);
             DrawIcon2(p_context,actual_rect,icon);
         }
         else
@@ -714,8 +714,8 @@ void DrawRoundRect(CGameContext* p_context,ge_common_struct::ge_rect rect,
 }
 
 void DrawIcon2(CGameContext* p_context,ge_common_struct::ge_rect rect
-               ,CIcon icon,int scale){
-    CTiledIcon* ti=icon.GetTiledIcon();
+               ,CTexture icon,int scale){
+    CTiledTexture* ti=icon.GetTiledTexture();
     if(ti){
         int idx=icon.GetIdx();
         RenderSprite(p_context,ti,rect.x,rect.y,idx,scale);
@@ -724,7 +724,7 @@ void DrawIcon2(CGameContext* p_context,ge_common_struct::ge_rect rect
 }
 
 void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node* node
-              ,unsigned int pointer_pos,CTiledIcon icon,std::string icon_name,
+              ,unsigned int pointer_pos,CTiledTexture icon,std::string icon_name,
               int offsetx,int offsety,int scale)
 {
     if(icon.GetSpriteSheet())
@@ -734,7 +734,7 @@ void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node* node
             ge_common_struct::dom_node* cnode=node->children[pointer_pos];
             int screenx=cnode->box.x+offsetx;
             int screeny=cnode->box.y+offsety;
-            int pos=icon.GetIconPos(icon_name);
+            int pos=icon.GetTexturePos(icon_name);
             RenderSprite(p_context,&icon,screenx,screeny,pos,scale);
         }else{
             size_t cnt=node->children.size();
@@ -747,7 +747,7 @@ void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node* node
                 ge_common_struct::dom_node* ccnode=cnode->children[idx];
                 int screenx=ccnode->box.x+offsetx;
                 int screeny=ccnode->box.y+offsety;
-                int pos=icon.GetIconPos(icon_name);
+                int pos=icon.GetTexturePos(icon_name);
                 RenderSprite(p_context,&icon,screenx,screeny,pos,scale);
             }
         }

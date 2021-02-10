@@ -15,11 +15,11 @@ CImageDB::~CImageDB()
     m_spritesheets.clear();
 }
 
-void CImageDB::AddIconSheet(std::string sheet_name,
-                            std::string icon_name,int icon_idx){
-    CTiledIcon& tiled_icon=m_icons[sheet_name];
-    tiled_icon.AddIcon(icon_name,icon_idx);
-    m_icon_map[icon_name]=sheet_name;
+void CImageDB::AddTexture(std::string sheet_name,
+                            std::string texture_name,int idx){
+    CTiledTexture& tiled_texture=m_textures[sheet_name];
+    tiled_texture.AddTexture(texture_name,idx);
+    m_texture_map[texture_name]=sheet_name;
 }
 
 void CImageDB::AddSpriteSheet(CSpriteSheet* spritesheet,
@@ -27,44 +27,44 @@ void CImageDB::AddSpriteSheet(CSpriteSheet* spritesheet,
     //不支持多线程
     m_sheet_map[sheet_name]=m_spritesheets.size();
     m_spritesheets.push_back(spritesheet);
-    CTiledIcon tile_icon(spritesheet);
-    m_icons[sheet_name]=tile_icon;
+    CTiledTexture tile_icon(spritesheet);
+    m_textures[sheet_name]=tile_icon;
 }
 
-CIcon CImageDB::GetIcon(std::string icon_name){
-    if(m_icon_map.find(icon_name)!=m_icon_map.end()){
-        std::string icon_sheet=m_icon_map[icon_name];
-        CTiledIcon* ticon=&m_icons[icon_sheet];
-        int idx=ticon->GetIconPos(icon_name);
-        CIcon icon(ticon,idx);
-        return icon;
+CTexture CImageDB::GetTexture(std::string texture_name){
+    if(m_texture_map.find(texture_name)!=m_texture_map.end()){
+        std::string sheet_name=m_texture_map[texture_name];
+        CTiledTexture* tt=&m_textures[sheet_name];
+        int idx=tt->GetTexturePos(texture_name);
+        CTexture texture(tt,idx);
+        return texture;
     }else{
-        return CIcon(nullptr,-1);
+        return CTexture(nullptr,-1);
     }
     //CIcon icon()
 }
 
 bool CImageDB::ContainsSheet(std::string sheet_name){
-    if(m_icons.find(sheet_name)!=m_icons.end()){
+    if(m_textures.find(sheet_name)!=m_textures.end()){
         return true;
     }else{
         return false;
     }
 }
 
-bool CImageDB::ContainsIcon(std::string icon_name){
-    if(m_icon_map.find(icon_name)!=m_icon_map.end()){
+bool CImageDB::ContainsTexture(std::string texture_name){
+    if(m_texture_map.find(texture_name)!=m_texture_map.end()){
         return true;
     }else{
         return false;
     }
 }
 
-CTiledIcon CImageDB::GetTiledIcon(std::string icon_name){
-    if(m_icon_map.find(icon_name)!=m_icon_map.end()){
-        std::string iconsheet=m_icon_map[icon_name];
-        return m_icons[iconsheet];
+CTiledTexture CImageDB::GetTiledTexture(std::string texture_name){
+    if(m_texture_map.find(texture_name)!=m_texture_map.end()){
+        std::string iconsheet=m_texture_map[texture_name];
+        return m_textures[iconsheet];
     }else{
-        return CTiledIcon(nullptr);
+        return CTiledTexture(nullptr);
     }
 }

@@ -48,12 +48,13 @@ class CGameUISystem :public IDefaultEventProcess
 
         std::vector<std::string> m_menu_stack;
         std::vector<std::string> m_hud_stack;
+        std::vector<int> m_elp_stack;
 
 
         CImageDB m_imagedb;
         std::map<std::string,ge_common_struct::dom_node*> m_panels;
 
-        CTiledIcon GetTileIcon(std::string icon_name);
+        CTiledTexture GetTileIcon(std::string icon_name);
         void UpdateDialogStyle();
         void LoadNextLine();
         void SelChoice();

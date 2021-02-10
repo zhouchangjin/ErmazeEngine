@@ -64,6 +64,7 @@
 		<Unit filename="include/CCamera2D.h" />
 		<Unit filename="include/CChoiceDialog.h" />
 		<Unit filename="include/CDomWindow.h" />
+		<Unit filename="include/CEquipMenu.h" />
 		<Unit filename="include/CEventManager.h" />
 		<Unit filename="include/CGame.h" />
 		<Unit filename="include/CGameContext.h" />
@@ -100,9 +101,11 @@
 		<Unit filename="include/CTileLayer.h" />
 		<Unit filename="include/CTiledIcon.h" />
 		<Unit filename="include/CTransferArea.h" />
+		<Unit filename="include/CUIActionManager.h" />
 		<Unit filename="include/GameFileLoader.h" />
 		<Unit filename="include/IDefaultActionEventProcess.h" />
 		<Unit filename="include/IDefaultEventProcess.h" />
+		<Unit filename="include/IMenuProcess.h" />
 		<Unit filename="include/Render_Util.h" />
 		<Unit filename="include/SDL_Utilities.h" />
 		<Unit filename="include/Str_Utilities.h" />
@@ -117,6 +120,7 @@
 		<Unit filename="src/CCamera2D.cpp" />
 		<Unit filename="src/CChoiceDialog.cpp" />
 		<Unit filename="src/CDomWindow.cpp" />
+		<Unit filename="src/CEquipMenu.cpp" />
 		<Unit filename="src/CGame.cpp" />
 		<Unit filename="src/CGameContext.cpp" />
 		<Unit filename="src/CGameData.cpp" />
@@ -151,9 +155,11 @@
 		<Unit filename="src/CTileLayer.cpp" />
 		<Unit filename="src/CTiledIcon.cpp" />
 		<Unit filename="src/CTransferArea.cpp" />
+		<Unit filename="src/CUIActionManager.cpp" />
 		<Unit filename="src/GameFileLoader.cpp" />
 		<Unit filename="src/IDefaultActionEventProcess.cpp" />
 		<Unit filename="src/IDefaultEventProcess.cpp" />
+		<Unit filename="src/IMenuProcess.cpp" />
 		<Unit filename="src/Main.cpp" />
 		<Unit filename="src/Render_Util.cpp" />
 		<Unit filename="src/SDL_Utilities.cpp" />

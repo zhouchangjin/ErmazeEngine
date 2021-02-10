@@ -6,7 +6,8 @@ class CServiceLocator
 {
     public:
         enum ServiceID{
-            DATABASE
+            DATABASE,
+            TEXTURE_DB
         };
         template<class ServiceType>
         static ServiceType* GetService(CServiceLocator::ServiceID id){

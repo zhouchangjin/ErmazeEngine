@@ -5,4 +5,7 @@
 	<icons>
 		<icon ref_sheet="ui01" name="point_right" id="0" direction="0"/>
 	</icons>
+	<textures>
+		<texture ref_sheet="ui02" name="grass" id="0"/>
+	</textures>
   </ui>

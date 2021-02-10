@@ -80,7 +80,7 @@ void CGameUISystem::LoadUI()
         int icon_idx=icon.id;
         if(m_imagedb.ContainsSheet(sheet_id))
         {
-            m_imagedb.AddIconSheet(sheet_id,icon_name,icon_idx);
+            m_imagedb.AddTexture(sheet_id,icon_name,icon_idx);
             //m_icons[sheet_id].AddIcon(icon_name,icon_idx);
             //m_icon_sheet_map[icon_name]=sheet_id;
         }
@@ -170,9 +170,9 @@ void CGameUISystem::UpdateDialogStyle()
     m_dialog.InitResponseByDialog();
 }
 
-CTiledIcon CGameUISystem::GetTileIcon(std::string icon_name)
+CTiledTexture CGameUISystem::GetTileIcon(std::string icon_name)
 {
-    return m_imagedb.GetTiledIcon(icon_name);
+    return m_imagedb.GetTiledTexture(icon_name);
 }
 
 void CGameUISystem::Draw()
@@ -193,7 +193,7 @@ void CGameUISystem::Draw()
                 ge_common_struct::dom_node* menu=m_panels[menu_id];
                 sdlutil2::UpdateDomRect(menu,fullWindow);
                 sdlutil2::DrawDomNode(m_context,menu,m_imagedb);
-                CTiledIcon icon=GetTileIcon(m_menu_pointer);
+                CTiledTexture icon=GetTileIcon(m_menu_pointer);
                 sdlutil2::DrawIcon(m_context,menu,m_el_pointer,icon,m_menu_pointer,-10,0,m_icon_scale);
             }
         }
@@ -425,6 +425,10 @@ void CGameUISystem::ProcessInput(CInputEvent event)
                         if(event_type==ge_common_struct::key_event_type::KEY_CANCLE)
                         {
                             m_menu_stack.pop_back();
+                            if(m_elp_stack.size()>0){
+                                m_el_pointer=m_elp_stack.back();
+                                m_elp_stack.pop_back();
+                            }
                         }
                         else if(event_type==ge_common_struct::key_event_type::KEY_DOWN)
                         {
@@ -479,6 +483,9 @@ void CGameUISystem::ProcessInput(CInputEvent event)
                                 m_menu_stack.push_back(sel->action_name);
                                 ge_common_struct::dom_node* menu=m_panels[sel->action_name];
                                 UpdateDomContent(menu);
+                                m_elp_stack.push_back(m_el_pointer);
+                                m_el_pointer=0;
+
                             }
                         }
                     }
@@ -490,6 +497,7 @@ void CGameUISystem::ProcessInput(CInputEvent event)
         {
             if(event_type==ge_common_struct::key_event_type::KEY_CONFIRM)
             {
+                m_el_pointer=0;
                 m_menu_stack.push_back(m_confirm_menu);
                 ge_common_struct::dom_node* menu=m_panels[m_confirm_menu];
                 UpdateDomContent(menu);

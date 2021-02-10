@@ -1,0 +1,29 @@
+<ui>
+<hud>
+
+<panel id="skyview">
+<rect x="0" y="0" w="100" h="30" num_type="percentage" radius="10">
+<background texture="cloud.png" repeat="0" />
+
+</rect>
+</panel>
+
+<panel id="groundview">
+
+</panel>
+
+<panel id="headbox">
+
+</panel>
+
+</hud>
+
+<menu>
+
+<window id="battle_command">
+
+</window>
+
+</menu>
+
+</ui>
