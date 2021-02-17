@@ -32,6 +32,7 @@ class CGameUISystem :public IDefaultEventProcess
         CUIActionManager m_ui_manager;
         CGameContext* m_context;
         CGameDatabase* m_database=nullptr;
+        CImageDB* m_imagedb=nullptr;
         CAdvDialog  m_dialog;
 
         ge_common_struct::dialog_tree_node* m_dialog_tree=nullptr;
@@ -51,7 +52,6 @@ class CGameUISystem :public IDefaultEventProcess
         std::vector<int> m_elp_stack;
 
 
-        CImageDB m_imagedb;
         std::map<std::string,ge_common_struct::dom_node*> m_panels;
 
         CTiledTexture GetTileIcon(std::string icon_name);

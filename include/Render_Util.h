@@ -57,7 +57,7 @@ namespace sdlutil2{
 
     void DrawPointDownTriangle(CGameContext* p_context,int x,int y,int height,ge_common_struct::ge_color color);
 
-    void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImageDB& imagedb);
+    void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImageDB* imagedb);
 
     void UpdateDomRect(ge_common_struct::dom_node* node,ge_common_struct::ge_rect parent_rect);
 

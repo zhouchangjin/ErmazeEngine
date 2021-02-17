@@ -19,6 +19,10 @@ CGameEngine::~CGameEngine()
 void CGameEngine::Init(){
 
     CSimpleGameDB* db=new CSimpleGameDB();
+    CImageDB* image_db=new CImageDB();
+    CServiceLocator::Register(CServiceLocator::DATABASE,db);
+    CServiceLocator::Register(CServiceLocator::TEXTURE_DB,image_db);
+    image_db->Initialize();
     //demo db
     //db->SetIntData("tmp",9); //demo
     db->CreateList("players");
@@ -55,7 +59,6 @@ void CGameEngine::Init(){
 
     //db->RemoveObjectFromList("players",id4);
 
-    CServiceLocator::Register(CServiceLocator::DATABASE,db);
 
     m_game_context=new CSdlGameContext();
     CSdlGameContext* p_context=(CSdlGameContext*)m_game_context;

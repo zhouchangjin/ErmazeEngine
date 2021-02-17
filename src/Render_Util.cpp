@@ -456,7 +456,7 @@ void UpdateDomRect(ge_common_struct::dom_node* node,
     UpdateDomRect(node,parent_rect,offsetx,offsety,paint_height);
 }
 
-void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImageDB& imagedb)
+void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImageDB* imagedb)
 {
     ge_common_struct::box_style style=node->style;
     if(!style.visibility)
@@ -517,7 +517,7 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImage
         if(node->style.is_icon)
         {
             std::string icon_name=node->text;
-            CTexture icon=imagedb.GetTexture(icon_name);
+            CTexture icon=imagedb->GetTexture(icon_name);
             DrawIcon2(p_context,actual_rect,icon);
         }
         else

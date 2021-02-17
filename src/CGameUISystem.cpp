@@ -48,43 +48,6 @@ void CGameUISystem::SetDialogStyle(ge_common_struct::dialog_style_node style)
 
 void CGameUISystem::LoadUI()
 {
-    xmlutils::MyXMLDoc icon_doc=xmlutils::LoadXML("./ui/resource.ui");
-    xmlutils::MyXMLNode icon_sheet_node=icon_doc.
-                                        GetNode("/ui/spritesheets");
-    xmlutils::MyXMLNode icon_node=icon_doc.GetNode("/ui/icons");
-
-    std::map<std::string,ge_common_struct::image_def> sheets;
-    std::map<std::string,ge_common_struct::icon_def> icons;
-    ge_fileutil::parse_sheets(icon_sheet_node,sheets,"./ui/res/");
-    ge_fileutil::parse_icons(icon_node,icons);
-
-    std::map<std::string,ge_common_struct::image_def>::iterator it;
-    std::map<std::string,ge_common_struct::icon_def>::iterator it_icon;
-    for(it=sheets.begin(); it!=sheets.end(); it++)
-    {
-        ge_common_struct::image_def image=it->second;
-        CSpriteSheet* sprite_sheet=new CSpriteSheet(image.path,image.width,
-                image.height,
-                image.col,image.row);
-        m_imagedb.AddSpriteSheet(sprite_sheet,image.id);
-        //m_spritesheets.push_back(sprite_sheet);
-        //CTiledIcon tile_icon(sprite_sheet);
-        //m_icons[image.id]=tile_icon;
-    }
-
-    for(it_icon=icons.begin(); it_icon!=icons.end(); it_icon++)
-    {
-        ge_common_struct::icon_def icon=it_icon->second;
-        std::string sheet_id=icon.resource_id;
-        std::string icon_name=icon.icon_name;
-        int icon_idx=icon.id;
-        if(m_imagedb.ContainsSheet(sheet_id))
-        {
-            m_imagedb.AddTexture(sheet_id,icon_name,icon_idx);
-            //m_icons[sheet_id].AddIcon(icon_name,icon_idx);
-            //m_icon_sheet_map[icon_name]=sheet_id;
-        }
-    }
 
     xmlutils::MyXMLDoc doc=xmlutils::LoadXML("./ui/menu.ui");
     xmlutils::MyXMLNode node=doc.GetNode("ui");
@@ -116,6 +79,8 @@ void CGameUISystem::LoadDatabase()
     m_database=CServiceLocator::
                GetService<CGameDatabase>
                (CServiceLocator::ServiceID::DATABASE);
+    m_imagedb=CServiceLocator::GetService<CImageDB>
+    (CServiceLocator::ServiceID::TEXTURE_DB);
 }
 
 bool CGameUISystem::EventLock()
@@ -172,7 +137,7 @@ void CGameUISystem::UpdateDialogStyle()
 
 CTiledTexture CGameUISystem::GetTileIcon(std::string icon_name)
 {
-    return m_imagedb.GetTiledTexture(icon_name);
+    return m_imagedb->GetTiledTexture(icon_name);
 }
 
 void CGameUISystem::Draw()

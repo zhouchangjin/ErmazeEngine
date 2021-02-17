@@ -443,7 +443,7 @@
 	<CGameUISystem.h>
 	<GameFileLoader.h>
 
-1612365753 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
+1612968966 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
 	"CGameEngine.h"
 
 1607567445 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
@@ -492,11 +492,11 @@
 	"SDL_Utilities.h"
 	"common_struct.h"
 
-1612965166 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
+1612968036 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
 	"Render_Util.h"
 	"CSdlGameContext.h"
 
-1612958756 c:\work\cplusworkspace\ermazeengine\include\render_util.h
+1612967969 c:\work\cplusworkspace\ermazeengine\include\render_util.h
 	<string>
 	"SDL_Utilities.h"
 	"Str_Utilities.h"
@@ -714,10 +714,10 @@
 1606383249 c:\work\cplusworkspace\ermazeengine\include\cchoicedialog.h
 	<CGameWindow.h>
 
-1612965547 source:c:\work\cplusworkspace\ermazeengine\src\cgameuisystem.cpp
+1612968933 source:c:\work\cplusworkspace\ermazeengine\src\cgameuisystem.cpp
 	"CGameUISystem.h"
 
-1612958756 c:\work\cplusworkspace\ermazeengine\include\cgameuisystem.h
+1612967393 c:\work\cplusworkspace\ermazeengine\include\cgameuisystem.h
 	"XML_Utilities.h"
 	"GameFileLoader.h"
 	<CGameDatabase.h>
@@ -773,7 +773,7 @@
 1612434375 source:c:\work\cplusworkspace\ermazeengine\src\gamefileloader.cpp
 	"GameFileLoader.h"
 
-1608806859 c:\work\cplusworkspace\ermazeengine\include\gamefileloader.h
+1613569328 c:\work\cplusworkspace\ermazeengine\include\gamefileloader.h
 	<common_struct.h>
 	<XML_Utilities.h>
 	<Str_Utilities.h>
@@ -807,13 +807,15 @@
 1610090997 c:\work\cplusworkspace\ermazeengine\include\cicon.h
 	<CTiledIcon.h>
 
-1612965591 source:c:\work\cplusworkspace\ermazeengine\src\cimagedb.cpp
+1613123139 source:c:\work\cplusworkspace\ermazeengine\src\cimagedb.cpp
 	"CImageDB.h"
 
-1612966506 c:\work\cplusworkspace\ermazeengine\include\cimagedb.h
+1612968987 c:\work\cplusworkspace\ermazeengine\include\cimagedb.h
 	<map>
 	<string>
 	<vector>
+	<XML_Utilities.h>
+	<GameFileLoader.h>
 	<ITextureDB.h>
 
 1612428670 source:c:\work\cplusworkspace\ermazeengine\src\imenuprocess.cpp
