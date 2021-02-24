@@ -372,22 +372,22 @@ ge_common_struct::dialog_style_node parse_dialog_style(xmlutils::MyXMLNode
     return style_node;
 }
 
-void parse_icons(xmlutils::MyXMLNode xml_node,
-                 std::map<std::string,ge_common_struct::icon_def>& icons)
+void parse_resource(xmlutils::MyXMLNode xml_node,
+                 std::map<std::string,ge_common_struct::resource_def>& resources)
 {
-    xmlutils::MyXMLNode icon_node=xml_node.Child("icon");
-    for(; icon_node; icon_node=icon_node.NextSlibing("icon"))
+    xmlutils::MyXMLNode node=xml_node.FirstChild();
+    for(; node; node=node.NextSlibing())
     {
-        std::string ref_id=icon_node.StrAttribute("ref_sheet");
-        std::string name=icon_node.StrAttribute("name");
-        int id=icon_node.IntAttribute("id");
-        int dir=icon_node.IntAttribute("direction");
-        ge_common_struct::icon_def icon_def;
-        icon_def.direction=dir;
-        icon_def.id=id;
-        icon_def.icon_name=name;
-        icon_def.resource_id=ref_id;
-        icons[name]=icon_def;
+        std::string ref_id=node.StrAttribute("ref_sheet");
+        std::string name=node.StrAttribute("name");
+        int id=node.IntAttribute("id");
+        int dir=node.IntAttribute("direction");
+        ge_common_struct::resource_def resourcedef;
+        resourcedef.direction=dir;
+        resourcedef.id=id;
+        resourcedef.resource_name=name;
+        resourcedef.resource_id=ref_id;
+        resources[name]=resourcedef;
     }
 }
 

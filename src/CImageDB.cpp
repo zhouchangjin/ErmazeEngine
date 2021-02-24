@@ -93,13 +93,17 @@ void CImageDB::Initialize()
     xmlutils::MyXMLNode sheet_node=doc.
                                    GetNode("/ui/spritesheets");
     xmlutils::MyXMLNode icon_node=doc.GetNode("/ui/icons");
+    xmlutils::MyXMLNode texture_node=doc.GetNode("/ui/textures");
 
     std::map<std::string,ge_common_struct::image_def> sheets;
-    std::map<std::string,ge_common_struct::icon_def> icons;
+    std::map<std::string,ge_common_struct::resource_def> icons;
+    std::map<std::string,ge_common_struct::resource_def> textures;
     ge_fileutil::parse_sheets(sheet_node,sheets);
-    ge_fileutil::parse_icons(icon_node,icons);
+    ge_fileutil::parse_resource(icon_node,icons);
+    ge_fileutil::parse_resource(texture_node,textures);
     std::map<std::string,ge_common_struct::image_def>::iterator it;
-    std::map<std::string,ge_common_struct::icon_def>::iterator it_icon;
+    std::map<std::string,ge_common_struct::resource_def>::iterator it_icon;
+    std::map<std::string,ge_common_struct::resource_def>::iterator it_texture;
 
     for(it=sheets.begin(); it!=sheets.end(); it++)
     {
@@ -112,14 +116,19 @@ void CImageDB::Initialize()
 
     for(it_icon=icons.begin(); it_icon!=icons.end(); it_icon++)
     {
-        ge_common_struct::icon_def icon=it_icon->second;
+        ge_common_struct::resource_def icon=it_icon->second;
         std::string sheet_id=icon.resource_id;
-        std::string icon_name=icon.icon_name;
+        std::string icon_name=icon.resource_name;
         int icon_idx=icon.id;
         if(ContainsSheet(sheet_id))
         {
             AddTexture(sheet_id,icon_name,icon_idx);
         }
+    }
+
+    for(it_texture=textures.begin(); it_texture!=textures.end(); it_texture++)
+    {
+        ge_common_struct::resource_def texture=it_texture->second;
     }
 
 }

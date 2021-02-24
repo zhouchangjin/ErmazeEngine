@@ -1,12 +1,12 @@
   <ui>
 	<spritesheets>
 		<spritesheet id="ui01" path="./ui/res/icon.png" width="16" height="16" col="6" row="4"/>
-		<spritesheet id="battle_scene_01" path="skyview.png" width="48" height="32" col="6" row="8"/>
+		<spritesheet id="battle_scene_01" path="./ui/battle/backview.png" width="48" height="32" col="6" row="8"/>
 	</spritesheets>
 	<icons>
 		<icon ref_sheet="ui01" name="point_right" id="0" direction="0"/>
 	</icons>
 	<textures>
-		<texture ref_sheet="battle_scene_01" name="grass" id="0"/>
+		<texture ref_sheet="battle_scene_01" name="swamp" id="0"/>
 	</textures>
   </ui>

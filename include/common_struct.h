@@ -451,9 +451,9 @@ struct image_def{
     int col;
 };
 
-struct icon_def{
+struct resource_def{
     std::string resource_id;
-    std::string icon_name;
+    std::string resource_name;
     int id;
     int direction;
 };
