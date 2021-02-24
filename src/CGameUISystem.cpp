@@ -159,7 +159,7 @@ void CGameUISystem::Draw()
                 sdlutil2::UpdateDomRect(menu,fullWindow);
                 sdlutil2::DrawDomNode(m_context,menu,m_imagedb);
                 CTiledTexture icon=GetTileIcon(m_menu_pointer);
-                sdlutil2::DrawIcon(m_context,menu,m_el_pointer,icon,m_menu_pointer,-10,0,m_icon_scale);
+                sdlutil2::DrawTexture(m_context,menu,m_el_pointer,icon,m_menu_pointer,-10,0,m_icon_scale);
             }
         }
 

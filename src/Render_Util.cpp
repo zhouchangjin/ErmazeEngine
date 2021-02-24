@@ -518,7 +518,7 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImage
         {
             std::string icon_name=node->text;
             CTexture icon=imagedb->GetTexture(icon_name);
-            DrawIcon2(p_context,actual_rect,icon);
+            DrawTexture2(p_context,actual_rect,icon);
         }
         else
         {
@@ -713,29 +713,29 @@ void DrawRoundRect(CGameContext* p_context,ge_common_struct::ge_rect rect,
                            color.r,color.g,color.b,color.a);
 }
 
-void DrawIcon2(CGameContext* p_context,ge_common_struct::ge_rect rect
-               ,CTexture icon,int scale){
-    CTiledTexture* ti=icon.GetTiledTexture();
+void DrawTexture2(CGameContext* p_context,ge_common_struct::ge_rect rect
+               ,CTexture texture,int scale){
+    CTiledTexture* ti=texture.GetTiledTexture();
     if(ti){
-        int idx=icon.GetIdx();
+        int idx=texture.GetIdx();
         RenderSprite(p_context,ti,rect.x,rect.y,idx,scale);
     }
 
 }
 
-void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node* node
-              ,unsigned int pointer_pos,CTiledTexture icon,std::string icon_name,
+void DrawTexture(CGameContext* p_context,ge_common_struct::dom_node* node
+              ,unsigned int pointer_pos,CTiledTexture texture,std::string name,
               int offsetx,int offsety,int scale)
 {
-    if(icon.GetSpriteSheet())
+    if(texture.GetSpriteSheet())
     {
         if(pointer_pos<node->children.size())
         {
             ge_common_struct::dom_node* cnode=node->children[pointer_pos];
             int screenx=cnode->box.x+offsetx;
             int screeny=cnode->box.y+offsety;
-            int pos=icon.GetTexturePos(icon_name);
-            RenderSprite(p_context,&icon,screenx,screeny,pos,scale);
+            int pos=texture.GetTexturePos(name);
+            RenderSprite(p_context,&texture,screenx,screeny,pos,scale);
         }else{
             size_t cnt=node->children.size();
             //TODO 如果是有行列排列则下面代码才有效
@@ -747,8 +747,8 @@ void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node* node
                 ge_common_struct::dom_node* ccnode=cnode->children[idx];
                 int screenx=ccnode->box.x+offsetx;
                 int screeny=ccnode->box.y+offsety;
-                int pos=icon.GetTexturePos(icon_name);
-                RenderSprite(p_context,&icon,screenx,screeny,pos,scale);
+                int pos=texture.GetTexturePos(name);
+                RenderSprite(p_context,&texture,screenx,screeny,pos,scale);
             }
         }
     }

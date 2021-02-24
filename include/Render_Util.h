@@ -61,9 +61,9 @@ namespace sdlutil2{
 
     void UpdateDomRect(ge_common_struct::dom_node* node,ge_common_struct::ge_rect parent_rect);
 
-    void DrawIcon(CGameContext* p_context,ge_common_struct::dom_node* node,unsigned int pointer_pos,CTiledTexture icon,std::string icon_name,int offsetx=0,int offsety=0,int scale=1);
+    void DrawTexture(CGameContext* p_context,ge_common_struct::dom_node* node,unsigned int pointer_pos,CTiledTexture texture,std::string name,int offsetx=0,int offsety=0,int scale=1);
 
-    void DrawIcon2(CGameContext* p_context,ge_common_struct::ge_rect rect,CTexture icon,int scale=1);
+    void DrawTexture2(CGameContext* p_context,ge_common_struct::ge_rect rect,CTexture texture,int scale=1);
 
     void DrawBorder(CGameContext* context,ge_common_struct::ge_rect rect,ge_common_struct::ge_adv_color color,ge_common_struct::ge_sides border);
 

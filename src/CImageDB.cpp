@@ -129,6 +129,13 @@ void CImageDB::Initialize()
     for(it_texture=textures.begin(); it_texture!=textures.end(); it_texture++)
     {
         ge_common_struct::resource_def texture=it_texture->second;
+        std::string sheet_id=texture.resource_id;
+        std::string name=texture.resource_name;
+        int idx=texture.id;
+        if(ContainsSheet(sheet_id))
+        {
+            AddTexture(sheet_id,name,idx);
+        }
     }
 
 }
