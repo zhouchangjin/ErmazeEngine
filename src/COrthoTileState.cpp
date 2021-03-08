@@ -210,6 +210,12 @@ void COrthoTileState::Update()
         }
         npc->MoveUpdate();
     }
+
+    int rand_num=rand()%100;
+    if(rand_num==1){
+        GE_LOG("encounter\n");
+        m_state_value=3;
+    }
 }
 
 void COrthoTileState::PrepareData()

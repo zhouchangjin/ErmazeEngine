@@ -27,6 +27,8 @@ namespace sdlutil{
 
     void DrawRoundRect(SDL_Renderer* renderer,int x,int y,int w,int h,int radius,int r,int g,int b,int a);
 
+    void FillRectWithTexture(SDL_Renderer* renderer,int x,int y,int w,int h,SDL_Texture* texture,int sx,int sy,int sw,int sh,int scale=1);
+
 
 }
 

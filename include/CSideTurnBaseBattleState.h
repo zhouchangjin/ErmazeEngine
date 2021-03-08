@@ -1,12 +1,19 @@
 #ifndef CSIDETURNBASEBATTLESTATE_H
 #define CSIDETURNBASEBATTLESTATE_H
 
+#include <XML_Utilities.h>
+#include <GameFileLoader.h>
+#include <Render_Util.h>
+#include <CServiceLocator.h>
 #include <CGameState.h>
+#include <CImageDB.h>
+#include <CGameDatabase.h>
 
 class CSideTurnBaseBattleState: public CGameState
 {
     public:
         CSideTurnBaseBattleState();
+        CSideTurnBaseBattleState(CGameContext * context);
         virtual ~CSideTurnBaseBattleState();
         void Init();
         void Cleanup();
@@ -20,7 +27,15 @@ class CSideTurnBaseBattleState: public CGameState
 
     protected:
 
+        std::map<std::string,ge_common_struct::dom_node*> m_panels;
+        std::map<std::string,ge_common_struct::dom_node*> m_menus;
+
+
+        CGameDatabase* m_database=nullptr;
+        CImageDB* m_imagedb=nullptr;
+
     private:
+        void LoadComponents();
         void LoadUIDef();
         void LoadTexture();
         void LoadSprites();

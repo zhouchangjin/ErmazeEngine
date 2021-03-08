@@ -325,6 +325,7 @@ typedef std::map<std::string,attribute> AttMap;
 struct box_style
 {
     bool is_icon=false;
+    bool background_texture=false;
     bool draw_shape=false;
     bool position_is_absolute=false; //暂时没有用的属性
     bool is_percentage=false;
@@ -336,10 +337,10 @@ struct box_style
     ge_adv_color border_color;
     ge_color font_color;
     int border_width=0;
-    int texture_id=-1;
     int font_size=24;
     int line_height=26;
     text_align align=text_align::LEFT;
+    std::string texture_name;
 };
 
 struct dom_node

@@ -93,6 +93,7 @@
 		<Unit filename="include/CSceneData.h" />
 		<Unit filename="include/CSdlGameContext.h" />
 		<Unit filename="include/CServiceLocator.h" />
+		<Unit filename="include/CSideTurnBaseBattleState.h" />
 		<Unit filename="include/CSimpleGameDB.h" />
 		<Unit filename="include/CSprite.h" />
 		<Unit filename="include/CSpriteGameObject.h" />
@@ -148,6 +149,7 @@
 		<Unit filename="src/CSceneData.cpp" />
 		<Unit filename="src/CSdlGameContext.cpp" />
 		<Unit filename="src/CServiceLocator.cpp" />
+		<Unit filename="src/CSideTurnBaseBattleState.cpp" />
 		<Unit filename="src/CSimpleGameDB.cpp" />
 		<Unit filename="src/CSprite.cpp" />
 		<Unit filename="src/CSpriteGameObject.cpp" />

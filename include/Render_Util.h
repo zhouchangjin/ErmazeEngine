@@ -67,6 +67,8 @@ namespace sdlutil2{
 
     void DrawBorder(CGameContext* context,ge_common_struct::ge_rect rect,ge_common_struct::ge_adv_color color,ge_common_struct::ge_sides border);
 
+    void FillRectTexture(CGameContext* p_context,ge_common_struct::ge_rect rect,CTiledTexture texture,std::string texture_name,int scale=1);
+
 }
 
 #endif // RENDER_UTIL_H_INCLUDED

@@ -11,6 +11,7 @@
 #include "CGameContext.h"
 #include "CMenuState.h"
 #include "COrthoTileState.h"
+#include "CSideTurnBaseBattleState.h"
 #include "CSdlGameContext.h"
 #include "CRPGGameData.h"
 #include "CSimpleGameDB.h"

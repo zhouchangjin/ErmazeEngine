@@ -496,6 +496,11 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImage
     if(node->child_layout!=ge_common_struct::ui_layout::GRID_LAYOUT)
     {
         FillRect(p_context,rect,bg_color.r,bg_color.g,bg_color.b,bg_color.a);
+        if(node->style.background_texture)
+        {
+            std::string texture_name=node->style.texture_name;
+            FillRectTexture(p_context,rect,imagedb->GetTiledTexture(texture_name),texture_name,2);
+        }
     }
     if(child_cnt>0)
     {
@@ -714,9 +719,11 @@ void DrawRoundRect(CGameContext* p_context,ge_common_struct::ge_rect rect,
 }
 
 void DrawTexture2(CGameContext* p_context,ge_common_struct::ge_rect rect
-               ,CTexture texture,int scale){
+                  ,CTexture texture,int scale)
+{
     CTiledTexture* ti=texture.GetTiledTexture();
-    if(ti){
+    if(ti)
+    {
         int idx=texture.GetIdx();
         RenderSprite(p_context,ti,rect.x,rect.y,idx,scale);
     }
@@ -724,8 +731,8 @@ void DrawTexture2(CGameContext* p_context,ge_common_struct::ge_rect rect
 }
 
 void DrawTexture(CGameContext* p_context,ge_common_struct::dom_node* node
-              ,unsigned int pointer_pos,CTiledTexture texture,std::string name,
-              int offsetx,int offsety,int scale)
+                 ,unsigned int pointer_pos,CTiledTexture texture,std::string name,
+                 int offsetx,int offsety,int scale)
 {
     if(texture.GetSpriteSheet())
     {
@@ -736,14 +743,17 @@ void DrawTexture(CGameContext* p_context,ge_common_struct::dom_node* node
             int screeny=cnode->box.y+offsety;
             int pos=texture.GetTexturePos(name);
             RenderSprite(p_context,&texture,screenx,screeny,pos,scale);
-        }else{
+        }
+        else
+        {
             size_t cnt=node->children.size();
             //TODO 如果是有行列排列则下面代码才有效
             int p_parent=pointer_pos%cnt;
             ge_common_struct::dom_node* cnode=node->children[p_parent];
             size_t ccnt=cnode->children.size();
             size_t idx=pointer_pos/cnt;
-            if(idx<ccnt){
+            if(idx<ccnt)
+            {
                 ge_common_struct::dom_node* ccnode=cnode->children[idx];
                 int screenx=ccnode->box.x+offsetx;
                 int screeny=ccnode->box.y+offsety;
@@ -767,6 +777,27 @@ void DrawBorder(CGameContext* context,ge_common_struct::ge_rect rect,
     ge_common_struct::ge_rect right_rect=GetBorderRight(rect,border.right);
     FillRect(context,right_rect,color.r,color.g,color.b,color.a);
 
+}
+
+void FillRectTexture(CGameContext* p_context,ge_common_struct::ge_rect rect,
+                     CTiledTexture tiled_texture,std::string texture_name,
+                     int scale){
+    int pos=tiled_texture.GetTexturePos(texture_name);
+    CSpriteSheet* spritesheet=tiled_texture.GetSpriteSheet();
+    void * texture=spritesheet->GetTexture();
+    if(!texture)
+    {
+        std::string path=spritesheet->GetSpritePath();
+        spritesheet->SetTexture(LoadPngTexture(path,p_context));
+        texture=spritesheet->GetTexture();
+    }
+    SDL_Texture* sdl_texture=(SDL_Texture* )texture;
+    SDL_Renderer * renderer=GetRenderer(p_context);
+    ge_common_struct::ge_rect srect=spritesheet->GetRectByIdx(pos);
+    SDL_Rect sdlrect=TransformRect(srect);
+    sdlutil::FillRectWithTexture(renderer,rect.x,rect.y,rect.w,rect.h,
+                                 sdl_texture,sdlrect.x,sdlrect.y,
+                                 sdlrect.w,sdlrect.h,scale);
 }
 
 }

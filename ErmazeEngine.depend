@@ -5,7 +5,7 @@
 1605575700 c:\work\cplusworkspace\ermazeengine\include\cgamecontext.h
 	"common_struct.h"
 
-1613570198 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
+1615196796 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
 	<map>
 	<vector>
 	<string>
@@ -31,7 +31,7 @@
 1592728836 c:\work\cplusworkspace\ermazeengine\include\cgame.h
 	"CGameEngine.h"
 
-1606304713 c:\work\cplusworkspace\ermazeengine\include\cgameengine.h
+1614158566 c:\work\cplusworkspace\ermazeengine\include\cgameengine.h
 	<string>
 	<vector>
 	<map>
@@ -41,6 +41,7 @@
 	"CGameContext.h"
 	"CMenuState.h"
 	"COrthoTileState.h"
+	"CSideTurnBaseBattleState.h"
 	"CSdlGameContext.h"
 	"CRPGGameData.h"
 	"CSimpleGameDB.h"
@@ -404,7 +405,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1606899525 c:\work\cplusworkspace\ermazeengine\include\sdl_utilities.h
+1615200559 c:\work\cplusworkspace\ermazeengine\include\sdl_utilities.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -443,19 +444,19 @@
 	<CGameUISystem.h>
 	<GameFileLoader.h>
 
-1612968966 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
+1614158541 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
 	"CGameEngine.h"
 
 1607567445 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
 	"CMenuState.h"
 
-1612431613 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
+1614159710 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
 	"COrthoTileState.h"
 
 1607513094 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
 	"CSdlGameContext.h"
 
-1606899606 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
+1615200732 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
 	"SDL_Utilities.h"
 
 1606643052 source:c:\work\cplusworkspace\ermazeengine\src\main.cpp
@@ -492,11 +493,11 @@
 	"SDL_Utilities.h"
 	"common_struct.h"
 
-1614153576 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
+1615201196 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
 	"Render_Util.h"
 	"CSdlGameContext.h"
 
-1614153546 c:\work\cplusworkspace\ermazeengine\include\render_util.h
+1615199887 c:\work\cplusworkspace\ermazeengine\include\render_util.h
 	<string>
 	"SDL_Utilities.h"
 	"Str_Utilities.h"
@@ -770,7 +771,7 @@
 1612950516 c:\work\cplusworkspace\ermazeengine\include\cservicelocator.h
 	<map>
 
-1613571104 source:c:\work\cplusworkspace\ermazeengine\src\gamefileloader.cpp
+1615197746 source:c:\work\cplusworkspace\ermazeengine\src\gamefileloader.cpp
 	"GameFileLoader.h"
 
 1613571247 c:\work\cplusworkspace\ermazeengine\include\gamefileloader.h
@@ -831,18 +832,24 @@
 1612430409 source:c:\work\cplusworkspace\ermazeengine\src\cuiactionmanager.cpp
 	"CUIActionManager.h"
 
-1612431719 source:c:\work\cplusworkspace\ermazeengine\src\cequipmenu.cpp
+1614158627 source:c:\work\cplusworkspace\ermazeengine\src\cequipmenu.cpp
 	"CEquipMenu.h"
 
 1612431360 c:\work\cplusworkspace\ermazeengine\include\cequipmenu.h
 	<common_struct.h>
 	<IMenuProcess.h>
 
-1612950476 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
+1614175040 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
 	"CSideTurnBaseBattleState.h"
 
-1612860649 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
+1614158367 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
+	<XML_Utilities.h>
+	<GameFileLoader.h>
+	<Render_Util.h>
+	<CServiceLocator.h>
 	<CGameState.h>
+	<CImageDB.h>
+	<CGameDatabase.h>
 
 1612950563 source:c:\work\cplusworkspace\ermazeengine\src\itexturedb.cpp
 	"ITextureDB.h"

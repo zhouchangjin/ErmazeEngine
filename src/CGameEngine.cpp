@@ -5,13 +5,16 @@ CGameEngine::CGameEngine()
 
 CGameEngine::~CGameEngine()
 {
-    //TODO hard coding
     m_game_context->ClearUp();
     delete m_game_context;
     m_game_context=nullptr;
-    for(int i=1;i<=2;i++){
-       delete m_states[i];
+
+    std::map<int,CGameState*>::iterator it;
+
+    for(it=m_states.begin();it!=m_states.end();it++){
+       delete it->second;
     }
+    m_states.clear();
     delete m_gamedata;
     m_gamedata=nullptr;
 }
@@ -69,6 +72,7 @@ void CGameEngine::Init(){
     p_context->RegisterKey('a',ge_common_struct::key_event_type::KEY_LEFT);
     p_context->RegisterKey('d',ge_common_struct::key_event_type::KEY_RIGHT);
     LoadSetting();
+
     m_game_context->Init(m_game_setting.GetWindowWidth(),m_game_setting.GetWindowHeight());
     m_current_state=new CMenuState(m_game_context);
     m_current_state->Init();
@@ -84,6 +88,12 @@ void CGameEngine::Init(){
 
     m_states.insert(std::pair<int,CGameState*>(2,ortho_tile_state));
 
+    CSideTurnBaseBattleState * btt_state=new CSideTurnBaseBattleState(m_game_context);
+    btt_state->Init();
+    btt_state->SetGameData(m_gamedata);
+    btt_state->PrepareData();
+
+    m_states[3]=btt_state;
 
 }
 

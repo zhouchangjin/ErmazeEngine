@@ -295,6 +295,16 @@ ge_common_struct::box_style parse_window_style(xmlutils::MyXMLNode
                 std::string colorStr=background_node.StrAttribute("color");
                 ge_common_struct::ge_adv_color color=parse_rgba_color(colorStr);
                 window_style.background_color=color;
+            }else{
+                window_style.background_color.r=0;
+                window_style.background_color.g=0;
+                window_style.background_color.b=0;
+                window_style.background_color.a=255;
+            }
+            if(background_node.HasAttribute("texture")){
+                window_style.background_texture=true;
+                std::string name=background_node.StrAttribute("texture");
+                window_style.texture_name=name;
             }
         }
         if(border_node)

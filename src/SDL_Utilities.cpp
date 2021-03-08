@@ -122,5 +122,40 @@ void DrawRoundRect(SDL_Renderer* renderer,
 
 }
 
+void FillRectWithTexture(SDL_Renderer* renderer,int x,int y,int w,int h,
+                         SDL_Texture* texture,int sx,int sy,int sw,int sh,
+                         int scale)
+{
+
+    int cnt_x=w/(sw*scale);
+    int cnt_y=h/(sh*scale);
+    int rest_w=w-sw*scale*cnt_x;
+    int rest_h=h-sh*scale*cnt_y;
+    for(int i=0;i<=cnt_y;i++){
+        for(int j=0;j<=cnt_x;j++){
+
+            int draw_x=x+j*sw*scale;
+            int draw_y=y+i*sh*scale;
+            int draw_w=sw*scale;
+            int draw_h=sh*scale;
+            if(i==cnt_y){
+                draw_h=rest_h;
+            }
+            if(j==cnt_x){
+                draw_w=rest_w;
+            }
+            if(draw_h!=0 && draw_w!=0){
+                SDL_Rect clip;
+                clip.x=sx;
+                clip.y=sy;
+                clip.w=draw_w/scale;
+                clip.h=draw_h/scale;
+                RenderTexture(draw_x,draw_y,&clip,texture,renderer,scale);
+            }
+
+        }
+    }
+}
+
 
 }
