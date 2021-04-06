@@ -781,7 +781,8 @@ void DrawBorder(CGameContext* context,ge_common_struct::ge_rect rect,
 
 void FillRectTexture(CGameContext* p_context,ge_common_struct::ge_rect rect,
                      CTiledTexture tiled_texture,std::string texture_name,
-                     int scale){
+                     int scale)
+{
     int pos=tiled_texture.GetTexturePos(texture_name);
     CSpriteSheet* spritesheet=tiled_texture.GetSpriteSheet();
     void * texture=spritesheet->GetTexture();
@@ -798,6 +799,70 @@ void FillRectTexture(CGameContext* p_context,ge_common_struct::ge_rect rect,
     sdlutil::FillRectWithTexture(renderer,rect.x,rect.y,rect.w,rect.h,
                                  sdl_texture,sdlrect.x,sdlrect.y,
                                  sdlrect.w,sdlrect.h,scale);
+}
+
+
+void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,
+                   int context_obj)
+{
+
+    if(node->list_template!=nullptr)
+    {
+        //当前节点是一个列表
+        ge_common_struct::FreeDomVector(node->children);
+
+        ge_common_struct::dom_node* list_template=node->list_template;
+
+        std::vector<ge_common_struct::dom_node*>& children=
+            list_template->children;
+
+        std::string list_name=node->list_template->list_name;
+        std::vector<int> ids=gamedb->GetListObjectIds(list_name);
+        for(size_t j=0; j<ids.size(); j++)
+        {
+            int id=ids[j];
+            ge_common_struct::dom_node* list_item=
+                new ge_common_struct::dom_node();
+            node->children.push_back(list_item);
+            list_item->ele_name="list_container";
+            list_item->obj_id=id;
+            list_item->child_seq_no=j;
+            //TODO layout
+            list_item->child_layout=ge_common_struct::
+                                    ui_layout::HORIZONTAL_LAYOUT;
+            list_item->style.border_color.a=0;
+            list_item->style.background_color.a=0;
+            list_item->parent_node=node;
+            for(size_t i=0; i<children.size(); i++)
+            {
+                ge_common_struct::dom_node* temp=children[i];
+                ge_common_struct::dom_node* child=CreateDomNode(temp,list_item,id);
+                list_item->children.push_back(child);
+            }
+        }
+    }
+    if(node->obj_id>=0)
+    {
+        context_obj=node->obj_id;
+    }
+    if(node->children.size()>0)
+    {
+        for(size_t i=0; i<node->children.size(); i++)
+        {
+            UpdateDomNode(node->children[i],gamedb,context_obj);
+        }
+    }
+    else
+    {
+        if(node->use_template && context_obj>=0)
+        {
+            std::string template_text=node->template_text;
+
+        }
+
+    }
+
+
 }
 
 }

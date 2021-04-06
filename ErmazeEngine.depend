@@ -493,11 +493,11 @@
 	"SDL_Utilities.h"
 	"common_struct.h"
 
-1615201196 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
+1615436188 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
 	"Render_Util.h"
 	"CSdlGameContext.h"
 
-1615199887 c:\work\cplusworkspace\ermazeengine\include\render_util.h
+1615435697 c:\work\cplusworkspace\ermazeengine\include\render_util.h
 	<string>
 	"SDL_Utilities.h"
 	"Str_Utilities.h"
@@ -508,6 +508,7 @@
 	"CAdvDialog.h"
 	"CChoiceDialog.h"
 	"CImageDB.h"
+	"CGameDatabase.h"
 
 1603709491 c:\work\cplusworkspace\ermazeengine\include\cspritesheet.h
 	<string>
@@ -715,7 +716,7 @@
 1606383249 c:\work\cplusworkspace\ermazeengine\include\cchoicedialog.h
 	<CGameWindow.h>
 
-1614153246 source:c:\work\cplusworkspace\ermazeengine\src\cgameuisystem.cpp
+1615436232 source:c:\work\cplusworkspace\ermazeengine\src\cgameuisystem.cpp
 	"CGameUISystem.h"
 
 1612967393 c:\work\cplusworkspace\ermazeengine\include\cgameuisystem.h

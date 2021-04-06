@@ -491,7 +491,7 @@ void CGameUISystem::UpdateDomContent(ge_common_struct::dom_node* node
         ge_common_struct::FreeDomVector(node->children);
         //node->children.clear();
         ge_common_struct::dom_node* list_template=node->list_template;
-        std::vector<ge_common_struct::dom_node*> children=
+        std::vector<ge_common_struct::dom_node*>& children=
             list_template->children;
         std::string list_name=node->list_template->list_name;
         std::vector<int> ids=m_database->GetListObjectIds(list_name);

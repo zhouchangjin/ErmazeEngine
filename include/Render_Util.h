@@ -12,6 +12,7 @@
 #include "CAdvDialog.h"
 #include "CChoiceDialog.h"
 #include "CImageDB.h"
+#include "CGameDatabase.h"
 
 namespace sdlutil2{
 
@@ -58,6 +59,8 @@ namespace sdlutil2{
     void DrawPointDownTriangle(CGameContext* p_context,int x,int y,int height,ge_common_struct::ge_color color);
 
     void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImageDB* imagedb);
+
+    void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,int context_obj);
 
     void UpdateDomRect(ge_common_struct::dom_node* node,ge_common_struct::ge_rect parent_rect);
 
