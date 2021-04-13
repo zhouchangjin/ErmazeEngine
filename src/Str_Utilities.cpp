@@ -147,4 +147,17 @@ bool Contains(const std::string& original,std::string sub)
     }
 }
 
+std::vector<std::string> SearchPattern(const std::string& str,
+                                       const std::regex reg){
+    std::vector<std::string> result;
+    std::smatch mr;
+    std::string search_str=str;
+    while(std::regex_search(search_str,mr,reg)){
+        result.push_back(mr[0]);
+        search_str=mr.suffix().str();
+    }
+    return result;
+
+}
+
 }

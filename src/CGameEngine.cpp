@@ -31,6 +31,8 @@ void CGameEngine::Init(){
     db->CreateList("players");
     db->CreateList("tanks");
     db->AddPropToType("player","icon","icon",CGameDatabase::DataType::ICON_ID);
+    db->AddPropToType("player","hp","hp",CGameDatabase::DataType::INTEGER);
+    db->AddPropToType("player","hpmax","hpmax",CGameDatabase::DataType::INTEGER);
     db->AddPropToType("tank","icon","icon",CGameDatabase::DataType::ICON_ID);
     int id1=db->StoreObject("pro_1","wolf","player");
     int id2=db->StoreObject("pro_2","fish","player");
@@ -41,6 +43,15 @@ void CGameEngine::Init(){
     int tid2=db->StoreObject("t_2","tank2","tank");
     int tid3=db->StoreObject("t_3","tank3","tank");
 
+    db->SetObjectData(id1,"hp",90);
+    db->SetObjectData(id2,"hp",80);
+    db->SetObjectData(id3,"hp",60);
+    db->SetObjectData(id4,"hp",70);
+
+    db->SetObjectData(id1,"hpmax",90);
+    db->SetObjectData(id2,"hpmax",80);
+    db->SetObjectData(id3,"hpmax",60);
+    db->SetObjectData(id4,"hpmax",70);
 
     db->SetObjectText(id1,"icon","point_right");
     db->SetObjectText(id2,"icon","point_right");

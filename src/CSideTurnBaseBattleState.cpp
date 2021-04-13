@@ -57,6 +57,7 @@ void CSideTurnBaseBattleState::Draw()
     for(it=m_panels.begin(); it!=m_panels.end(); it++)
     {
         ge_common_struct::dom_node* p=it->second;
+        sdlutil2::UpdateDomNode(p,m_database);
         sdlutil2::UpdateDomRect(p,fullWindow);
         sdlutil2::DrawDomNode(m_context,p,m_imagedb);
 

@@ -11,16 +11,23 @@
 
 
 <panel id="player_condition">
+
 <rect x="40" y="60" w="50" h="40" num_type="percentage" radius="10">
+
 <background color="(0,0,0,255)"/>
 <border type="box" width="5" color="(255,255,255,255)"/>
+<font color="(255,255,255)"/>
 <container layout="vertical">
+
 <list list="players">
-<template layout="flow">
+<template item_width="100" item_height="15" layout="grid" col="2">
 <text>{label}</text><text>{hp}/{hpmax}</text>
 </template>
 </list>
+
+
 </container>
+
 </rect>
 </panel>
 

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <regex>
 
 namespace ge_str_utilities{
 
@@ -30,6 +31,8 @@ namespace ge_str_utilities{
 
     //°üº¬×Ó´®
     bool Contains(const std::string& original,std::string sub);
+
+    std::vector<std::string> SearchPattern(const std::string& str,const std::regex reg);
 
 }
 

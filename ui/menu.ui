@@ -22,12 +22,12 @@
 		<font color="(255,255,255)"/>	
 		<container layout="grid" row="1" col="2">
 			<list list="players">
-				<template layout="flow">
+				<template>
 					<icon>{icon}</icon><text>{label}</text>
 				</template>
 			</list>
 			<list list="tanks">
-				<template layout="flow">
+				<template>
 					<icon>{icon}</icon><text>{label}</text>
 				</template>
 			</list>

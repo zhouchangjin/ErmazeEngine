@@ -18,7 +18,8 @@ std::string CSimpleGameDB::GetKeyName(int object_id,int prop_id)
 
 std::string CSimpleGameDB::GetKeyName(int object_id,std::string prop_name)
 {
-    int prop_id=m_prop_id[prop_name];
+    std::string obj_type=GetObjectType(object_id);
+    int prop_id=GetPropId(obj_type,prop_name);
     return GetKeyName(object_id,prop_id);
 }
 

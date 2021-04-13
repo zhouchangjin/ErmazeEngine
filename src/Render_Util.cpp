@@ -3,6 +3,38 @@
 #include "CSdlGameContext.h"
 namespace sdlutil2
 {
+ge_common_struct::dom_node* CreateNodeFromTemplate(
+    ge_common_struct::dom_node* temp,
+    ge_common_struct::dom_node* parent,
+    int context_id)
+{
+    ge_common_struct::dom_node* node=new ge_common_struct::dom_node();
+    node->attributes=temp->attributes;
+    node->box=temp->box;
+    node->child_layout=temp->child_layout;
+    node->col=temp->col;
+    node->ele_name=temp->ele_name;
+    node->list_name=temp->list_name;
+    node->obj_id=context_id;
+    node->parent_node=parent;
+    node->row=temp->row;
+    node->style=temp->style;
+    node->template_text=temp->template_text;
+    node->use_template=temp->use_template;
+    node->text=temp->text;
+    node->template_node=temp;
+    if(temp->children.size()>0)
+    {
+        for(size_t i=0; i<temp->children.size(); i++)
+        {
+            ge_common_struct::dom_node* childtemp=temp->children[i];
+            ge_common_struct::dom_node* child=CreateNodeFromTemplate(childtemp,
+                                              node,context_id);
+            node->children.push_back(child);
+        }
+    }
+    return node;
+}
 
 ge_common_struct::ge_point CalcTitlePos(ge_common_struct::ge_rect r,int charcnt
                                         ,int font_size=24)
@@ -385,18 +417,18 @@ void UpdateDomRect(ge_common_struct::dom_node* node,
     }
     else
     {
-        //ge_common_struct::ge_rect rc=node->style.client_rect;
         if(node->style.is_percentage)
         {
             node->box.w=rc.w*parent_rect.w/100;
             node->box.h=rc.h*parent_rect.h/100;
-
+            //GE_LOG("%s %s (parent_wnd_height=%d  rect_percent_height=%d)\n",node->ele_name.c_str(),node->text.c_str(),parent_rect.h,rc.h);
         }
         else
         {
             node->box.w=rc.w==0?actual_width:rc.w;
-            //node->box.w=rc.w;
             node->box.h=rc.h;
+
+            //GE_LOG("%s %s (parent_wnd_height=%d  rect_height=%d)\n",node->ele_name.c_str(),node->text.c_str(),parent_rect.h,rc.h);
         }
 
         node->box.x=parent_rect.x+offsetx;
@@ -827,16 +859,22 @@ void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,
             list_item->ele_name="list_container";
             list_item->obj_id=id;
             list_item->child_seq_no=j;
-            //TODO layout
-            list_item->child_layout=ge_common_struct::
-                                    ui_layout::HORIZONTAL_LAYOUT;
+
+            list_item->child_layout=list_template->child_layout;
+            list_item->col=list_template->col;
+            list_item->row=list_template->row;
+
             list_item->style.border_color.a=0;
             list_item->style.background_color.a=0;
             list_item->parent_node=node;
+            list_item->style.is_percentage=true;
+            list_item->style.client_rect.h=list_template->style.client_rect.h;
+            list_item->style.client_rect.w=list_template->style.client_rect.w;
             for(size_t i=0; i<children.size(); i++)
             {
                 ge_common_struct::dom_node* temp=children[i];
-                ge_common_struct::dom_node* child=CreateDomNode(temp,list_item,id);
+                ge_common_struct::dom_node* child=
+                CreateNodeFromTemplate(temp,list_item,id);
                 list_item->children.push_back(child);
             }
         }
@@ -857,7 +895,39 @@ void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,
         if(node->use_template && context_obj>=0)
         {
             std::string template_text=node->template_text;
+            if(node->template_node!=nullptr)
+            {
+                std::vector<std::string>& var_list=node->template_node->var_list;
+                for(auto prop_name:var_list)
+                {
+                    std::string replace_str="{"+prop_name+"}";
+                    std::string obj_type=gamedb->GetObjectType(context_obj);
+                    CGameDatabase::DataType type=
+                        gamedb->GetPropType(obj_type,prop_name);
+                    std::string value="";
+                    if(prop_name.compare("label")==0)
+                    {
+                        value=gamedb->GetObjectLabel(context_obj);
+                    }
+                    else if(type==CGameDatabase::DataType::INTEGER)
+                    {
+                        int intValue=gamedb->GetObjectData(context_obj
+                                                           ,prop_name);
+                        value=std::to_string(intValue);
+                    }
+                    else if(type==CGameDatabase::DataType::TEXT)
+                    {
+                        value=gamedb->GetObjectText(context_obj,prop_name);
 
+                    }
+                    else if(type==CGameDatabase::DataType::ICON_ID)
+                    {
+                        value=gamedb->GetObjectText(context_obj,prop_name);
+                    }
+                    ge_str_utilities::ReplaceAll(template_text,replace_str,value);
+                }
+                node->text=template_text;
+            }
         }
 
     }

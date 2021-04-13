@@ -352,7 +352,7 @@ struct dom_node
     std::string text;
     std::string template_text;
     std::vector<dom_node*> children;
-    AttMap attributes;
+    AttMap attributes; //尚未使用节点属性
     ge_rect box;  //真实box
     int row=1;
     int col=1;
@@ -363,6 +363,8 @@ struct dom_node
     int obj_id=-1;
     std::string action_name; //菜单跳转
     bool use_template=false;
+    std::vector<std::string> var_list; //模板变量名称集合
+    dom_node* template_node=nullptr; //拷贝模板
 };
 
 
