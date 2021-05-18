@@ -780,18 +780,23 @@ void DrawTexture(CGameContext* p_context,ge_common_struct::dom_node* node
         {
             size_t cnt=node->children.size();
             //TODO 如果是有行列排列则下面代码才有效
-            int p_parent=pointer_pos%cnt;
-            ge_common_struct::dom_node* cnode=node->children[p_parent];
-            size_t ccnt=cnode->children.size();
-            size_t idx=pointer_pos/cnt;
-            if(idx<ccnt)
+            if(cnt>0)
             {
-                ge_common_struct::dom_node* ccnode=cnode->children[idx];
-                int screenx=ccnode->box.x+offsetx;
-                int screeny=ccnode->box.y+offsety;
-                int pos=texture.GetTexturePos(name);
-                RenderSprite(p_context,&texture,screenx,screeny,pos,scale);
+                int p_parent=pointer_pos%cnt;
+                ge_common_struct::dom_node* cnode=node->children[p_parent];
+                size_t ccnt=cnode->children.size();
+                size_t idx=pointer_pos/cnt;
+                if(idx<ccnt)
+                {
+                    ge_common_struct::dom_node* ccnode=cnode->children[idx];
+                    int screenx=ccnode->box.x+offsetx;
+                    int screeny=ccnode->box.y+offsety;
+                    int pos=texture.GetTexturePos(name);
+                    RenderSprite(p_context,&texture,screenx,screeny,pos,scale);
+                }
+
             }
+
         }
     }
 }
@@ -874,7 +879,7 @@ void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,
             {
                 ge_common_struct::dom_node* temp=children[i];
                 ge_common_struct::dom_node* child=
-                CreateNodeFromTemplate(temp,list_item,id);
+                    CreateNodeFromTemplate(temp,list_item,id);
                 list_item->children.push_back(child);
             }
         }

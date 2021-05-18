@@ -362,6 +362,7 @@ struct dom_node
     int child_seq_no=-1;
     int obj_id=-1;
     std::string action_name; //菜单跳转
+    std::string type; //菜单类型
     bool use_template=false;
     std::vector<std::string> var_list; //模板变量名称集合
     dom_node* template_node=nullptr; //拷贝模板

@@ -10,15 +10,6 @@ CGameUISystem::CGameUISystem(CGameContext* context)
 
 CGameUISystem::~CGameUISystem()
 {
-    //dtor
-    /*
-    for(size_t i=0; i<m_spritesheets.size(); i++)
-    {
-        CSpriteSheet* sheet=m_spritesheets[i];
-        delete sheet;
-    }
-    m_spritesheets.clear();
-    */
     std::map<std::string,ge_common_struct::dom_node*>::iterator it;
     for(it=m_panels.begin(); it!=m_panels.end(); it++)
     {

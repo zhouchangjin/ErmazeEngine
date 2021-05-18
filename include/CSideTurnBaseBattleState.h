@@ -3,15 +3,19 @@
 
 #include <XML_Utilities.h>
 #include <GameFileLoader.h>
-#include <Render_Util.h>
-#include <CServiceLocator.h>
 #include <CGameState.h>
-#include <CImageDB.h>
-#include <CGameDatabase.h>
+#include <CUIManager.h>
+#include <CEventManager.h>
+
 
 class CSideTurnBaseBattleState: public CGameState
 {
     public:
+        enum substate{
+            BATTLE_STATE,
+            COMMAND_INIT_STATE,
+            COMMAND_STATE
+        };
         CSideTurnBaseBattleState();
         CSideTurnBaseBattleState(CGameContext * context);
         virtual ~CSideTurnBaseBattleState();
@@ -26,14 +30,14 @@ class CSideTurnBaseBattleState: public CGameState
         void PrepareData();
 
     protected:
-
-        std::map<std::string,ge_common_struct::dom_node*> m_panels;
-        std::map<std::string,ge_common_struct::dom_node*> m_menus;
-
-
-        CGameDatabase* m_database=nullptr;
-        CImageDB* m_imagedb=nullptr;
-
+       //事件管理
+       CEventManager m_event_manager;
+       //界面管理
+       CUIManager m_ui_manager;
+       //状态标志
+       substate m_substate=substate::COMMAND_INIT_STATE;
+       //菜单指示名称
+       std::string m_menu_pointer="point_right";
     private:
         void LoadComponents();
         void LoadUIDef();

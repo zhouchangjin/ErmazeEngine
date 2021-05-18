@@ -61,6 +61,9 @@ dom_node* GetDomSelection(dom_node* select_root,int selection){
     }else{
         size_t cnt=select_root->children.size();
         //TODO 如果是有行列排列则下面代码才有效
+        if(cnt==0){
+            return nullptr;
+        }
         int p_parent=selection%cnt;
         ge_common_struct::dom_node* sub_node=select_root->children[p_parent];
         size_t ccnt=sub_node->children.size();
