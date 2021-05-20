@@ -67,9 +67,12 @@
 <background color="(0,0,0,255)"/>
 <border type="box" width="5" color="(255,255,255,255)"/>
 <font color="(255,255,255)"/>
-<container layout="grid" row="2" col="1">
-<button>item1</button>
-<button>item2</button>
+<container layout="vertical">
+<list list="players" page_size="3">
+<template item_width="100" item_height="15" layout="grid" col="1">
+<button>{label}</button>
+</template>
+</list>
 </container>
 </rect>
 </window>

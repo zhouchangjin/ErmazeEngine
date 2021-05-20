@@ -341,6 +341,10 @@ struct box_style
     int line_height=26;
     text_align align=text_align::LEFT;
     std::string texture_name;
+    bool scroll_x_enabled=false; //暂时不用scroll的方式载入全部数据
+    bool scroll_y_enabled=false; //暂时不用的属性，采用伪scroll
+    int  scroll_x=0;             // 即使不启用scroll，该属性也可以显示scroll位置
+    int  scroll_y=0;              //即使不启用scroll，该属性也可以显示scroll位置
 };
 
 struct dom_node
@@ -364,6 +368,8 @@ struct dom_node
     std::string action_name; //菜单跳转
     std::string type; //菜单类型
     bool use_template=false;
+    bool enable_page=false;
+    int page_size=0;
     std::vector<std::string> var_list; //模板变量名称集合
     dom_node* template_node=nullptr; //拷贝模板
 };
@@ -469,6 +475,8 @@ void FreeDomVector(std::vector<dom_node*>& nodes);
 int CntDomChild(dom_node* node);
 
 dom_node* GetDomSelection(dom_node* select_root,int selection);
+
+bool DomEnablePage(dom_node* node);
 
 }
 

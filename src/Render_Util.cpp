@@ -329,6 +329,11 @@ void UpdateDomRect(ge_common_struct::dom_node* node,
                    int &offsetx,int &offsety,int &paint_height)
 {
     ge_common_struct::ui_layout layout;
+    int actual_width=0;
+    std::string text=node->text;
+    int content_height=0;
+    int word_cnt=node->style.is_icon?0:ge_str_utilities::Utf8Strlen(text);
+
     if(node->parent_node==nullptr)
     {
         layout=ge_common_struct::ui_layout::NULL_LAYOUT;
@@ -338,7 +343,6 @@ void UpdateDomRect(ge_common_struct::dom_node* node,
         layout=node->parent_node->child_layout;
     }
     ge_common_struct::ge_rect rc=node->style.client_rect;
-    int actual_width=0;
     if(rc.w==0)
     {
         //宽度受内容限制
@@ -346,12 +350,9 @@ void UpdateDomRect(ge_common_struct::dom_node* node,
         {
             if(node->style.is_icon)
             {
-
             }
             else
             {
-                std::string text=node->text;
-                int word_cnt=ge_str_utilities::Utf8Strlen(text);
                 actual_width=node->style.font_size*word_cnt;
             }
         }
@@ -467,9 +468,17 @@ void UpdateDomRect(ge_common_struct::dom_node* node,
         p_rectnew.h=node->box.h-node->style.border_width*2;
         UpdateDomRect(cnode,p_rectnew,offx_new,offy_new,paint_h_new);
     }
-    int actual_height=offy_new+paint_h_new+node->style.border_width*2;
+
     if(node->box.h<=0)
     {
+        if(word_cnt>0)
+        {
+            int char_cnt_per_line=node->box.w/node->style.font_size;
+            int line_cnt=(word_cnt-1)/char_cnt_per_line+1;
+            content_height=line_cnt*node->style.line_height;
+        }
+        int actual_height=offy_new+content_height+paint_h_new
+                          +node->style.border_width*2;
         node->box.h=actual_height;
         if(node->box.h>paint_height)
         {
@@ -838,9 +847,8 @@ void FillRectTexture(CGameContext* p_context,ge_common_struct::ge_rect rect,
                                  sdlrect.w,sdlrect.h,scale);
 }
 
-
 void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,
-                   int context_obj)
+                   int context_obj,int page_start)
 {
 
     if(node->list_template!=nullptr)
@@ -855,7 +863,16 @@ void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,
 
         std::string list_name=node->list_template->list_name;
         std::vector<int> ids=gamedb->GetListObjectIds(list_name);
-        for(size_t j=0; j<ids.size(); j++)
+        uint32_t max_size=ids.size();
+        if(node->enable_page)
+        {
+            max_size=page_start+node->page_size;
+            if(max_size>ids.size())
+            {
+                max_size=ids.size();
+            }
+        }
+        for(size_t j=page_start; j<max_size; j++)
         {
             int id=ids[j];
             ge_common_struct::dom_node* list_item=
@@ -892,7 +909,7 @@ void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,
     {
         for(size_t i=0; i<node->children.size(); i++)
         {
-            UpdateDomNode(node->children[i],gamedb,context_obj);
+            UpdateDomNode(node->children[i],gamedb,context_obj,page_start);
         }
     }
     else
@@ -938,6 +955,35 @@ void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,
     }
 
 
+}
+
+ge_common_struct::dom_node* GetPageDom(ge_common_struct::dom_node* node){
+
+    if(node->enable_page){
+        return node;
+    }else{
+        std::vector<ge_common_struct::dom_node*> children=node->children;
+        for(size_t i=0;i<children.size();i++){
+            ge_common_struct::dom_node* child=children[i];
+            ge_common_struct::dom_node* result=GetPageDom(child);
+            if(result){
+                return result;
+            }
+        }
+        return nullptr;
+    }
+}
+
+int GetMaxPageCntOfDomNode(ge_common_struct::dom_node* node
+                           ,CGameDatabase* gamedb)
+{
+    ge_common_struct::dom_node* page_node=GetPageDom(node);
+    if(page_node){
+      std::vector<int> ids=gamedb->GetListObjectIds(page_node->list_template->list_name);
+      return ids.size();
+    }else{
+      return 0;
+    }
 }
 
 }

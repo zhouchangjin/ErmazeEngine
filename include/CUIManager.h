@@ -49,6 +49,7 @@ class CUIManager :public IDefaultMenuEventProcess
         std::vector<std::string> m_panel_list;
         std::vector<std::string> m_pop_panel_list;
         std::map<std::string,ge_common_struct::dom_node*> m_panels;
+        std::map<std::string,int> m_panel_page_start;
 
     private:
 };

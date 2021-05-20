@@ -60,7 +60,9 @@ namespace sdlutil2{
 
     void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImageDB* imagedb);
 
-    void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,int context_obj=-1);
+    int GetMaxPageCntOfDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb);
+
+    void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,int context_obj=-1,int page_start=0);
 
     void UpdateDomRect(ge_common_struct::dom_node* node,ge_common_struct::ge_rect parent_rect);
 

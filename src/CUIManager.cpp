@@ -52,7 +52,12 @@ void CUIManager::Draw()
     {
         std::string panel_name=m_panel_list[i];
         ge_common_struct::dom_node* p=m_panels[panel_name];
-        sdlutil2::UpdateDomNode(p,m_database);
+        int page_start=0;
+        if(m_panel_page_start.find(panel_name)!=m_panel_page_start.end())
+        {
+            page_start=m_panel_page_start[panel_name];
+        }
+        sdlutil2::UpdateDomNode(p,m_database,-1,page_start);
         sdlutil2::UpdateDomRect(p,fullWindow);
         sdlutil2::DrawDomNode(m_context,p,m_imagedb);
     }
@@ -61,9 +66,14 @@ void CUIManager::Draw()
     {
         std::string panel_name=m_pop_panel_stack[i];
         ge_common_struct::dom_node* p=m_panels[panel_name];
+        int page_start=0;
+        if(m_panel_page_start.find(panel_name)!=m_panel_page_start.end())
+        {
+            page_start=m_panel_page_start[panel_name];
+        }
         if(p->style.visibility)
         {
-            sdlutil2::UpdateDomNode(p,m_database);
+            sdlutil2::UpdateDomNode(p,m_database,-1,page_start);
             sdlutil2::UpdateDomRect(p,fullWindow);
             sdlutil2::DrawDomNode(m_context,p,m_imagedb);
             if(i==m_pop_panel_stack.size()-1)
@@ -97,9 +107,12 @@ void CUIManager::ShowPopPanel(std::string panel_name)
         {
             std::string last_panel=m_pop_panel_stack.back();
             ge_common_struct::dom_node* last_panel_node=m_panels[last_panel];
-            if(last_panel_node->type.compare("menu")==0){
+            if(last_panel_node->type.compare("menu")==0)
+            {
 
-            }else{
+            }
+            else
+            {
                 last_panel_node->style.visibility=false;
             }
             m_elp_stack.push_back(m_el_pointer);
@@ -108,6 +121,10 @@ void CUIManager::ShowPopPanel(std::string panel_name)
         m_pop_panel_stack.push_back(panel_name);
         ge_common_struct::dom_node* panel_node=m_panels[panel_name];
         panel_node->style.visibility=true;
+        if(ge_common_struct::DomEnablePage(panel_node))
+        {
+            m_panel_page_start[panel_name]=0;
+        }
         m_el_pointer=0;
     }
 }
@@ -192,14 +209,20 @@ void CUIManager::ProcessInput(CMenuInputEvent event)
         }
         else if(state_value==CUIManager::UIState::POP_MENU)
         {
-            GE_LOG("comming here2\n");
+
             if(m_pop_panel_stack.size()>0)
             {
                 std::string panel_name=m_pop_panel_stack.back();
                 if(m_panels.find(panel_name)!=m_panels.end())
                 {
                     ge_common_struct::dom_node* node=m_panels[panel_name];
+                    bool enable_page=ge_common_struct::DomEnablePage(node);
                     int cnt=ge_common_struct::CntDomChild(node);
+                    int max_cnt=cnt;
+                    if(enable_page)
+                    {
+                        max_cnt=sdlutil2::GetMaxPageCntOfDomNode(node,m_database);
+                    }
                     if(cnt>0)
                     {
                         int col=node->col;
@@ -215,7 +238,22 @@ void CUIManager::ProcessInput(CMenuInputEvent event)
                             {
                                 m_el_pointer++;
                             }
-                            m_el_pointer=m_el_pointer%cnt;
+                            if(enable_page)
+                            {
+                                if(m_el_pointer>=cnt)
+                                {
+                                    m_el_pointer=m_el_pointer-1;
+                                    int& page_start=m_panel_page_start[panel_name];
+                                    if(page_start+cnt<max_cnt)
+                                    {
+                                        page_start++;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                m_el_pointer=m_el_pointer%cnt;
+                            }
 
                         }
                         else if(event_type==ge_common_struct::key_event_type::KEY_UP)
@@ -228,19 +266,64 @@ void CUIManager::ProcessInput(CMenuInputEvent event)
                             {
                                 m_el_pointer--;
                             }
-                            m_el_pointer=(m_el_pointer+cnt)%cnt;
-
-
+                            if(enable_page)
+                            {
+                                if(m_el_pointer<0)
+                                {
+                                    m_el_pointer=0;
+                                    int& page_start=m_panel_page_start[panel_name];
+                                    if(page_start>0)
+                                    {
+                                        page_start--;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                m_el_pointer=(m_el_pointer+cnt)%cnt;
+                            }
                         }
                         else if(event_type==ge_common_struct::key_event_type::KEY_LEFT)
                         {
                             m_el_pointer--;
-                            m_el_pointer=(m_el_pointer+cnt)%cnt;
+                            if(enable_page)
+                            {
+                                if(m_el_pointer<0)
+                                {
+                                    m_el_pointer=0;
+                                    int& page_start=m_panel_page_start[panel_name];
+                                    if(page_start>0)
+                                    {
+                                        page_start--;
+                                    }
+                                }
+
+
+                            }
+                            else
+                            {
+                                m_el_pointer=(m_el_pointer+cnt)%cnt;
+                            }
+
                         }
                         else if(event_type==ge_common_struct::key_event_type::KEY_RIGHT)
                         {
                             m_el_pointer++;
-                            m_el_pointer=m_el_pointer%cnt;
+                            if(enable_page){
+                                if(m_el_pointer>=cnt)
+                                {
+                                    m_el_pointer=m_el_pointer-1;
+                                    int& page_start=m_panel_page_start[panel_name];
+                                    if(page_start+cnt<max_cnt)
+                                    {
+                                        page_start++;
+                                    }
+                                }
+
+                            }else{
+                                m_el_pointer=m_el_pointer%cnt;
+                            }
+
                         }
                         else if(event_type==ge_common_struct::key_event_type::KEY_CONFIRM)
                         {

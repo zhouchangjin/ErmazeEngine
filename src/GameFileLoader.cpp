@@ -453,6 +453,10 @@ ge_common_struct::dom_node* parse_dom(xmlutils::MyXMLNode xml_node,
     if(xml_node.HasAttribute("type")){
         node->type=xml_node.StrAttribute("type");
     }
+    if(xml_node.HasAttribute("page_size")){
+        node->enable_page=true;
+        node->page_size=xml_node.IntAttribute("page_size");
+    }
     ge_common_struct::box_style style=parse_window_style(xml_node,parent);
     node->style=style;
 

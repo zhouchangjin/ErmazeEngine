@@ -78,4 +78,21 @@ dom_node* GetDomSelection(dom_node* select_root,int selection){
     }
 }
 
+bool DomEnablePage(dom_node* node){
+    if(node->enable_page){
+        return true;
+    }else{
+        std::vector<ge_common_struct::dom_node*> children=node->children;
+        for(size_t i=0;i<children.size();i++){
+            ge_common_struct::dom_node* child=children[i];
+            bool enable=DomEnablePage(child);
+            if(enable){
+                return true;
+            }
+        }
+    }
+    return false;
+
+}
+
 }
