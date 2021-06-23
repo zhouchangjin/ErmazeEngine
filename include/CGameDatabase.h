@@ -42,13 +42,26 @@ public:
     virtual void AddPropToType(std::string obj_type,std::string prop_name,
                                std::string prop_label,
                                DataType type=DataType::INTEGER)=0;
+
     virtual void CreateList(std::string list_name)=0;
     virtual void AddObjectToList(std::string list_name,int obj_id)=0;
     virtual void RemoveObjectFromList(std::string list_name,int obj_id)=0;
-    virtual std::vector<int> GetListObjectIds(std::string list_name)=0;
+
     virtual void CreateInventory(std::string list_name)=0;
     virtual void AddObjectToInventory(std::string list_name,int obj_type_id)=0;
     virtual void RemoveObjectFromInventory(std::string list_name,int obj_type_id)=0;
+
+    virtual void CreateObjectList(int parent_id,std::string list_name)=0;
+    virtual void AddObjectToObjectList(int parent_id,std::string list_name,int obj_id)=0;
+    virtual void RemoveObjectFromObjectList(int parent_id,std::string list_name,int obj_id)=0;
+
+    virtual void CreateObjectInventory(int parent_id,std::string list_name)=0;
+    virtual void AddObjectToObjectInventory(int parent_id,std::string list_name,int obj_id)=0;
+    virtual void RemoveObjectFromObjectInventory(int parent_id,std::string list_name,int obj_id)=0;
+
+    virtual std::vector<int> GetListObjectIds(std::string list_name)=0;
+    virtual std::vector<int> GetObjectListIds(int parent_id,std::string list_name)=0;
+
 protected:
 
 private:

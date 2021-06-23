@@ -72,6 +72,13 @@ bool CImageDB::ContainsTexture(std::string texture_name)
         return false;
     }
 }
+CTiledTexture CImageDB::GetTiledTextureBySheetName(std::string sheet_name){
+    if(ContainsSheet(sheet_name)){
+        return m_textures[sheet_name];
+    }else{
+        return CTiledTexture(nullptr);
+    }
+}
 
 CTiledTexture CImageDB::GetTiledTexture(std::string texture_name)
 {
@@ -92,15 +99,21 @@ void CImageDB::Initialize()
     xmlutils::MyXMLDoc doc=xmlutils::LoadXML("./ui/resource.ui");
     xmlutils::MyXMLNode sheet_node=doc.
                                    GetNode("/ui/spritesheets");
+
     xmlutils::MyXMLNode icon_node=doc.GetNode("/ui/icons");
     xmlutils::MyXMLNode texture_node=doc.GetNode("/ui/textures");
+    xmlutils::MyXMLNode particle_node=doc.GetNode("/ui/particles");
 
     std::map<std::string,ge_common_struct::image_def> sheets;
     std::map<std::string,ge_common_struct::resource_def> icons;
     std::map<std::string,ge_common_struct::resource_def> textures;
+    std::map<std::string,ge_common_struct::resource_def> particles;
+
     ge_fileutil::parse_sheets(sheet_node,sheets);
     ge_fileutil::parse_resource(icon_node,icons);
     ge_fileutil::parse_resource(texture_node,textures);
+    ge_fileutil::parse_resource(particle_node,particles);
+
     std::map<std::string,ge_common_struct::image_def>::iterator it;
     std::map<std::string,ge_common_struct::resource_def>::iterator it_icon;
     std::map<std::string,ge_common_struct::resource_def>::iterator it_texture;
@@ -113,28 +126,24 @@ void CImageDB::Initialize()
                 image.col,image.row);
         AddSpriteSheet(sprite_sheet,image.id);
     }
+    ResInit(icons);
+    ResInit(textures);
+    ResInit(particles);
 
-    for(it_icon=icons.begin(); it_icon!=icons.end(); it_icon++)
+}
+
+void CImageDB::ResInit(std::map<std::string,ge_common_struct::resource_def> r)
+{
+    std::map<std::string,ge_common_struct::resource_def>::iterator it;
+    for(it=r.begin(); it!=r.end(); it++)
     {
-        ge_common_struct::resource_def icon=it_icon->second;
-        std::string sheet_id=icon.resource_id;
-        std::string icon_name=icon.resource_name;
-        int icon_idx=icon.id;
+        ge_common_struct::resource_def resource=it->second;
+        std::string sheet_id=resource.resource_id;
+        std::string resource_name=resource.resource_name;
+        int resource_id=resource.id;
         if(ContainsSheet(sheet_id))
         {
-            AddTexture(sheet_id,icon_name,icon_idx);
-        }
-    }
-
-    for(it_texture=textures.begin(); it_texture!=textures.end(); it_texture++)
-    {
-        ge_common_struct::resource_def texture=it_texture->second;
-        std::string sheet_id=texture.resource_id;
-        std::string name=texture.resource_name;
-        int idx=texture.id;
-        if(ContainsSheet(sheet_id))
-        {
-            AddTexture(sheet_id,name,idx);
+            AddTexture(sheet_id,resource_name,resource_id);
         }
     }
 

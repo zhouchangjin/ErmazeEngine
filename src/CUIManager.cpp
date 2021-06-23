@@ -197,14 +197,15 @@ void CUIManager::ProcessInput(CMenuInputEvent event)
     ge_common_struct::key_event kevent=event.GetInput().get_top_event();
     ge_common_struct::key_event_type event_type=kevent.key;
     ge_common_struct::key_press_type press_type=kevent.press;
-    if(press_type==ge_common_struct::key_press_type::KEY_PRESS)
+    if(press_type==ge_common_struct::key_press_type::KEY_PRESS
+           /* || press_type==ge_common_struct::key_press_type::KEY_PRESSED*/)
     {
 
         int state_value=event.GetCurrentSubState();
-        GE_LOG("state_value=%d\n",state_value);
+
         if(state_value==CUIManager::UIState::POP_INIT)
         {
-            //GE_LOG("init panel name %s\n",event.GetMenuInitPanel().c_str());
+            GE_LOG("UIManager Show Panel Event\n");
             ShowPopPanel(event.GetMenuInitPanel());
         }
         else if(state_value==CUIManager::UIState::POP_MENU)
@@ -309,7 +310,8 @@ void CUIManager::ProcessInput(CMenuInputEvent event)
                         else if(event_type==ge_common_struct::key_event_type::KEY_RIGHT)
                         {
                             m_el_pointer++;
-                            if(enable_page){
+                            if(enable_page)
+                            {
                                 if(m_el_pointer>=cnt)
                                 {
                                     m_el_pointer=m_el_pointer-1;
@@ -320,7 +322,9 @@ void CUIManager::ProcessInput(CMenuInputEvent event)
                                     }
                                 }
 
-                            }else{
+                            }
+                            else
+                            {
                                 m_el_pointer=m_el_pointer%cnt;
                             }
 

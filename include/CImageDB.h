@@ -17,6 +17,7 @@ class CImageDB :public ITextureDB
         void AddTexture(std::string sheet_name,std::string texture_name,int idx);
         CTexture GetTexture(std::string texture_name);
         CTiledTexture GetTiledTexture(std::string texture_name);
+        CTiledTexture GetTiledTextureBySheetName(std::string sheet_name);
         bool ContainsSheet(std::string sheet_name);
         bool ContainsTexture(std::string texture_name);
         void Initialize();
@@ -25,6 +26,7 @@ class CImageDB :public ITextureDB
         std::map<std::string,CTiledTexture> m_textures;
         std::map<std::string,std::string> m_texture_map;
         std::map<std::string,int> m_sheet_map;
+        void ResInit(std::map<std::string,ge_common_struct::resource_def> resource);
 
     private:
 };

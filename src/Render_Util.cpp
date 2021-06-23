@@ -957,16 +957,22 @@ void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,
 
 }
 
-ge_common_struct::dom_node* GetPageDom(ge_common_struct::dom_node* node){
+ge_common_struct::dom_node* GetPageDom(ge_common_struct::dom_node* node)
+{
 
-    if(node->enable_page){
+    if(node->enable_page)
+    {
         return node;
-    }else{
+    }
+    else
+    {
         std::vector<ge_common_struct::dom_node*> children=node->children;
-        for(size_t i=0;i<children.size();i++){
+        for(size_t i=0; i<children.size(); i++)
+        {
             ge_common_struct::dom_node* child=children[i];
             ge_common_struct::dom_node* result=GetPageDom(child);
-            if(result){
+            if(result)
+            {
                 return result;
             }
         }
@@ -978,11 +984,28 @@ int GetMaxPageCntOfDomNode(ge_common_struct::dom_node* node
                            ,CGameDatabase* gamedb)
 {
     ge_common_struct::dom_node* page_node=GetPageDom(node);
-    if(page_node){
-      std::vector<int> ids=gamedb->GetListObjectIds(page_node->list_template->list_name);
-      return ids.size();
-    }else{
-      return 0;
+    if(page_node)
+    {
+        std::vector<int> ids=gamedb->GetListObjectIds(page_node->list_template->list_name);
+        return ids.size();
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void RenderParticles(CGameContext* p_context,std::vector<CParticle*> particles,
+                     CTiledTexture tiledtexture)
+{
+    for(size_t i=0;i<particles.size();i++){
+        CParticle* p=particles[i];
+        if(!p->IsDead()){
+            std::string texture_name=p->GetTextureName();
+            int pos=tiledtexture.GetTexturePos(texture_name);
+            RenderSprite(p_context,&tiledtexture,p->GetX(),p->GetY()
+                         ,pos,p->GetSize());
+        }
     }
 }
 

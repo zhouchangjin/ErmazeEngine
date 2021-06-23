@@ -332,3 +332,63 @@ void CSimpleGameDB::RemoveObjectFromInventory(std::string list_name,int obj_id)
 
     }
 }
+
+std::string CSimpleGameDB::GetListKeyName(int parent_id,std::string list_name)
+{
+    if(parent_id<0)
+    {
+        return list_name;
+    }
+    else
+    {
+        return list_name+"_"+std::to_string(parent_id);
+    }
+}
+
+void CSimpleGameDB::CreateObjectList(int parent_id,std::string list_name)
+{
+    std::string list_name_new=GetListKeyName(parent_id,list_name);
+    CreateList(list_name_new);
+}
+
+void CSimpleGameDB::CreateObjectInventory(int parent_id,std::string list_name)
+{
+    std::string list_name_new=GetListKeyName(parent_id,list_name);
+    CreateInventory(list_name_new);
+}
+
+void CSimpleGameDB::AddObjectToObjectList(int parent_id,
+        std::string list_name,int obj_id)
+{
+    std::string list_name_new=GetListKeyName(parent_id,list_name);
+    AddObjectToList(list_name_new,obj_id);
+}
+
+void CSimpleGameDB::AddObjectToObjectInventory(int parent_id,
+        std::string list_name,int obj_id)
+{
+    std::string list_name_new=GetListKeyName(parent_id,list_name);
+    AddObjectToInventory(list_name_new,obj_id);
+}
+
+void CSimpleGameDB::RemoveObjectFromObjectList(int parent_id,
+        std::string list_name
+        ,int obj_id)
+{
+    std::string list_name_new=GetListKeyName(parent_id,list_name);
+    RemoveObjectFromList(list_name_new,obj_id);
+}
+
+void CSimpleGameDB::RemoveObjectFromObjectInventory(int parent_id,
+        std::string list_name,int obj_id)
+{
+    std::string list_name_new=GetListKeyName(parent_id,list_name);
+    RemoveObjectFromInventory(list_name_new,obj_id);
+}
+
+std::vector<int> CSimpleGameDB::GetObjectListIds(int parent_id
+        ,std::string list_name)
+{
+    std::string list_name_new=GetListKeyName(parent_id,list_name);
+    return GetListObjectIds(list_name_new);
+}

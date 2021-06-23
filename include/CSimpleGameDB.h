@@ -33,11 +33,26 @@ public:
     void CreateList(std::string list_name);
     void AddObjectToList(std::string list_name,int obj_id);
     void RemoveObjectFromList(std::string list_name,int obj_id);
+
     std::vector<int> GetListObjectIds(std::string list_name);
 
     void CreateInventory(std::string list_name);
-    void AddObjectToInventory(std::string list_name,int obj_type_id);
-    void RemoveObjectFromInventory(std::string list_name,int obj_type_id);
+    void AddObjectToInventory(std::string list_name,int obj_id);
+    void RemoveObjectFromInventory(std::string list_name,int obj_id);
+
+    void CreateObjectList(int parent_id,std::string list_name);
+    void AddObjectToObjectList(int parent_id,std::string list_name,int obj_id);
+    void RemoveObjectFromObjectList(int parent_id,std::string list_name,int obj_id);
+
+    void CreateObjectInventory(int parent_id,std::string list_name);
+    void AddObjectToObjectInventory(int parent_id,std::string list_name,int obj_id);
+    void RemoveObjectFromObjectInventory(int parent_id,std::string list_name,int obj_id);
+
+    std::vector<int> GetObjectListIds(int parent_id,std::string list_name);
+
+
+
+
 
 protected:
 
@@ -46,6 +61,7 @@ private:
     std::string GetKeyName(int object_id,int prop_id);
     std::string GetKeyName(int object_id,std::string prop_name);
     std::string GetKeyName(std::string object_name,std::string prop_name);
+    std::string GetListKeyName(int parent_id,std::string list_name);
 
     std::string GetPropIntKey(std::string obj_type,std::string prop_name);
 

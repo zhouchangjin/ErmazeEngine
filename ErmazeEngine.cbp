@@ -61,6 +61,7 @@
 		<Unit filename="include/C2DGameScene.h" />
 		<Unit filename="include/CActionEvent.h" />
 		<Unit filename="include/CAdvDialog.h" />
+		<Unit filename="include/CBaseParticleEmitter.h" />
 		<Unit filename="include/CCamera2D.h" />
 		<Unit filename="include/CChoiceDialog.h" />
 		<Unit filename="include/CDomWindow.h" />
@@ -89,6 +90,10 @@
 		<Unit filename="include/CNPCGameObject.h" />
 		<Unit filename="include/COrthoTileState.h" />
 		<Unit filename="include/CPCSpriteGameObject.h" />
+		<Unit filename="include/CParticle.h" />
+		<Unit filename="include/CParticlePool.h" />
+		<Unit filename="include/CParticleSystem.h" />
+		<Unit filename="include/CRPGCommand.h" />
 		<Unit filename="include/CRPGGameData.h" />
 		<Unit filename="include/CSDLRenderService.h" />
 		<Unit filename="include/CSceneData.h" />
@@ -122,6 +127,7 @@
 		<Unit filename="src/C2DGameScene.cpp" />
 		<Unit filename="src/CActionEvent.cpp" />
 		<Unit filename="src/CAdvDialog.cpp" />
+		<Unit filename="src/CBaseParticleEmitter.cpp" />
 		<Unit filename="src/CCamera2D.cpp" />
 		<Unit filename="src/CChoiceDialog.cpp" />
 		<Unit filename="src/CDomWindow.cpp" />
@@ -148,6 +154,10 @@
 		<Unit filename="src/CNPCGameObject.cpp" />
 		<Unit filename="src/COrthoTileState.cpp" />
 		<Unit filename="src/CPCSpriteGameObject.cpp" />
+		<Unit filename="src/CParticle.cpp" />
+		<Unit filename="src/CParticlePool.cpp" />
+		<Unit filename="src/CParticleSystem.cpp" />
+		<Unit filename="src/CRPGCommand.cpp" />
 		<Unit filename="src/CRPGGameData.cpp" />
 		<Unit filename="src/CSDLRenderService.cpp" />
 		<Unit filename="src/CSceneData.cpp" />

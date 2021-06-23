@@ -31,6 +31,7 @@ class CUIManager :public IDefaultMenuEventProcess
         void CloseCurrentPopPanel();
         void HideAllPopPanel();
         void Draw();
+        void Update();
         void ProcessInput(CMenuInputEvent event);
         bool IsPopPanelHidden();
     protected:

@@ -6,7 +6,7 @@ CSideTurnBaseBattleState::CSideTurnBaseBattleState()
 }
 
 CSideTurnBaseBattleState::CSideTurnBaseBattleState(CGameContext* context)
-:CGameState(context)
+    :CGameState(context)
 {
 
 }
@@ -44,18 +44,21 @@ void CSideTurnBaseBattleState::Resume()
 
 void CSideTurnBaseBattleState::HandleEvent(ge_common_struct::input_event event)
 {
-    if(event.get_top_event().key!=ge_common_struct::key_event_type::NO_EVENT){
+    if(event.get_top_event().key!=ge_common_struct::key_event_type::NO_EVENT)
+    {
 
         CMenuInputEvent inputevent;
         inputevent.SetInputEvent(event);
-        if(m_substate==substate::COMMAND_INIT_STATE){
-            inputevent.SetCurrentSubState(0);
-            inputevent.setMenuInitPanel("battle_command");
-            m_substate=substate::COMMAND_STATE;
-        }else if(m_substate==substate::COMMAND_STATE){
+        if(m_substate==substate::COMMAND_INIT_STATE)
+        {
+
+        }
+        else if(m_substate==substate::COMMAND_STATE)
+        {
             inputevent.SetCurrentSubState(1);
         }
-        else if(m_substate==substate::BATTLE_STATE){
+        else if(m_substate==substate::BATTLE_STATE)
+        {
             inputevent.SetCurrentSubState(2);
         }
         m_event_manager.EventPublish(inputevent);
@@ -64,11 +67,85 @@ void CSideTurnBaseBattleState::HandleEvent(ge_common_struct::input_event event)
 
 void CSideTurnBaseBattleState::Update()
 {
-    if(m_substate==substate::COMMAND_STATE){
-        if(m_ui_manager.IsPopPanelHidden()){
+    m_temp_timer++;
+    if(m_substate==substate::BATTLE_INIT_STATE){
+        GE_LOG("Prepare battle scene....\n");
+        if(m_temp_timer>20){
+            GE_LOG("Prepare battle scene done.\n");
             m_substate=substate::COMMAND_INIT_STATE;
         }
+    }else if(m_substate==substate::COMMAND_STATE){
+
+        //检查命令是否完备，如果完备则转下一个状态
+        if(m_ui_manager.IsPopPanelHidden()){
+            if(m_current_command_player>3){
+                //全部完毕
+                m_substate=substate::BATTLE_STATE;
+                m_last_timer=m_temp_timer;
+            }else{
+                m_substate=substate::COMMAND_INIT_STATE;
+            }
+        }
+    }else if(m_substate==substate::COMMAND_INIT_STATE){
+            ge_common_struct::input_event event;
+            ge_common_struct::key_event_type etype=ge_common_struct
+                                               ::key_event_type::KEY_CONFIRM;
+            event.add_event(etype);
+            InitMenu(event);
+    }else if(m_substate==substate::BATTLE_STATE){
+
+            if(m_temp_timer-m_last_timer>50){
+                GE_LOG("battle done\n");
+                m_substate=substate::COMMAND_INIT_STATE;
+                m_current_command_player=0;
+            }else{
+                GE_LOG("battle proceding\n");
+            }
     }
+    /***
+    if(m_substate==substate::COMMAND_STATE)
+    {
+        if(m_ui_manager.IsPopPanelHidden())
+        {
+            if(m_temp_timer>104)
+            {
+                m_temp_timer=0;
+                m_substate=substate::BATTLE_STATE;
+            }
+            else
+            {
+                m_substate=substate::COMMAND_INIT_STATE;
+                m_temp_timer++;
+                GE_LOG("command control %d....\n",m_temp_timer);
+            }
+        }
+    }
+    else if(m_substate==substate::COMMAND_INIT_STATE)
+    {
+        ge_common_struct::input_event event;
+        ge_common_struct::key_event_type etype=ge_common_struct
+                                               ::key_event_type::KEY_CONFIRM;
+        event.add_event(etype);
+        InitMenu(event);
+    }
+    else
+    {
+        if(m_temp_timer<100)
+        {
+            m_temp_timer++;
+            GE_LOG("combat running....\n");
+        }
+        else
+        {
+            m_substate=substate::COMMAND_STATE;
+            GE_LOG("command control....\n");
+        }
+
+    }
+    **/
+    m_particle_system.Update();
+
+
 
 }
 
@@ -79,7 +156,7 @@ void CSideTurnBaseBattleState::Draw()
     //绘制sprites
 
     //绘制特效
-
+    m_particle_system.Draw();
     //绘制菜单
     sdlutil2::RenderPresent(m_context);
 
@@ -99,6 +176,15 @@ void CSideTurnBaseBattleState::LoadComponents()
 {
     m_ui_manager.SetGameContext(m_context);
     m_ui_manager.Init();
+    m_particle_system.SetGameContext(m_context);
+    m_particle_system.Init();
+    //Test code
+    CBaseParticleEmitter* emmiter=
+    new CBaseParticleEmitter(m_particle_system.GetParticlePool());
+
+    emmiter->Init();
+
+    m_particle_system.AddEmmiter(emmiter);
 }
 
 void CSideTurnBaseBattleState::LoadUIDef()
@@ -144,4 +230,16 @@ void CSideTurnBaseBattleState::LoadUIDef()
         m_ui_manager.AddPanel(idStr,dom_node_ptr,true,true);
     }
 
+}
+
+void CSideTurnBaseBattleState::InitMenu(ge_common_struct::input_event& event)
+{
+    GE_LOG("player %d\n",m_current_command_player);
+    CMenuInputEvent inputevent;
+    inputevent.SetInputEvent(event);
+    inputevent.SetCurrentSubState(0);
+    inputevent.setMenuInitPanel("battle_command");
+    m_event_manager.EventPublish(inputevent);
+    m_substate=substate::COMMAND_STATE;
+    m_current_command_player++;
 }

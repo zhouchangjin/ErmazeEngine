@@ -1,6 +1,7 @@
   <ui>
 	<spritesheets>
 		<spritesheet id="ui01" path="./ui/res/icon.png" width="16" height="16" col="6" row="4"/>
+		<spritesheet id="particles" path="./ui/particles/particles.png" width="6" height="6" col="6" row="4"/>
 		<spritesheet id="battle_scene_01" path="./ui/battle/backview.png" width="48" height="32" col="6" row="8"/>
 	</spritesheets>
 	<icons>
@@ -9,4 +10,7 @@
 	<textures>
 		<texture ref_sheet="battle_scene_01" name="swamp" id="0"/>
 	</textures>
+	<particles>
+		<particle ref_sheet="particles" name="dot" id="0"/>
+	</particles>
   </ui>

@@ -6,6 +6,7 @@
 #include "SDL_Utilities.h"
 #include "Str_Utilities.h"
 #include "CGameContext.h"
+#include "CParticle.h"
 #include "CSprite.h"
 #include "C2DGameScene.h"
 #include "CTileLayer.h"
@@ -73,6 +74,8 @@ namespace sdlutil2{
     void DrawBorder(CGameContext* context,ge_common_struct::ge_rect rect,ge_common_struct::ge_adv_color color,ge_common_struct::ge_sides border);
 
     void FillRectTexture(CGameContext* p_context,ge_common_struct::ge_rect rect,CTiledTexture texture,std::string texture_name,int scale=1);
+
+    void RenderParticles(CGameContext* p_context,std::vector<CParticle*> particles,CTiledTexture texture);
 
 }
 
