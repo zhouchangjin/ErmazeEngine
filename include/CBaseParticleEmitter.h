@@ -1,16 +1,17 @@
 #ifndef CBASEPARTICLEEMITTER_H
 #define CBASEPARTICLEEMITTER_H
 
+#include <IEmitter.h>
 #include <CParticlePool.h>
 
-class CBaseParticleEmitter
+class CBaseParticleEmitter :public IEmitter
 {
     public:
         CBaseParticleEmitter(CParticlePool *pool);
         virtual ~CBaseParticleEmitter();
         void Init();
         void Update();
-        std::vector<CParticle*> GetParticles()const{return m_particles;};
+        std::vector<CParticle*> GetParticles(){return m_particles;};
 
     protected:
 

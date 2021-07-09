@@ -93,6 +93,8 @@
 		<Unit filename="include/CParticle.h" />
 		<Unit filename="include/CParticlePool.h" />
 		<Unit filename="include/CParticleSystem.h" />
+		<Unit filename="include/CProjectile.h" />
+		<Unit filename="include/CProjectileEmitter.h" />
 		<Unit filename="include/CRPGCommand.h" />
 		<Unit filename="include/CRPGGameData.h" />
 		<Unit filename="include/CSDLRenderService.h" />
@@ -114,6 +116,7 @@
 		<Unit filename="include/IDefaultActionEventProcess.h" />
 		<Unit filename="include/IDefaultEventProcess.h" />
 		<Unit filename="include/IDefaultMenuEventProcess.h" />
+		<Unit filename="include/IEmitter.h" />
 		<Unit filename="include/IMenuProcess.h" />
 		<Unit filename="include/ITextureDB.h" />
 		<Unit filename="include/Render_Util.h" />
@@ -157,6 +160,8 @@
 		<Unit filename="src/CParticle.cpp" />
 		<Unit filename="src/CParticlePool.cpp" />
 		<Unit filename="src/CParticleSystem.cpp" />
+		<Unit filename="src/CProjectile.cpp" />
+		<Unit filename="src/CProjectileEmitter.cpp" />
 		<Unit filename="src/CRPGCommand.cpp" />
 		<Unit filename="src/CRPGGameData.cpp" />
 		<Unit filename="src/CSDLRenderService.cpp" />
@@ -178,6 +183,7 @@
 		<Unit filename="src/IDefaultActionEventProcess.cpp" />
 		<Unit filename="src/IDefaultEventProcess.cpp" />
 		<Unit filename="src/IDefaultMenuEventProcess.cpp" />
+		<Unit filename="src/IEmitter.cpp" />
 		<Unit filename="src/IMenuProcess.cpp" />
 		<Unit filename="src/ITextureDB.cpp" />
 		<Unit filename="src/Main.cpp" />

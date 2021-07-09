@@ -35,8 +35,6 @@ class CSpriteGameObject  : public CGameObject
         void MoveUpdate();
         int GetLayer()const{return m_layer;};
         int GetShowLayer();
-        int GetX()const{return m_x;};
-        int GetY()const{return m_y;};
         int GetFootY()const{return m_y+GetObjectHeight()-1;}
         int GetMoveX()const{return m_move_x;};
         int GetMoveY()const{return m_move_y;};
@@ -57,8 +55,6 @@ class CSpriteGameObject  : public CGameObject
         CSprite* m_sprite;
         int m_frame_idx=0;
         int m_step=0;
-        int m_x=0;
-        int m_y=0;
         std::string m_current_action="downward";
         int m_move_x=0;
         int m_move_y=0;

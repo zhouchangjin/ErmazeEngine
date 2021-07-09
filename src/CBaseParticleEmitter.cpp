@@ -113,6 +113,8 @@ void CBaseParticleEmitter::Update()
         }
     }
     m_emitter_life--;
+    //
+
     //GE_LOG("Pool Size===%d,%d\n",m_particles.size(),m_particle_pool->GetParicleCnt());
 }
 

@@ -181,10 +181,19 @@ void CSideTurnBaseBattleState::LoadComponents()
     //Test code
     CBaseParticleEmitter* emmiter=
     new CBaseParticleEmitter(m_particle_system.GetParticlePool());
-
-    emmiter->Init();
-
-    m_particle_system.AddEmmiter(emmiter);
+    m_particle_system.AddEmitter(emmiter);
+    CProjectileEmitter* projectile_emitter=new CProjectileEmitter();
+    m_particle_system.AddEmitter(projectile_emitter);
+    CProjectile pj;
+    pj.SetPosX(800);
+    pj.SetPosY(120);
+    pj.SetVelocityX(-3);
+    pj.SetVelocityY(3);
+    pj.SetAX(-3);
+    pj.SetAY(1);
+    pj.SetLife(1000);
+    pj.SetTextureName("bullet");
+    projectile_emitter->SetProjectile(pj);
 }
 
 void CSideTurnBaseBattleState::LoadUIDef()

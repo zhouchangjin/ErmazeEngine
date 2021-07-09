@@ -1002,6 +1002,9 @@ void RenderParticles(CGameContext* p_context,std::vector<CParticle*> particles,
         CParticle* p=particles[i];
         if(!p->IsDead()){
             std::string texture_name=p->GetTextureName();
+            if(particles.size()==1){
+               GE_LOG("=======%s\n",texture_name.c_str());
+            }
             int pos=tiledtexture.GetTexturePos(texture_name);
             RenderSprite(p_context,&tiledtexture,p->GetX(),p->GetY()
                          ,pos,p->GetSize());

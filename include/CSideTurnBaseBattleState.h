@@ -7,7 +7,8 @@
 #include <CUIManager.h>
 #include <CEventManager.h>
 #include <CParticleSystem.h>
-
+#include <CBaseParticleEmitter.h>
+#include <CProjectileEmitter.h>
 class CSideTurnBaseBattleState: public CGameState
 {
     public:

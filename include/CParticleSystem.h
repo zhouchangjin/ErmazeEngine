@@ -3,8 +3,9 @@
 
 #include <CImageDB.h>
 #include <Render_Util.h>
-#include <CBaseParticleEmitter.h>
+#include <IEmitter.h>
 #include <CServiceLocator.h>
+#include <CParticlePool.h>
 class CParticleSystem
 {
     public:
@@ -15,11 +16,11 @@ class CParticleSystem
         void Update();
         void Draw();
         void SetGameContext(CGameContext* context){m_context=context;};
-        void AddEmmiter(CBaseParticleEmitter* particle_emiter);
+        void AddEmitter(IEmitter* particle_emiter);
         CParticlePool* GetParticlePool(){return &m_particle_pool;};
     protected:
 
-        std::vector<CBaseParticleEmitter*> m_particle_emitters;
+        std::vector<IEmitter*> m_particle_emitters;
         CParticlePool m_particle_pool;
         CGameContext* m_context;
         CImageDB* m_image_db=nullptr;
