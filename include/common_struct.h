@@ -461,6 +461,13 @@ struct image_def{
     int col;
 };
 
+struct sprite_action{
+    std::string sheet_id;
+    std::string sprite_id;
+    std::string action_name;
+    std::vector<int> ids;
+};
+
 struct resource_def{
     std::string resource_id;
     std::string resource_name;

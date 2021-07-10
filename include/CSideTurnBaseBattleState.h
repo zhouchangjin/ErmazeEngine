@@ -9,6 +9,9 @@
 #include <CParticleSystem.h>
 #include <CBaseParticleEmitter.h>
 #include <CProjectileEmitter.h>
+#include <CSpriteDB.h>
+#include <CServiceLocator.h>
+
 class CSideTurnBaseBattleState: public CGameState
 {
     public:
@@ -45,6 +48,14 @@ class CSideTurnBaseBattleState: public CGameState
        //粒子动画系统
        CParticleSystem m_particle_system;
 
+       //精灵库
+       CSpriteDB* m_sprite_db=nullptr;
+       //数据库
+       CGameDatabase* m_database=nullptr;
+
+       std::vector<CSpriteGameObject> m_players;
+       std::vector<CSpriteGameObject> m_enemies;
+
        //状态标志
        substate m_substate=substate::BATTLE_INIT_STATE;
        //菜单指示名称
@@ -54,6 +65,10 @@ class CSideTurnBaseBattleState: public CGameState
        uint32_t m_last_timer=0;
 
        int m_current_command_player=0;
+
+       int m_player_scale=3;
+       int m_player_draw_x=80;
+       int m_player_draw_y=12;
 
     private:
         void LoadComponents();

@@ -18,12 +18,13 @@ CSideTurnBaseBattleState::~CSideTurnBaseBattleState()
 
 void CSideTurnBaseBattleState::Init()
 {
-    //0´ú±í×´Ì¬²»¸Ä±ä
+    //0ä»£è¡¨çŠ¶æ€ä¸æ”¹å˜
     m_state_value=0;
     m_event_manager.EventSubscribe(&m_ui_manager,CUIManager::ProcessInput);
     m_ui_manager.SetMenuPointerName(m_menu_pointer);
     LoadComponents();
     LoadUIDef();
+    LoadSprites();
 
 }
 
@@ -76,10 +77,10 @@ void CSideTurnBaseBattleState::Update()
         }
     }else if(m_substate==substate::COMMAND_STATE){
 
-        //¼ì²éÃüÁîÊÇ·ñÍê±¸£¬Èç¹ûÍê±¸Ôò×ªÏÂÒ»¸ö×´Ì¬
+        //æ£€æŸ¥å‘½ä»¤æ˜¯å¦å®Œå¤‡ï¼Œå¦‚æœå®Œå¤‡åˆ™è½¬ä¸‹ä¸€ä¸ªçŠ¶æ€
         if(m_ui_manager.IsPopPanelHidden()){
             if(m_current_command_player>3){
-                //È«²¿Íê±Ï
+                //å…¨éƒ¨å®Œæ¯•
                 m_substate=substate::BATTLE_STATE;
                 m_last_timer=m_temp_timer;
             }else{
@@ -151,13 +152,16 @@ void CSideTurnBaseBattleState::Update()
 
 void CSideTurnBaseBattleState::Draw()
 {
-    //»æÖÆ½çÃæ
+    //ç»˜åˆ¶ç•Œé¢
     m_ui_manager.Draw();
-    //»æÖÆsprites
+    //ç»˜åˆ¶sprites
 
-    //»æÖÆÌØĞ§
+    DrawPlayer();
+
+
+    //ç»˜åˆ¶ç‰¹æ•ˆ
     m_particle_system.Draw();
-    //»æÖÆ²Ëµ¥
+    //ç»˜åˆ¶èœå•
     sdlutil2::RenderPresent(m_context);
 
 }
@@ -174,6 +178,10 @@ void CSideTurnBaseBattleState::PrepareData()
 
 void CSideTurnBaseBattleState::LoadComponents()
 {
+    m_sprite_db=CServiceLocator::GetService<CSpriteDB>
+              (CServiceLocator::ServiceID::SPRITE_DB);
+    m_database=CServiceLocator::GetService<CGameDatabase>
+                (CServiceLocator::ServiceID::DATABASE);
     m_ui_manager.SetGameContext(m_context);
     m_ui_manager.Init();
     m_particle_system.SetGameContext(m_context);
@@ -251,4 +259,46 @@ void CSideTurnBaseBattleState::InitMenu(ge_common_struct::input_event& event)
     m_event_manager.EventPublish(inputevent);
     m_substate=substate::COMMAND_STATE;
     m_current_command_player++;
+}
+
+void CSideTurnBaseBattleState::DrawPlayer(){
+
+    for(size_t i=0;i<m_players.size();i++){
+       CSpriteGameObject& obj=m_players[i];
+       CSprite* sprite=obj.GetSprite();
+       int screenx=obj.GetX();
+       int screeny=obj.GetY();
+       obj.Play();
+       int frameidx=obj.GetFrameIdx();
+       sdlutil2::RenderSprite(m_context,sprite,screenx,screeny,frameidx,m_player_scale);
+    }
+}
+
+void CSideTurnBaseBattleState::UpdatePlayer(){
+
+
+}
+
+
+void CSideTurnBaseBattleState::LoadSprites(){
+
+    ge_common_struct::ge_rect rect=sdlutil2::LoadWindowRect(m_context);
+    std::vector<int> ids=m_database->GetListObjectIds("players");
+    int screenx=rect.w*m_player_draw_x/100;
+    int screeny=rect.h*m_player_draw_y/100;
+    int height=80;
+
+
+    for(size_t i=0;i<ids.size();i++){
+        int id=ids[i];
+        std::string sprite_name= m_database->GetObjectText(id,"sprite");
+        CSprite* sprite=m_sprite_db->GetSprite(sprite_name);
+        CSpriteGameObject player(sprite);
+        player.UpdateDirection("leftward");//TODO å¢åŠ æ–¹æ³•åç§°
+        int x=screenx;
+        int y=screeny+i*height;
+        player.SetX(x);
+        player.SetY(y);
+        m_players.push_back(player);
+    }
 }

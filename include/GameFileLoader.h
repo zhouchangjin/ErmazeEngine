@@ -8,6 +8,7 @@
 namespace ge_fileutil{
     void parse_sheets(xmlutils::MyXMLNode xml_node,std::map<std::string,ge_common_struct::image_def>& images,std::string path="");
     void parse_resource(xmlutils::MyXMLNode xml_node,std::map<std::string,ge_common_struct::resource_def>& resources);
+    void parse_sprites_action(xmlutils::MyXMLNode xml_node,std::vector<ge_common_struct::sprite_action>& actions);
     ge_common_struct::dialog_tree_node* parse_dialog_tree(xmlutils::MyXMLNode dialog_node);
     ge_common_struct::dialog_style_node parse_dialog_style(xmlutils::MyXMLNode dialog_node);
     ge_common_struct::ge_adv_color parse_rgba_color(std::string colorStr);

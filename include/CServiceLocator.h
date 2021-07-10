@@ -8,6 +8,7 @@ class CServiceLocator
         enum ServiceID{
             DATABASE,
             TEXTURE_DB,
+            SPRITE_DB,
             GAME_CONTEXT
         };
         template<class ServiceType>

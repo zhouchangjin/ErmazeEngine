@@ -5,6 +5,8 @@
 #include <vector>
 #include <map>
 
+#include <CSpriteDB.h>
+
 #include "CServiceLocator.h"
 #include "CGameSettings.h"
 #include "CGameState.h"

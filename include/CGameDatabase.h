@@ -14,6 +14,7 @@ public:
         TEXT,
         OBJECT_ID,
         TEXTURE_ID,
+        SPRITE_ID,
         ICON_ID
     };
     CGameDatabase();

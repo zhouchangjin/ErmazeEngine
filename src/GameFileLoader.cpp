@@ -450,10 +450,12 @@ ge_common_struct::dom_node* parse_dom(xmlutils::MyXMLNode xml_node,
     {
         node->action_name=xml_node.StrAttribute("action");
     }
-    if(xml_node.HasAttribute("type")){
+    if(xml_node.HasAttribute("type"))
+    {
         node->type=xml_node.StrAttribute("type");
     }
-    if(xml_node.HasAttribute("page_size")){
+    if(xml_node.HasAttribute("page_size"))
+    {
         node->enable_page=true;
         node->page_size=xml_node.IntAttribute("page_size");
     }
@@ -510,28 +512,33 @@ ge_common_struct::dom_node* parse_dom(xmlutils::MyXMLNode xml_node,
         }
         else
         {
-           node->style.client_rect.h=100;
-           node->style.is_percentage=true;
+            node->style.client_rect.h=100;
+            node->style.is_percentage=true;
         }
         template_dom->style=node->style;
         node->list_template=template_dom;
         template_dom->child_layout=ge_common_struct::ui_layout::FLOW_LAYOUT;
-        if(template_node.HasAttribute("item_width")){
+        if(template_node.HasAttribute("item_width"))
+        {
             int item_width=template_node.IntAttribute("item_width");
             template_dom->style.client_rect.w=item_width;
         }
-        if(template_node.HasAttribute("item_height")){
+        if(template_node.HasAttribute("item_height"))
+        {
             int item_height=template_node.IntAttribute("item_height");
             template_dom->style.client_rect.h=item_height;
         }
-        if(template_node.HasAttribute("layout")){
+        if(template_node.HasAttribute("layout"))
+        {
             std::string layoutstr=template_node.StrAttribute("layout");
             ge_common_struct::ui_layout layout=str_to_layout(layoutstr);
             template_dom->child_layout=layout;
-            if(template_node.HasAttribute("row")){
+            if(template_node.HasAttribute("row"))
+            {
                 template_dom->row=template_node.IntAttribute("row");
             }
-            if(template_node.HasAttribute("col")){
+            if(template_node.HasAttribute("col"))
+            {
                 template_dom->col=template_node.IntAttribute("col");
             }
         }
@@ -596,6 +603,28 @@ ge_common_struct::ui_layout str_to_layout(std::string layoutstr)
     else
     {
         return ge_common_struct::ui_layout::NULL_LAYOUT;
+    }
+}
+
+void parse_sprites_action(xmlutils::MyXMLNode xml_node,
+                          std::vector<ge_common_struct::sprite_action>&
+                          actions)
+{
+    xmlutils::MyXMLNode node=xml_node.Child("sprite");
+    for(; node; node=node.NextSlibing()){
+        ge_common_struct::sprite_action sprite_ref;
+        std::string sprite_id=node.StrAttribute("id");
+        std::string sheet_id=node.StrAttribute("sheet_id");
+        sprite_ref.sprite_id=sprite_id;
+        sprite_ref.sheet_id=sheet_id;
+        xmlutils::MyXMLNode act_node=node.Child("actions").Child("action");
+        for(; act_node; act_node=act_node.NextSlibing()){
+            ge_common_struct::sprite_action action=sprite_ref;
+            action.action_name=act_node.StrAttribute("name");
+            std::string ids_str=act_node.StrAttribute("ids");
+            action.ids=ge_str_utilities::SplitStrToIntArray(ids_str,',');
+            actions.push_back(action);
+        }
     }
 }
 

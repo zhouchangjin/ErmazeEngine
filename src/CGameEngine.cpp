@@ -23,17 +23,26 @@ void CGameEngine::Init(){
 
     CSimpleGameDB* db=new CSimpleGameDB();
     CImageDB* image_db=new CImageDB();
+    CSpriteDB* sprite_db=new CSpriteDB();
+
     CServiceLocator::Register(CServiceLocator::DATABASE,db);
     CServiceLocator::Register(CServiceLocator::TEXTURE_DB,image_db);
+    CServiceLocator::Register(CServiceLocator::SPRITE_DB,sprite_db);
     image_db->Initialize();
+    sprite_db->Initialize();
+
     //demo db
     //db->SetIntData("tmp",9); //demo
     db->CreateList("players");
     db->CreateList("tanks");
+
     db->AddPropToType("player","icon","icon",CGameDatabase::DataType::ICON_ID);
     db->AddPropToType("player","hp","hp",CGameDatabase::DataType::INTEGER);
     db->AddPropToType("player","hpmax","hpmax",CGameDatabase::DataType::INTEGER);
+    db->AddPropToType("player","sprite","sprite",CGameDatabase::DataType::SPRITE_ID);
+
     db->AddPropToType("tank","icon","icon",CGameDatabase::DataType::ICON_ID);
+
     int id1=db->StoreObject("pro_1","wolf","player");
     int id2=db->StoreObject("pro_2","fish","player");
     int id3=db->StoreObject("pro_3","bear","player");
@@ -57,6 +66,11 @@ void CGameEngine::Init(){
     db->SetObjectText(id2,"icon","point_right");
     db->SetObjectText(id3,"icon","point_right");
     db->SetObjectText(id4,"icon","point_right");
+
+    db->SetObjectText(id1,"sprite","mage");
+    db->SetObjectText(id2,"sprite","mage");
+    db->SetObjectText(id3,"sprite","mage");
+    db->SetObjectText(id4,"sprite","mage");
 
     db->SetObjectText(tid1,"icon","point_right");
     db->SetObjectText(tid2,"icon","point_right");

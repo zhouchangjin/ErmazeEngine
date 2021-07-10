@@ -55,9 +55,10 @@ void CSimpleGameDB::SetObjectData(int obj_id,int prop_id,int data)
 std::string CSimpleGameDB::GetObjectText(int obj_id,std::string prop_name)
 {
     std::string key_name=GetKeyName(obj_id,prop_name);
-    int pos=GetIntData(prop_name);
+    int pos=GetIntData(key_name);
     if(pos>=0 && pos<(int)m_text_data.size())
     {
+        std::string text=m_text_data[pos];
         return m_text_data[pos];
     }
     else
@@ -70,7 +71,7 @@ void CSimpleGameDB::SetObjectText(int obj_id,std::string prop_name,
                                   std::string text)
 {
     m_text_data.push_back(text);
-    int pos=m_text_data.size();
+    int pos=m_text_data.size()-1;
     std::string key_name=GetKeyName(obj_id,prop_name);
     SetIntData(key_name,pos);
 }
