@@ -32,6 +32,11 @@ void CParticleSystem::Update(){
     for(size_t i=0;i<m_particle_emitters.size();i++){
         IEmitter* emmiter=m_particle_emitters[i];
         emmiter->Update();
+        if(emmiter->IsDead()){
+            GE_LOG("emmiter dead\n");
+            m_particle_emitters.erase(m_particle_emitters.begin()+i);
+            i--;
+        }
     }
 }
 

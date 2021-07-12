@@ -11,6 +11,10 @@ CBaseParticleEmitter::~CBaseParticleEmitter()
     //dtor
 }
 
+bool CBaseParticleEmitter::IsDead(){
+   return m_emitter_life<0;
+}
+
 void CBaseParticleEmitter::Init()
 {
     if(m_particle_pool!=nullptr)

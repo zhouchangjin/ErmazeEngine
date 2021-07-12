@@ -10,6 +10,7 @@ class CProjectileEmitter :public IEmitter
         virtual ~CProjectileEmitter();
         void Init();
         void Update();
+        bool IsDead();
         std::vector<CParticle*> GetParticles();
         void SetProjectile(CProjectile projectile);
 

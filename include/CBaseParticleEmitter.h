@@ -11,6 +11,7 @@ class CBaseParticleEmitter :public IEmitter
         virtual ~CBaseParticleEmitter();
         void Init();
         void Update();
+        bool IsDead();
         std::vector<CParticle*> GetParticles(){return m_particles;};
 
     protected:

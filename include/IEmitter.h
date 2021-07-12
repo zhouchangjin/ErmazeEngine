@@ -11,6 +11,7 @@ class IEmitter
         virtual ~IEmitter();
         virtual void Init()=0;
         virtual void Update()=0;
+        virtual bool IsDead()=0;
         virtual std::vector<CParticle*> GetParticles()=0;
     protected:
 

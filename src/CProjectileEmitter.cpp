@@ -18,6 +18,10 @@ void CProjectileEmitter::Update(){
     m_projectile.AutoUpdate();
 }
 
+bool CProjectileEmitter::IsDead(){
+    return m_projectile.IsDead();
+}
+
 void CProjectileEmitter::SetProjectile(CProjectile projectile){
     m_projectile.SetPosX(projectile.GetX());
     m_projectile.SetPosY(projectile.GetY());
