@@ -445,7 +445,7 @@
 	<CGameUISystem.h>
 	<GameFileLoader.h>
 
-1625894602 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
+1626080854 source:c:\work\cplusworkspace\ermazeengine\src\cgameengine.cpp
 	"CGameEngine.h"
 
 1607567445 source:c:\work\cplusworkspace\ermazeengine\src\cmenustate.cpp
@@ -843,10 +843,10 @@
 	<common_struct.h>
 	<IMenuProcess.h>
 
-1625912409 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
+1626082799 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
 	"CSideTurnBaseBattleState.h"
 
-1625912507 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
+1626081621 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
 	<XML_Utilities.h>
 	<GameFileLoader.h>
 	<CGameState.h>

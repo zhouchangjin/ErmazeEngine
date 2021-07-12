@@ -61,14 +61,16 @@ class CSideTurnBaseBattleState: public CGameState
        //菜单指示名称
        std::string m_menu_pointer="point_right";
 
-       uint32_t m_temp_timer=0;
+       uint32_t m_frame=0;
        uint32_t m_last_timer=0;
 
-       int m_current_command_player=0;
+       uint32_t m_current_command_player=0;
 
        int m_player_scale=3;
-       int m_player_draw_x=80;
-       int m_player_draw_y=12;
+       int m_enemy_scale=2;
+
+       ge_common_struct::ge_rect m_enemy_rect;
+       ge_common_struct::ge_rect m_player_rect;
 
     private:
         void LoadComponents();

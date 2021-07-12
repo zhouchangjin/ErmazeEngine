@@ -22,6 +22,14 @@ void CSideTurnBaseBattleState::Init()
     m_state_value=0;
     m_event_manager.EventSubscribe(&m_ui_manager,CUIManager::ProcessInput);
     m_ui_manager.SetMenuPointerName(m_menu_pointer);
+
+    m_player_rect.x=80;
+    m_player_rect.y=20;
+
+    m_enemy_rect.x=10;
+    m_enemy_rect.y=20;
+    m_enemy_rect.w=50;
+    m_enemy_rect.h=50;
     LoadComponents();
     LoadUIDef();
     LoadSprites();
@@ -68,40 +76,55 @@ void CSideTurnBaseBattleState::HandleEvent(ge_common_struct::input_event event)
 
 void CSideTurnBaseBattleState::Update()
 {
-    m_temp_timer++;
-    if(m_substate==substate::BATTLE_INIT_STATE){
+    m_frame++;
+    if(m_substate==substate::BATTLE_INIT_STATE)
+    {
         GE_LOG("Prepare battle scene....\n");
-        if(m_temp_timer>20){
+        if(m_frame>20)
+        {
             GE_LOG("Prepare battle scene done.\n");
             m_substate=substate::COMMAND_INIT_STATE;
         }
-    }else if(m_substate==substate::COMMAND_STATE){
+    }
+    else if(m_substate==substate::COMMAND_STATE)
+    {
 
         //检查命令是否完备，如果完备则转下一个状态
-        if(m_ui_manager.IsPopPanelHidden()){
-            if(m_current_command_player>3){
+        if(m_ui_manager.IsPopPanelHidden())
+        {
+            if(m_current_command_player>3)
+            {
                 //全部完毕
                 m_substate=substate::BATTLE_STATE;
-                m_last_timer=m_temp_timer;
-            }else{
+                m_last_timer=m_frame;
+            }
+            else
+            {
                 m_substate=substate::COMMAND_INIT_STATE;
             }
         }
-    }else if(m_substate==substate::COMMAND_INIT_STATE){
-            ge_common_struct::input_event event;
-            ge_common_struct::key_event_type etype=ge_common_struct
+    }
+    else if(m_substate==substate::COMMAND_INIT_STATE)
+    {
+        ge_common_struct::input_event event;
+        ge_common_struct::key_event_type etype=ge_common_struct
                                                ::key_event_type::KEY_CONFIRM;
-            event.add_event(etype);
-            InitMenu(event);
-    }else if(m_substate==substate::BATTLE_STATE){
+        event.add_event(etype);
+        InitMenu(event);
+    }
+    else if(m_substate==substate::BATTLE_STATE)
+    {
 
-            if(m_temp_timer-m_last_timer>50){
-                GE_LOG("battle done\n");
-                m_substate=substate::COMMAND_INIT_STATE;
-                m_current_command_player=0;
-            }else{
-                GE_LOG("battle proceding\n");
-            }
+        if(m_frame-m_last_timer>50)
+        {
+            GE_LOG("battle done\n");
+            m_substate=substate::COMMAND_INIT_STATE;
+            m_current_command_player=0;
+        }
+        else
+        {
+            GE_LOG("battle proceding\n");
+        }
     }
     /***
     if(m_substate==substate::COMMAND_STATE)
@@ -145,7 +168,7 @@ void CSideTurnBaseBattleState::Update()
     }
     **/
     m_particle_system.Update();
-
+    UpdatePlayer();
 
 
 }
@@ -157,7 +180,7 @@ void CSideTurnBaseBattleState::Draw()
     //绘制sprites
 
     DrawPlayer();
-
+    DrawEnemy();
 
     //绘制特效
     m_particle_system.Draw();
@@ -179,16 +202,16 @@ void CSideTurnBaseBattleState::PrepareData()
 void CSideTurnBaseBattleState::LoadComponents()
 {
     m_sprite_db=CServiceLocator::GetService<CSpriteDB>
-              (CServiceLocator::ServiceID::SPRITE_DB);
+                (CServiceLocator::ServiceID::SPRITE_DB);
     m_database=CServiceLocator::GetService<CGameDatabase>
-                (CServiceLocator::ServiceID::DATABASE);
+               (CServiceLocator::ServiceID::DATABASE);
     m_ui_manager.SetGameContext(m_context);
     m_ui_manager.Init();
     m_particle_system.SetGameContext(m_context);
     m_particle_system.Init();
     //Test code
     CBaseParticleEmitter* emmiter=
-    new CBaseParticleEmitter(m_particle_system.GetParticlePool());
+        new CBaseParticleEmitter(m_particle_system.GetParticlePool());
     m_particle_system.AddEmitter(emmiter);
     CProjectileEmitter* projectile_emitter=new CProjectileEmitter();
     m_particle_system.AddEmitter(projectile_emitter);
@@ -261,35 +284,66 @@ void CSideTurnBaseBattleState::InitMenu(ge_common_struct::input_event& event)
     m_current_command_player++;
 }
 
-void CSideTurnBaseBattleState::DrawPlayer(){
+void CSideTurnBaseBattleState::DrawEnemy()
+{
+    for(size_t i=0; i<m_enemies.size(); i++)
+    {
+        CSpriteGameObject& obj=m_enemies[i];
+        int screenx=obj.GetX();
+        int screeny=obj.GetY();
+        obj.Play();
+        int frameidx=obj.GetFrameIdx();
+        sdlutil2::RenderSprite(m_context,obj.GetSprite(),screenx,
+                               screeny,frameidx,m_enemy_scale);
+    }
 
-    for(size_t i=0;i<m_players.size();i++){
-       CSpriteGameObject& obj=m_players[i];
-       CSprite* sprite=obj.GetSprite();
-       int screenx=obj.GetX();
-       int screeny=obj.GetY();
-       obj.Play();
-       int frameidx=obj.GetFrameIdx();
-       sdlutil2::RenderSprite(m_context,sprite,screenx,screeny,frameidx,m_player_scale);
+}
+
+void CSideTurnBaseBattleState::DrawPlayer()
+{
+
+    for(size_t i=0; i<m_players.size(); i++)
+    {
+        CSpriteGameObject& obj=m_players[i];
+        CSprite* sprite=obj.GetSprite();
+        int screenx=obj.GetX();
+        int screeny=obj.GetY();
+        obj.Play();
+        if(i==m_current_command_player-1 && m_substate!=substate::BATTLE_STATE)
+        {
+            screenx-=80;
+        }
+        int frameidx=obj.GetFrameIdx();
+        sdlutil2::RenderSprite(m_context,sprite,screenx,screeny,frameidx,m_player_scale);
     }
 }
 
-void CSideTurnBaseBattleState::UpdatePlayer(){
-
-
+void CSideTurnBaseBattleState::UpdatePlayer()
+{
+    if(m_frame%10==0)
+    {
+        for(size_t i=0; i<m_players.size(); i++)
+        {
+            m_players[i].Step();
+        }
+    }
 }
 
 
-void CSideTurnBaseBattleState::LoadSprites(){
-
+void CSideTurnBaseBattleState::LoadSprites()
+{
+    int draw_x=m_player_rect.x;
+    int draw_y=m_player_rect.y;
     ge_common_struct::ge_rect rect=sdlutil2::LoadWindowRect(m_context);
     std::vector<int> ids=m_database->GetListObjectIds("players");
-    int screenx=rect.w*m_player_draw_x/100;
-    int screeny=rect.h*m_player_draw_y/100;
+    std::vector<int> ids_ene=m_database->GetListObjectIds("battle");
+    int screenx=rect.w*draw_x/100;
+    int screeny=rect.h*draw_y/100;
     int height=80;
 
 
-    for(size_t i=0;i<ids.size();i++){
+    for(size_t i=0; i<ids.size(); i++)
+    {
         int id=ids[i];
         std::string sprite_name= m_database->GetObjectText(id,"sprite");
         CSprite* sprite=m_sprite_db->GetSprite(sprite_name);
@@ -300,5 +354,32 @@ void CSideTurnBaseBattleState::LoadSprites(){
         player.SetX(x);
         player.SetY(y);
         m_players.push_back(player);
+    }
+    int startx=m_enemy_rect.x*rect.w/100;
+    int starty=m_enemy_rect.y*rect.h/100;
+    int maxw=m_enemy_rect.w*rect.w/100;
+    //int maxh=m_enemy_rect.h*rect.h/100;
+    int maxx=startx+maxw;
+    //int maxy=starty+maxh;
+    int curx=startx;
+    int cury=starty;
+    for(size_t i=0; i<ids_ene.size(); i++)
+    {
+        int id=ids_ene[i];
+        std::string sprite_name=m_database->GetObjectText(id,"sprite");
+        CSprite* sprite=m_sprite_db->GetSprite(sprite_name);
+        CSpriteGameObject enemy(sprite);
+        enemy.UpdateDirection("stand");
+        enemy.SetX(curx);
+        enemy.SetY(cury);
+
+        int xnew=curx+sprite->GetSpriteSheet()->GetSpriteWidth()*m_enemy_scale;
+        if(xnew<maxx){
+            curx=xnew;
+        }else{
+            curx=startx;
+            cury=cury+sprite->GetSpriteSheet()->GetSpriteHeight()*m_enemy_scale;
+        }
+        m_enemies.push_back(enemy);
     }
 }

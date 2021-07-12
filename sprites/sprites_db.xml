@@ -2,6 +2,7 @@
 
 <spritesheets>
 	 <spritesheet  id="1" path="./sprites/sprites.png" width="16" height="16" col="8" row="10" />
+	 <spritesheet  id="2" path="./sprites/monsters.png" width="45" height="45" col="8" row="8" />
 </spritesheets>
 <sprites>
 	<sprite id="mage" sheet_id="1">
@@ -10,6 +11,11 @@
 			<action name="downward" ids="0,1" />
 			<action name="leftward" ids="4,5" />
 			<action name="rightward" ids="6,7" />
+		</actions>
+	</sprite>
+	<sprite id="type1" sheet_id="2">
+		<actions>
+			<action name="stand" ids="0"  />
 		</actions>
 	</sprite>
 </sprites>

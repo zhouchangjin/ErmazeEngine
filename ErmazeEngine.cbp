@@ -104,6 +104,7 @@
 		<Unit filename="include/CSideTurnBaseBattleState.h" />
 		<Unit filename="include/CSimpleGameDB.h" />
 		<Unit filename="include/CSprite.h" />
+		<Unit filename="include/CSpriteDB.h" />
 		<Unit filename="include/CSpriteGameObject.h" />
 		<Unit filename="include/CSpriteSheet.h" />
 		<Unit filename="include/CTexture.h" />
@@ -118,6 +119,7 @@
 		<Unit filename="include/IDefaultMenuEventProcess.h" />
 		<Unit filename="include/IEmitter.h" />
 		<Unit filename="include/IMenuProcess.h" />
+		<Unit filename="include/ISpriteDB.h" />
 		<Unit filename="include/ITextureDB.h" />
 		<Unit filename="include/Render_Util.h" />
 		<Unit filename="include/SDL_Utilities.h" />
@@ -171,6 +173,7 @@
 		<Unit filename="src/CSideTurnBaseBattleState.cpp" />
 		<Unit filename="src/CSimpleGameDB.cpp" />
 		<Unit filename="src/CSprite.cpp" />
+		<Unit filename="src/CSpriteDB.cpp" />
 		<Unit filename="src/CSpriteGameObject.cpp" />
 		<Unit filename="src/CSpriteSheet.cpp" />
 		<Unit filename="src/CTexture.cpp" />
@@ -185,6 +188,7 @@
 		<Unit filename="src/IDefaultMenuEventProcess.cpp" />
 		<Unit filename="src/IEmitter.cpp" />
 		<Unit filename="src/IMenuProcess.cpp" />
+		<Unit filename="src/ISpriteDB.cpp" />
 		<Unit filename="src/ITextureDB.cpp" />
 		<Unit filename="src/Main.cpp" />
 		<Unit filename="src/Render_Util.cpp" />

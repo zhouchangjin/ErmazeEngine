@@ -35,6 +35,11 @@ void CGameEngine::Init(){
     //db->SetIntData("tmp",9); //demo
     db->CreateList("players");
     db->CreateList("tanks");
+    db->CreateList("battle");
+
+    db->AddPropToType("enemy","hp","hp",CGameDatabase::DataType::INTEGER);
+    db->AddPropToType("enemy","hpmax","hpmax",CGameDatabase::DataType::INTEGER);
+    db->AddPropToType("enemy","sprite","sprite",CGameDatabase::DataType::SPRITE_ID);
 
     db->AddPropToType("player","icon","icon",CGameDatabase::DataType::ICON_ID);
     db->AddPropToType("player","hp","hp",CGameDatabase::DataType::INTEGER);
@@ -48,9 +53,15 @@ void CGameEngine::Init(){
     int id3=db->StoreObject("pro_3","bear","player");
     int id4=db->StoreObject("pro_4","dog","player");
 
+    int eid1=db->StoreObject("en_1","s","enemy");
+    int eid2=db->StoreObject("en_2","s","enemy");
+
     int tid1=db->StoreObject("t_1","tank1","tank");
     int tid2=db->StoreObject("t_2","tank2","tank");
     int tid3=db->StoreObject("t_3","tank3","tank");
+
+    db->SetObjectText(eid1,"sprite","type1");
+    db->SetObjectText(eid2,"sprite","type1");
 
     db->SetObjectData(id1,"hp",90);
     db->SetObjectData(id2,"hp",80);
@@ -85,6 +96,8 @@ void CGameEngine::Init(){
     db->AddObjectToList("tanks",tid2);
     db->AddObjectToList("tanks",tid3);
 
+    db->AddObjectToList("battle",eid1);
+    db->AddObjectToList("battle",eid2);
     //db->RemoveObjectFromList("players",id4);
 
 
