@@ -939,7 +939,7 @@
 	<IEmitter.h>
 	<CParticlePool.h>
 
-1626347638 source:c:\work\cplusworkspace\ermazeengine\src\cparticlesystem.cpp
+1626347981 source:c:\work\cplusworkspace\ermazeengine\src\cparticlesystem.cpp
 	"CParticleSystem.h"
 
 1625225952 c:\work\cplusworkspace\ermazeengine\include\cparticlesystem.h
@@ -991,7 +991,7 @@
 	<CSpriteGameObject.h>
 	<IEmitter.h>
 
-1626347573 source:c:\work\cplusworkspace\ermazeengine\src\canimationmanager.cpp
+1626347720 source:c:\work\cplusworkspace\ermazeengine\src\canimationmanager.cpp
 	"CAnimationManager.h"
 
 1626346724 c:\work\cplusworkspace\ermazeengine\include\canimationmanager.h
