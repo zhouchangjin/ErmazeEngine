@@ -11,6 +11,7 @@
 #include <CProjectileEmitter.h>
 #include <CSpriteDB.h>
 #include <CServiceLocator.h>
+#include <CAnimationManager.h>
 
 class CSideTurnBaseBattleState: public CGameState
 {
@@ -45,8 +46,10 @@ class CSideTurnBaseBattleState: public CGameState
        //界面管理
        CUIManager m_ui_manager;
 
+       CAnimationManager m_animation_manager;
+
        //粒子动画系统
-       CParticleSystem m_particle_system;
+       //CParticleSystem m_particle_system;
 
        //精灵库
        CSpriteDB* m_sprite_db=nullptr;
@@ -75,9 +78,7 @@ class CSideTurnBaseBattleState: public CGameState
     private:
         void LoadComponents();
         void LoadUIDef();
-        void LoadTexture();
         void LoadSprites();
-        void LoadAnimation();
 
         void UpdateEnemy();
         void UpdatePlayer();

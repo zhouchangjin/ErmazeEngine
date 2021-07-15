@@ -1,7 +1,7 @@
 <animation>
 
 <script id="attack" frame_cnt="30">
-	<move target="auto" motion_type="interface" interface="attack_move" start_frame="0" end_frame="10"/>
+	<move target="auto" motion_type="interface" interface="attack_move" start_frame="0" end_frame="10" action_name="attack"/>
 	<do start_frame="12" end_frame="20" action_name="attack"/>
 	<moveobject sprite="bullet" motion_type="interface" interface="straight" start_frame="0" end_frame="10"/>
 	<show sprite="thunder" start_frame="0" end_frame="20" action_name="thunder"/>

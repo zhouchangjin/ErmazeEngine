@@ -5,7 +5,7 @@
 1605575700 c:\work\cplusworkspace\ermazeengine\include\cgamecontext.h
 	"common_struct.h"
 
-1625848849 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
+1626338437 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
 	<map>
 	<vector>
 	<string>
@@ -843,10 +843,10 @@
 	<common_struct.h>
 	<IMenuProcess.h>
 
-1626082799 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
+1626341313 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
 	"CSideTurnBaseBattleState.h"
 
-1626081621 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
+1626341298 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
 	<XML_Utilities.h>
 	<GameFileLoader.h>
 	<CGameState.h>
@@ -857,6 +857,7 @@
 	<CProjectileEmitter.h>
 	<CSpriteDB.h>
 	<CServiceLocator.h>
+	<CAnimationManager.h>
 
 1612950563 source:c:\work\cplusworkspace\ermazeengine\src\itexturedb.cpp
 	"ITextureDB.h"
@@ -934,11 +935,11 @@
 1626084059 source:c:\work\cplusworkspace\ermazeengine\src\cbaseparticleemitter.cpp
 	"CBaseParticleEmitter.h"
 
-1626083868 c:\work\cplusworkspace\ermazeengine\include\cbaseparticleemitter.h
+1626173496 c:\work\cplusworkspace\ermazeengine\include\cbaseparticleemitter.h
 	<IEmitter.h>
 	<CParticlePool.h>
 
-1626084155 source:c:\work\cplusworkspace\ermazeengine\src\cparticlesystem.cpp
+1626172041 source:c:\work\cplusworkspace\ermazeengine\src\cparticlesystem.cpp
 	"CParticleSystem.h"
 
 1625225952 c:\work\cplusworkspace\ermazeengine\include\cparticlesystem.h
@@ -957,14 +958,14 @@
 1625215930 source:c:\work\cplusworkspace\ermazeengine\src\iemitter.cpp
 	"IEmitter.h"
 
-1626083860 c:\work\cplusworkspace\ermazeengine\include\iemitter.h
+1626173330 c:\work\cplusworkspace\ermazeengine\include\iemitter.h
 	"common_struct.h"
 	<CParticle.h>
 
-1626083975 source:c:\work\cplusworkspace\ermazeengine\src\cprojectileemitter.cpp
+1626173685 source:c:\work\cplusworkspace\ermazeengine\src\cprojectileemitter.cpp
 	"CProjectileEmitter.h"
 
-1626083899 c:\work\cplusworkspace\ermazeengine\include\cprojectileemitter.h
+1626173528 c:\work\cplusworkspace\ermazeengine\include\cprojectileemitter.h
 	<IEmitter.h>
 	<CProjectile.h>
 
@@ -981,4 +982,21 @@
 	<ISpriteDB.h>
 	<XML_Utilities.h>
 	<GameFileLoader.h>
+
+1626158319 source:c:\work\cplusworkspace\ermazeengine\src\animationitem.cpp
+	"AnimationItem.h"
+
+1626339324 c:\work\cplusworkspace\ermazeengine\include\animationitem.h
+	<common_struct.h>
+	<CSpriteGameObject.h>
+	<IEmitter.h>
+
+1626340162 source:c:\work\cplusworkspace\ermazeengine\src\canimationmanager.cpp
+	"CAnimationManager.h"
+
+1626341233 c:\work\cplusworkspace\ermazeengine\include\canimationmanager.h
+	<common_struct.h>
+	<AnimationItem.h>
+	<CParticleSystem.h>
+	<CSpriteDB.h>
 

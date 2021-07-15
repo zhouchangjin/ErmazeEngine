@@ -22,6 +22,22 @@ bool CProjectileEmitter::IsDead(){
     return m_projectile.IsDead();
 }
 
+int CProjectileEmitter::GetX(){
+    return m_projectile.GetX();
+}
+
+int CProjectileEmitter::GetY(){
+    return m_projectile.GetY();
+}
+
+void CProjectileEmitter::UpdateX(int x){
+    m_projectile.SetPosX(x);
+}
+
+void CProjectileEmitter::UpdateY(int y){
+    m_projectile.SetPosY(y);
+}
+
 void CProjectileEmitter::SetProjectile(CProjectile projectile){
     m_projectile.SetPosX(projectile.GetX());
     m_projectile.SetPosY(projectile.GetY());

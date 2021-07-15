@@ -3,6 +3,7 @@
 <spritesheets>
 	 <spritesheet  id="1" path="./sprites/sprites.png" width="16" height="16" col="8" row="10" />
 	 <spritesheet  id="2" path="./sprites/monsters.png" width="45" height="45" col="8" row="8" />
+	 <spritesheet  id="3" path="./sprites/magic.png" width="17" height="17" col="8" row="8" />
 </spritesheets>
 <sprites>
 	<sprite id="mage" sheet_id="1">
@@ -16,6 +17,11 @@
 	<sprite id="type1" sheet_id="2">
 		<actions>
 			<action name="stand" ids="0"  />
+		</actions>
+	</sprite>
+	<sprite id="magic" sheet_id="3">
+		<actions>
+			<action name="thunder" ids="0,1"  />
 		</actions>
 	</sprite>
 </sprites>

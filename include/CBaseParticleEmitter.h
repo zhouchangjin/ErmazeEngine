@@ -12,6 +12,10 @@ class CBaseParticleEmitter :public IEmitter
         void Init();
         void Update();
         bool IsDead();
+        int GetX(){return m_pos_x;};
+        int GetY(){return m_pos_y;};
+        void UpdateX(int x){m_pos_x=x;};
+        void UpdateY(int y){m_pos_y=y;};
         std::vector<CParticle*> GetParticles(){return m_particles;};
 
     protected:

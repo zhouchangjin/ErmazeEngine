@@ -18,19 +18,30 @@ CSideTurnBaseBattleState::~CSideTurnBaseBattleState()
 
 void CSideTurnBaseBattleState::Init()
 {
+    LoadComponents();
+
+
+    m_ui_manager.SetGameContext(m_context);
+    m_ui_manager.Init();
+    m_ui_manager.SetMenuPointerName(m_menu_pointer);
+
+    m_event_manager.EventSubscribe(&m_ui_manager,CUIManager::ProcessInput);
+
+
+
+    m_animation_manager.SetGameContext(m_context);
+    m_animation_manager.Init();
+
     //0代表状态不改变
     m_state_value=0;
-    m_event_manager.EventSubscribe(&m_ui_manager,CUIManager::ProcessInput);
-    m_ui_manager.SetMenuPointerName(m_menu_pointer);
 
     m_player_rect.x=80;
     m_player_rect.y=20;
-
     m_enemy_rect.x=10;
     m_enemy_rect.y=20;
     m_enemy_rect.w=50;
     m_enemy_rect.h=50;
-    LoadComponents();
+
     LoadUIDef();
     LoadSprites();
 
@@ -120,8 +131,53 @@ void CSideTurnBaseBattleState::Update()
             GE_LOG("battle done\n");
             m_substate=substate::COMMAND_INIT_STATE;
             m_current_command_player=0;
-        }
-        else
+        }else if(m_frame-m_last_timer==10){
+            GE_LOG("play animation\n");
+            for(size_t i=0;i<m_enemies.size();i++){
+                AnimationItem item;
+                item.SetAnimateType(AnimationItem::AnimateType::SHOW_VFX);
+                item.SetActionName("thunder");
+                item.SetSpriteName("magic");
+                item.SetStartFrame(3);
+                item.SetEndFrame(10);
+                item.SetObject(&m_enemies[i]);
+                m_animation_manager.AddAnimateItem(item);
+
+                AnimationItem item2;
+                item2.SetAnimateType(AnimationItem::AnimateType::TEXT_MOTION);
+                item2.SetStartFrame(11);
+                item2.SetEndFrame(20);
+                item2.SetObject(&m_enemies[i]);
+                item2.SetText("38");
+                ge_common_struct::ge_color color;
+                color.r=255;
+                color.g=255;
+                color.b=255;
+                item2.SetFontColor(color);
+                m_animation_manager.AddAnimateItem(item2);
+
+                AnimationItem item3;
+                item3.SetAnimateType(AnimationItem::AnimateType::FLASH_SPRITE);
+                item3.SetStartFrame(3);
+                item3.SetEndFrame(10);
+                item3.SetActionName("stand");
+                item3.SetResetPosition(true);
+                item3.SetObject(&m_enemies[i]);
+                m_animation_manager.AddAnimateItem(item3);
+
+            }
+            AnimationItem item;
+            item.SetAnimateType(AnimationItem::AnimateType::MOVE_SPRITE);
+            item.SetActionName("leftward");
+            item.SetStartFrame(0);
+            item.SetEndFrame(3);
+            CSpriteGameObject* p=&m_players[1];
+            item.SetObject(p);
+            item.SetEndLoc(ge_common_struct::ge_point(p->GetX()-50,p->GetY()));
+            item.SetResetPosition(true);
+            m_animation_manager.AddAnimateItem(item);
+
+        }else
         {
             GE_LOG("battle proceding\n");
         }
@@ -167,7 +223,8 @@ void CSideTurnBaseBattleState::Update()
 
     }
     **/
-    m_particle_system.Update();
+    //m_particle_system.Update();
+    m_animation_manager.Update();
     UpdatePlayer();
 
 
@@ -178,12 +235,12 @@ void CSideTurnBaseBattleState::Draw()
     //绘制界面
     m_ui_manager.Draw();
     //绘制sprites
-
     DrawPlayer();
     DrawEnemy();
 
     //绘制特效
-    m_particle_system.Draw();
+    m_animation_manager.Draw();
+
     //绘制菜单
     sdlutil2::RenderPresent(m_context);
 
@@ -205,10 +262,6 @@ void CSideTurnBaseBattleState::LoadComponents()
                 (CServiceLocator::ServiceID::SPRITE_DB);
     m_database=CServiceLocator::GetService<CGameDatabase>
                (CServiceLocator::ServiceID::DATABASE);
-    m_ui_manager.SetGameContext(m_context);
-    m_ui_manager.Init();
-    m_particle_system.SetGameContext(m_context);
-    m_particle_system.Init();
     //Test code
     /**
     CBaseParticleEmitter* emmiter=
@@ -339,6 +392,8 @@ void CSideTurnBaseBattleState::LoadSprites()
     ge_common_struct::ge_rect rect=sdlutil2::LoadWindowRect(m_context);
     std::vector<int> ids=m_database->GetListObjectIds("players");
     std::vector<int> ids_ene=m_database->GetListObjectIds("battle");
+
+    //hard coding
     int screenx=rect.w*draw_x/100;
     int screeny=rect.h*draw_y/100;
     int height=80;

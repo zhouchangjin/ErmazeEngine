@@ -58,9 +58,11 @@
 		<ExtraCommands>
 			<Add after="XCOPY $(#sdl2)\bin\*.dll $(TARGET_OUTPUT_DIR) /D /Y" />
 		</ExtraCommands>
+		<Unit filename="include/AnimationItem.h" />
 		<Unit filename="include/C2DGameScene.h" />
 		<Unit filename="include/CActionEvent.h" />
 		<Unit filename="include/CAdvDialog.h" />
+		<Unit filename="include/CAnimationManager.h" />
 		<Unit filename="include/CBaseParticleEmitter.h" />
 		<Unit filename="include/CCamera2D.h" />
 		<Unit filename="include/CChoiceDialog.h" />
@@ -129,9 +131,11 @@
 		<Unit filename="libs/pugixml/pugiconfig.hpp" />
 		<Unit filename="libs/pugixml/pugixml.cpp" />
 		<Unit filename="libs/pugixml/pugixml.hpp" />
+		<Unit filename="src/AnimationItem.cpp" />
 		<Unit filename="src/C2DGameScene.cpp" />
 		<Unit filename="src/CActionEvent.cpp" />
 		<Unit filename="src/CAdvDialog.cpp" />
+		<Unit filename="src/CAnimationManager.cpp" />
 		<Unit filename="src/CBaseParticleEmitter.cpp" />
 		<Unit filename="src/CCamera2D.cpp" />
 		<Unit filename="src/CChoiceDialog.cpp" />

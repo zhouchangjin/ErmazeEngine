@@ -12,6 +12,10 @@ class IEmitter
         virtual void Init()=0;
         virtual void Update()=0;
         virtual bool IsDead()=0;
+        virtual int GetX()=0;
+        virtual int GetY()=0;
+        virtual void UpdateX(int x)=0;
+        virtual void UpdateY(int y)=0;
         virtual std::vector<CParticle*> GetParticles()=0;
     protected:
 
