@@ -165,6 +165,14 @@ void CSideTurnBaseBattleState::Update()
                 item3.SetObject(&m_enemies[i]);
                 m_animation_manager.AddAnimateItem(item3);
 
+                AnimationItem item4;
+                item4.SetAnimateType(AnimationItem::AnimateType::PROJECTILE);
+                item4.SetStartFrame(3);
+                item4.SetEndFrame(10);
+                item4.SetSpriteName("bullet");
+                item4.SetObject(&m_players[1]);
+                item4.SetTargetObject(&m_enemies[i]);
+                m_animation_manager.AddAnimateItem(item4);
             }
             AnimationItem item;
             item.SetAnimateType(AnimationItem::AnimateType::MOVE_SPRITE);

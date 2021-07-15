@@ -14,7 +14,10 @@ void CAnimationManager::Init()
 {
     m_sprite_db=CServiceLocator::GetService<CSpriteDB>
                 (CServiceLocator::ServiceID::SPRITE_DB);
-    if(m_context){
+    m_image_db=CServiceLocator::GetService<CImageDB>
+               (CServiceLocator::ServiceID::TEXTURE_DB);
+    if(m_context)
+    {
         m_particle_system.SetGameContext(m_context);
         m_particle_system.Init();
     }
@@ -84,7 +87,8 @@ void CAnimationManager::Update()
                 int frame=m_frame-item.GetGlobalFrame();
                 int f_start=item.GetStartFrame();
                 int framespan=item.GetEndFrame()-item.GetStartFrame();
-                if(frame>=f_start && frame<=item.GetEndFrame()){
+                if(frame>=f_start && frame<=item.GetEndFrame())
+                {
                     int start_loc_x=item.GetStartLoc().x;
                     int start_loc_y=item.GetStartLoc().y;
                     int end_loc_x=item.GetEndLoc().x;
@@ -98,10 +102,13 @@ void CAnimationManager::Update()
                         cur_loc_x+=dx;
                         cur_loc_y+=dy;
                     }
-                    if(frame%2==0){
+                    if(frame%2==0)
+                    {
                         object->SetX(-10000);
                         object->SetY(-10000);
-                    }else{
+                    }
+                    else
+                    {
                         object->SetX(cur_loc_x);
                         object->SetY(cur_loc_y);
                     }
@@ -117,6 +124,11 @@ void CAnimationManager::Update()
             else if(type==AnimationItem::AnimateType::PROJECTILE)
             {
                 //update projectile emitter position,nothing useful
+                int frame=m_frame-item.GetGlobalFrame();
+                int f_start=item.GetStartFrame();
+                if(frame==f_start){
+                    CreateProjectile(item);
+                }
 
             }
             else if(type==AnimationItem::AnimateType::SHOW_VFX)
@@ -176,10 +188,39 @@ void CAnimationManager::AddAnimateItem(AnimationItem item)
     else if(item.GetAnimateType()==AnimationItem::AnimateType::PARTICLE)
     {
         //Create particle
+        CSpriteGameObject* object=item.GetObject();
+        CSpriteGameObject* tar_obj=item.GetTargetObject();
+        if(object!=nullptr)
+        {
+            int px=object->GetX();
+            int py=object->GetY();
+            item.SetStartLoc(ge_common_struct::ge_point(px,py));
+        }
+        if(tar_obj!=nullptr)
+        {
+            int px=tar_obj->GetX();
+            int py=tar_obj->GetY();
+            item.SetEndLoc(ge_common_struct::ge_point(px,py));
+        }
+
     }
     else if(item.GetAnimateType()==AnimationItem::AnimateType::PROJECTILE)
     {
         //Create projectile
+        CSpriteGameObject* object=item.GetObject();
+        CSpriteGameObject* tar_obj=item.GetTargetObject();
+        if(object!=nullptr)
+        {
+            int px=object->GetX();
+            int py=object->GetY();
+            item.SetStartLoc(ge_common_struct::ge_point(px,py));
+        }
+        if(tar_obj!=nullptr)
+        {
+            int px=tar_obj->GetX();
+            int py=tar_obj->GetY();
+            item.SetEndLoc(ge_common_struct::ge_point(px,py));
+        }
 
     }
     else if(item.GetAnimateType()==AnimationItem::AnimateType::TEXT_MOTION)
@@ -196,9 +237,12 @@ void CAnimationManager::AddAnimateItem(AnimationItem item)
         }
 
 
-    }else if(item.GetAnimateType()==AnimationItem::AnimateType::FLASH_SPRITE){
+    }
+    else if(item.GetAnimateType()==AnimationItem::AnimateType::FLASH_SPRITE)
+    {
         CSpriteGameObject* obj=item.GetObject();
-        if(obj!=nullptr){
+        if(obj!=nullptr)
+        {
             int x=obj->GetX();
             int y=obj->GetY();
             item.SetStartLoc(ge_common_struct::ge_point(x,y));
@@ -273,6 +317,35 @@ void CAnimationManager::Draw()
         }
 
     }
-    m_particle_system.Update();
+    m_particle_system.Draw();
     m_frame++;
+}
+
+
+void CAnimationManager::CreateProjectile(AnimationItem item)
+{
+    std::string texture_name=item.GetSpriteName();
+    int x=item.GetStartLoc().x;
+    int y=item.GetStartLoc().y;
+    int tx=item.GetEndLoc().x;
+    int ty=item.GetEndLoc().y;
+    int end_frame=item.GetEndFrame();
+    int start_frame=item.GetStartFrame();
+    int span=end_frame-start_frame;
+    int vx=(tx-x)/span;
+    int vy=(ty-y)/span;
+    CProjectileEmitter* projectile_emitter=new CProjectileEmitter();
+    m_particle_system.AddEmitter(projectile_emitter);
+    CProjectile pj;
+    pj.SetPosX(x);
+    pj.SetPosY(y);
+    pj.SetAX(0);
+    pj.SetAY(0);
+    pj.SetVelocityX(vx);
+    pj.SetVelocityY(vy);
+    pj.SetLife(span+10);
+    pj.SetTextureName(texture_name);
+    projectile_emitter->SetProjectile(pj);
+    projectile_emitter->Init();
+
 }

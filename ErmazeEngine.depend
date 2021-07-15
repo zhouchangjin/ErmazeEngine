@@ -843,7 +843,7 @@
 	<common_struct.h>
 	<IMenuProcess.h>
 
-1626341313 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
+1626347078 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
 	"CSideTurnBaseBattleState.h"
 
 1626341298 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
@@ -939,7 +939,7 @@
 	<IEmitter.h>
 	<CParticlePool.h>
 
-1626172041 source:c:\work\cplusworkspace\ermazeengine\src\cparticlesystem.cpp
+1626347638 source:c:\work\cplusworkspace\ermazeengine\src\cparticlesystem.cpp
 	"CParticleSystem.h"
 
 1625225952 c:\work\cplusworkspace\ermazeengine\include\cparticlesystem.h
@@ -991,12 +991,13 @@
 	<CSpriteGameObject.h>
 	<IEmitter.h>
 
-1626340162 source:c:\work\cplusworkspace\ermazeengine\src\canimationmanager.cpp
+1626347573 source:c:\work\cplusworkspace\ermazeengine\src\canimationmanager.cpp
 	"CAnimationManager.h"
 
-1626341233 c:\work\cplusworkspace\ermazeengine\include\canimationmanager.h
+1626346724 c:\work\cplusworkspace\ermazeengine\include\canimationmanager.h
 	<common_struct.h>
 	<AnimationItem.h>
 	<CParticleSystem.h>
 	<CSpriteDB.h>
+	<CProjectileEmitter.h>
 

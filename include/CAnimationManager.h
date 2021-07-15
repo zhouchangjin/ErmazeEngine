@@ -5,6 +5,7 @@
 #include <AnimationItem.h>
 #include <CParticleSystem.h>
 #include <CSpriteDB.h>
+#include <CProjectileEmitter.h>
 
 class CAnimationManager
 {
@@ -22,6 +23,9 @@ class CAnimationManager
         uint32_t m_frame=0;
         std::vector<AnimationItem> m_animation_list;
         CSpriteDB* m_sprite_db=nullptr;
+        CImageDB* m_image_db=nullptr;
+
+        void CreateProjectile(AnimationItem item);
     private:
 };
 
