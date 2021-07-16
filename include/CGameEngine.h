@@ -17,7 +17,7 @@
 #include "CSdlGameContext.h"
 #include "CRPGGameData.h"
 #include "CSimpleGameDB.h"
-
+#include <File_Util.h>
 class CGameEngine
 {
 
