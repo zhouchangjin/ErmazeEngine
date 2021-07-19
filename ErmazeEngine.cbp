@@ -115,6 +115,7 @@
 		<Unit filename="include/CTransferArea.h" />
 		<Unit filename="include/CUIActionManager.h" />
 		<Unit filename="include/CUIManager.h" />
+		<Unit filename="include/File_Util.h" />
 		<Unit filename="include/GameFileLoader.h" />
 		<Unit filename="include/IDefaultActionEventProcess.h" />
 		<Unit filename="include/IDefaultEventProcess.h" />

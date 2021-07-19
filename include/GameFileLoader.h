@@ -1,6 +1,7 @@
 #ifndef SCENEFILELOADER_H
 #define SCENEFILELOADER_H
 
+#include <File_Util.h>
 #include <common_struct.h>
 #include <XML_Utilities.h>
 #include <Str_Utilities.h>
@@ -15,6 +16,9 @@ namespace ge_fileutil{
     ge_common_struct::ge_color parse_color(std::string colorStr);
     ge_common_struct::dom_node* parse_dom(xmlutils::MyXMLNode dom_node,ge_common_struct::dom_node* parent=nullptr);
     ge_common_struct::ui_layout str_to_layout(std::string layoutstr);
+
+    void parse_chunk(xmlutils::MyXMLNode xml_node,ge_fileutil::chunk& chunk);
+    ge_fileutil::chunk_type translate_datatype(std::string datatype);
 }
 
 

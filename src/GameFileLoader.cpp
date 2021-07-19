@@ -611,14 +611,16 @@ void parse_sprites_action(xmlutils::MyXMLNode xml_node,
                           actions)
 {
     xmlutils::MyXMLNode node=xml_node.Child("sprite");
-    for(; node; node=node.NextSlibing()){
+    for(; node; node=node.NextSlibing())
+    {
         ge_common_struct::sprite_action sprite_ref;
         std::string sprite_id=node.StrAttribute("id");
         std::string sheet_id=node.StrAttribute("sheet_id");
         sprite_ref.sprite_id=sprite_id;
         sprite_ref.sheet_id=sheet_id;
         xmlutils::MyXMLNode act_node=node.Child("actions").Child("action");
-        for(; act_node; act_node=act_node.NextSlibing()){
+        for(; act_node; act_node=act_node.NextSlibing())
+        {
             ge_common_struct::sprite_action action=sprite_ref;
             action.action_name=act_node.StrAttribute("name");
             std::string ids_str=act_node.StrAttribute("ids");
@@ -626,6 +628,110 @@ void parse_sprites_action(xmlutils::MyXMLNode xml_node,
             actions.push_back(action);
         }
     }
+}
+
+void parse_chunk(xmlutils::MyXMLNode xml_node,chunk& chunk)
+{
+
+    std::string datatype=xml_node.StrAttribute("datatype");
+    std::string name=xml_node.StrAttribute("name");
+    int iMandatory=xml_node.IntAttribute("mandatory");
+
+    chunk_type chktype=translate_datatype(datatype);
+
+    chunk.type=chktype;
+    chunk.chunk_name=name;
+    int is_list=xml_node.IntAttribute("list");
+    if(is_list==1)
+    {
+        chunk.is_list=true;
+    }
+    else
+    {
+        chunk.is_list=false;
+    }
+    if(xml_node.HasAttribute("size")){
+        chunk.variable_size=false;
+        int sizen=xml_node.IntAttribute("size");
+        chunk.chunk_size=sizen;
+    }else{
+        chunk.variable_size=true;
+    }
+
+    if(iMandatory==1){
+        chunk.mandatory=true;
+    }else{
+        chunk.mandatory=false;
+    }
+
+
+    if(chktype==chunk_type::CHUNK)
+    {
+        if(xml_node.HasAttribute("ref_chunk"))
+        {
+            xmlutils::MyXMLNode childrule_node=xml_node.Child("rule");
+            std::string ref_chunk=xml_node.StrAttribute("ref_chunk");
+            chunk.ref_chunk=ref_chunk;
+            for(; childrule_node;
+                    childrule_node=childrule_node.NextSlibing("rule"))
+            {
+                std::string valueStr=childrule_node.StrAttribute("value");
+                std::string datatype=childrule_node.StrAttribute("datatype");
+                ge_fileutil::chunk_type type=translate_datatype(datatype);
+                chunk.rule[valueStr]=type;
+            }
+
+        }
+        else
+        {
+            xmlutils::MyXMLNode childchunk_node=xml_node.Child("chunk");
+            for(; childchunk_node;
+                    childchunk_node=childchunk_node.NextSlibing("chunk"))
+            {
+                ge_fileutil::chunk child_chunk;
+                child_chunk.parent_chunk=&chunk;
+                parse_chunk(childchunk_node,child_chunk);
+                if(chunk.is_list)
+                {
+                    chunk.chunk_list_entity.push_back(child_chunk);
+                }
+                else
+                {
+                    chunk.chunk_properties.push_back(child_chunk);
+                }
+            }
+
+        }
+
+    }
+    else
+    {
+
+
+    }
+
+}
+
+ge_fileutil::chunk_type translate_datatype(std::string datatype){
+
+    if(datatype.compare("STRING")==0 || datatype.compare("STR")==0){
+        return ge_fileutil::chunk_type::STRING;
+    }else if(datatype.compare("INTEGER")==0 || datatype.compare("INT")==0){
+        return ge_fileutil::chunk_type::INT;
+    }else if(datatype.compare("DOUBLE")==0 || datatype.compare("DBL")==0){
+        return ge_fileutil::chunk_type::DOUBLE;
+    }else if(datatype.compare("FLOAT")==0 || datatype.compare("FLT")==0){
+        return ge_fileutil::chunk_type::FLOAT;
+    }else if(datatype.compare("BYTE")==0){
+        return ge_fileutil::chunk_type::BYTE;
+    }else if(datatype.compare("CHAR")==0){
+        return ge_fileutil::chunk_type::CHAR;
+    }else if(datatype.compare("CHUNK")==0){
+        return ge_fileutil::chunk_type::CHUNK;
+    }else{
+        return ge_fileutil::chunk_type::UNKNOWN_CHUNK;
+    }
+
 }
 
 }
