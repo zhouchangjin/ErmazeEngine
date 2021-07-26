@@ -485,6 +485,8 @@ dom_node* GetDomSelection(dom_node* select_root,int selection);
 
 bool DomEnablePage(dom_node* node);
 
+key_event_type TranslateEventTypeName(std::string name);
+
 }
 
 

@@ -36,13 +36,7 @@ void CGameEngine::Init()
     LoadDatabase(db);
 
     m_game_context=new CSdlGameContext();
-    CSdlGameContext* p_context=(CSdlGameContext*)m_game_context;
-    p_context->RegisterKey('j',ge_common_struct::key_event_type::KEY_CONFIRM);
-    p_context->RegisterKey('k',ge_common_struct::key_event_type::KEY_CANCLE);
-    p_context->RegisterKey('w',ge_common_struct::key_event_type::KEY_UP);
-    p_context->RegisterKey('s',ge_common_struct::key_event_type::KEY_DOWN);
-    p_context->RegisterKey('a',ge_common_struct::key_event_type::KEY_LEFT);
-    p_context->RegisterKey('d',ge_common_struct::key_event_type::KEY_RIGHT);
+
     LoadSetting();
 
     m_game_context->Init(m_game_setting.GetWindowWidth(),m_game_setting.GetWindowHeight());
@@ -193,6 +187,17 @@ void CGameEngine::LoadSetting()
     int width=doc.GetIntAttribute("/ermaze/settings/window/@width");
     int height=doc.GetIntAttribute("/ermaze/settings/window/@height");
     int fps=atoi(doc.GetStr("/ermaze/settings/framerate").c_str());
+    xmlutils::MyXMLNode node=doc.GetNode("/ermaze/settings/keysetting");
+    xmlutils::MyXMLNode keynode=node.Child("keybinding");
+    for(;keynode;keynode=keynode.NextSlibing("keybinding")){
+        std::string keyname=keynode.StrAttribute("keyname");
+        char key=keyname.c_str()[0];
+        std::string keytypename=keynode.StrAttribute("event_type");
+        ge_common_struct::key_event_type type =ge_common_struct
+        ::TranslateEventTypeName(keytypename);
+        CSdlGameContext* p_context=(CSdlGameContext*)m_game_context;
+        p_context->RegisterKey(key,type);
+    }
     m_game_setting.SetWidthHeight(width,height);
     m_game_setting.SetFramePerSecond(fps);
     CRPGGameData* gamedata=(CRPGGameData*)m_gamedata;

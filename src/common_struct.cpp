@@ -95,4 +95,30 @@ bool DomEnablePage(dom_node* node){
 
 }
 
+key_event_type TranslateEventTypeName(std::string name){
+
+    if(name.compare("KEY_UP")==0){
+        return key_event_type::KEY_UP;
+    }else if(name.compare("KEY_LEFT")==0){
+        return key_event_type::KEY_LEFT;
+    }else if(name.compare("KEY_DOWN")==0){
+        return key_event_type::KEY_DOWN;
+    }else if(name.compare("KEY_RIGHT")==0){
+        return key_event_type::KEY_RIGHT;
+    }else if(name.compare("KEY_ESC")==0){
+        return key_event_type::KEY_ESC;
+    }else if(name.compare("KEY_CANCLE")==0){
+        return key_event_type::KEY_CANCLE;
+    }else if(name.compare("KEY_CONFIRM")==0){
+        return key_event_type::KEY_CONFIRM;
+    }else if(name.compare("KEY_ENTER")==0){
+        return key_event_type::KEY_ENTER;
+    }else if(name.compare("KEY_SPACE")==0){
+        return key_event_type::KEY_SPACE;
+    }else{
+        return key_event_type::NO_EVENT;
+    }
+
+}
+
 }
