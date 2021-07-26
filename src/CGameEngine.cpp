@@ -26,18 +26,18 @@ void CGameEngine::Init()
     CSimpleGameDB* db=new CSimpleGameDB();
     CImageDB* image_db=new CImageDB();
     CSpriteDB* sprite_db=new CSpriteDB();
+    m_game_context=new CSdlGameContext();
 
     CServiceLocator::Register(CServiceLocator::DATABASE,db);
     CServiceLocator::Register(CServiceLocator::TEXTURE_DB,image_db);
     CServiceLocator::Register(CServiceLocator::SPRITE_DB,sprite_db);
+
     image_db->Initialize();
     sprite_db->Initialize();
 
+    LoadSetting();
     LoadDatabase(db);
 
-    m_game_context=new CSdlGameContext();
-
-    LoadSetting();
 
     m_game_context->Init(m_game_setting.GetWindowWidth(),m_game_setting.GetWindowHeight());
     m_current_state=new CMenuState(m_game_context);
