@@ -32,6 +32,7 @@ public:
                        std::string prop_lable,DataType type=DataType::INTEGER);
     void CreateList(std::string list_name);
     void AddObjectToList(std::string list_name,int obj_id);
+    void AddObjectToList(std::string list_name,std::string object_name);
     void RemoveObjectFromList(std::string list_name,int obj_id);
 
     std::vector<int> GetListObjectIds(std::string list_name);

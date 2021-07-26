@@ -11,15 +11,17 @@ CGameEngine::~CGameEngine()
 
     std::map<int,CGameState*>::iterator it;
 
-    for(it=m_states.begin();it!=m_states.end();it++){
-       delete it->second;
+    for(it=m_states.begin(); it!=m_states.end(); it++)
+    {
+        delete it->second;
     }
     m_states.clear();
     delete m_gamedata;
     m_gamedata=nullptr;
 }
 
-void CGameEngine::Init(){
+void CGameEngine::Init()
+{
 
     CSimpleGameDB* db=new CSimpleGameDB();
     CImageDB* image_db=new CImageDB();
@@ -31,75 +33,7 @@ void CGameEngine::Init(){
     image_db->Initialize();
     sprite_db->Initialize();
 
-    //demo db
-    //db->SetIntData("tmp",9); //demo
-    db->CreateList("players");
-    db->CreateList("tanks");
-    db->CreateList("battle");
-
-    db->AddPropToType("enemy","hp","hp",CGameDatabase::DataType::INTEGER);
-    db->AddPropToType("enemy","hpmax","hpmax",CGameDatabase::DataType::INTEGER);
-    db->AddPropToType("enemy","sprite","sprite",CGameDatabase::DataType::SPRITE_ID);
-
-    db->AddPropToType("player","icon","icon",CGameDatabase::DataType::ICON_ID);
-    db->AddPropToType("player","hp","hp",CGameDatabase::DataType::INTEGER);
-    db->AddPropToType("player","hpmax","hpmax",CGameDatabase::DataType::INTEGER);
-    db->AddPropToType("player","sprite","sprite",CGameDatabase::DataType::SPRITE_ID);
-
-    db->AddPropToType("tank","icon","icon",CGameDatabase::DataType::ICON_ID);
-
-    int id1=db->StoreObject("pro_1","wolf","player");
-    int id2=db->StoreObject("pro_2","fish","player");
-    int id3=db->StoreObject("pro_3","bear","player");
-    int id4=db->StoreObject("pro_4","dog","player");
-
-    int eid1=db->StoreObject("en_1","s","enemy");
-    int eid2=db->StoreObject("en_2","s","enemy");
-
-    int tid1=db->StoreObject("t_1","tank1","tank");
-    int tid2=db->StoreObject("t_2","tank2","tank");
-    int tid3=db->StoreObject("t_3","tank3","tank");
-
-    db->SetObjectText(eid1,"sprite","type1");
-    db->SetObjectText(eid2,"sprite","type1");
-
-    db->SetObjectData(id1,"hp",90);
-    db->SetObjectData(id2,"hp",80);
-    db->SetObjectData(id3,"hp",60);
-    db->SetObjectData(id4,"hp",70);
-
-    db->SetObjectData(id1,"hpmax",90);
-    db->SetObjectData(id2,"hpmax",80);
-    db->SetObjectData(id3,"hpmax",60);
-    db->SetObjectData(id4,"hpmax",70);
-
-    db->SetObjectText(id1,"icon","point_right");
-    db->SetObjectText(id2,"icon","point_right");
-    db->SetObjectText(id3,"icon","point_right");
-    db->SetObjectText(id4,"icon","point_right");
-
-    db->SetObjectText(id1,"sprite","mage");
-    db->SetObjectText(id2,"sprite","mage");
-    db->SetObjectText(id3,"sprite","mage");
-    db->SetObjectText(id4,"sprite","mage");
-
-    db->SetObjectText(tid1,"icon","point_right");
-    db->SetObjectText(tid2,"icon","point_right");
-    db->SetObjectText(tid3,"icon","point_right");
-
-    db->AddObjectToList("players",id1);
-    db->AddObjectToList("players",id2);
-    db->AddObjectToList("players",id3);
-    db->AddObjectToList("players",id4);
-
-    db->AddObjectToList("tanks",tid1);
-    db->AddObjectToList("tanks",tid2);
-    db->AddObjectToList("tanks",tid3);
-
-    db->AddObjectToList("battle",eid1);
-    db->AddObjectToList("battle",eid2);
-    //db->RemoveObjectFromList("players",id4);
-
+    LoadDatabase(db);
 
     m_game_context=new CSdlGameContext();
     CSdlGameContext* p_context=(CSdlGameContext*)m_game_context;
@@ -135,57 +69,125 @@ void CGameEngine::Init(){
 
 }
 
-void CGameEngine::Draw(){
+void CGameEngine::Draw()
+{
     Delay();
     m_current_state->Draw();
     int change_state=m_current_state->GetStateValue();
-    if(change_state>0){
+    if(change_state>0)
+    {
         m_current_state=m_states[change_state];
         m_current_state->Resume();
-    }else if(change_state==-1){
+    }
+    else if(change_state==-1)
+    {
         m_running=false;
     }
     SetFrameTime();
 }
 
-void CGameEngine::HandleEvent(){
+void CGameEngine::HandleEvent()
+{
     ge_common_struct::input_event event=m_game_context->EventCatch();
-    if(event.get_top_event().key==ge_common_struct::QUIT){
+    if(event.get_top_event().key==ge_common_struct::QUIT)
+    {
         m_running=false;
-    }else{
+    }
+    else
+    {
         m_current_state->HandleEvent(event);
     }
 
 }
 
-void CGameEngine::Update(){
+void CGameEngine::Update()
+{
 
-    if(m_running){
+    if(m_running)
+    {
         m_current_state->Update();
     }
 
 }
 
 
-int CGameEngine::FrameDiff(){
-   return m_game_context->GetTicks()-m_frametime;
+int CGameEngine::FrameDiff()
+{
+    return m_game_context->GetTicks()-m_frametime;
 }
 
-void CGameEngine::Delay(){
+void CGameEngine::Delay()
+{
     int min_frametime=m_game_setting.GetMinFrameTime();
     int diff=FrameDiff();
-    if(m_cap_frame && diff<min_frametime){
+    if(m_cap_frame && diff<min_frametime)
+    {
         unsigned int time= min_frametime-(unsigned int)diff;
         //GE_LOG("%u==%u=%u=\n",time,min_frametime,diff);
         m_game_context->DelayTime(time);
     }
 }
 
-void CGameEngine::SetFrameTime(){
+void CGameEngine::SetFrameTime()
+{
     m_frametime=m_game_context->GetTicks();
 }
 
-void CGameEngine::LoadSetting(){
+void CGameEngine::LoadDatabase(CGameDatabase* db)
+{
+    std::string filepath="./data/metadata.xml";
+    xmlutils::MyXMLDoc doc=xmlutils::LoadXML(filepath);
+    xmlutils::MyXMLNode xml_node=doc.GetNode("/filedef/chunk");
+    ge_fileutil::chunk chunk;
+    ge_fileutil::parse_chunk(xml_node,chunk);
+    std::string playerdata="./data/player.dat";
+    std::string tankdata="./data/tank.dat";
+    std::string enemydata="./data/enemy.dat";
+
+    db->CreateList("players");
+    db->CreateList("tanks");
+    db->CreateList("battle");
+
+    ge_fileutil::CBinaryFileReader filereader(playerdata);
+    filereader.ReOpen();
+    CGameDataChunkFactory factory;
+    ge_fileutil::parse_chunk_file_bydef(filereader,chunk,&factory);
+    filereader.Close();
+
+    ge_fileutil::CBinaryFileReader tankreader(tankdata);
+    tankreader.ReOpen();
+    CGameDataChunkFactory tfactory;
+    ge_fileutil::parse_chunk_file_bydef(tankreader,chunk,&tfactory);
+    tankreader.Close();
+
+    ge_fileutil::CBinaryFileReader enereader(enemydata);
+    enereader.ReOpen();
+    CGameDataChunkFactory efactory;
+    ge_fileutil::parse_chunk_file_bydef(enereader,chunk,&efactory);
+
+    //factory.PrintAll();
+    //tfactory.PrintAll();
+
+    CDatabaseLoader loader;
+    loader.SetGameDatabase(db);
+    loader.LoadObjects(&factory);
+    loader.LoadObjects(&tfactory);
+    loader.LoadObjects(&efactory);
+
+    db->AddObjectToList("players","p1");
+    db->AddObjectToList("players","p2");
+    db->AddObjectToList("players","p3");
+    db->AddObjectToList("players","p4");
+    db->AddObjectToList("tanks","t1");
+    db->AddObjectToList("tanks","t2");
+    db->AddObjectToList("tanks","t3");
+    db->AddObjectToList("battle","e1");
+    db->AddObjectToList("battle","e2");
+
+}
+
+void CGameEngine::LoadSetting()
+{
     m_gamedata=new CRPGGameData();
     xmlutils::MyXMLDoc doc=xmlutils::LoadXML(m_setting_file);
     int width=doc.GetIntAttribute("/ermaze/settings/window/@width");

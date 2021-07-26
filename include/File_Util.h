@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <fstream>
+#include <Str_Utilities.h>
 
 namespace ge_fileutil{
     enum chunk_type{
@@ -30,14 +32,52 @@ namespace ge_fileutil{
         chunk* parent_chunk;      //*
         std::string ref_chunk;  //*
         std::map<std::string,chunk_type> rule;
+        std::map<std::string,int> chunk_size_rule;
     };
 
     template<class Type,class DataType>
     struct chunk_loader{
-        chunk* chunk_def;
         typedef void (Type::*Setter)(DataType);
-        Setter chunk_setter;
+        Setter chunk_setter; //对象设值
     };
+
+    class IChunkFactory{
+        public:
+            virtual int InitializeChunk(std::string chunk_name)=0;
+            virtual void* GetInstance()=0;
+            virtual void AddObjectToListProp()=0;
+            virtual void SetIntProperty(std::string prop_name,int intValue)=0;
+            virtual void SetStrProperty(std::string prop_name,std::string chunk_value)=0;
+            virtual void SetDoubleProperty(std::string prop_name,double chunk_value)=0;
+            virtual void SetFloatProperty(std::string prop_name,float chunk_value)=0;
+            virtual void AddIntToArray(std::string prop_name,int intValue)=0;
+            virtual void AddDoubleToArray(std::string prop_name,double dblValue)=0;
+            virtual void AddFloatToArray(std::string prop_name,float fltValue)=0;
+            virtual uint32_t CalListSize(std::string ref_chunk)=0;
+            virtual std::string GetRefObjVal(std::string chunk_name,std::string ref_chunk)=0;
+        protected:
+        void* m_instance;
+        private:
+    };
+
+    class CBinaryFileReader{
+        public:
+        CBinaryFileReader(std::string filename){m_file_name=filename;};
+        ~CBinaryFileReader(){};
+        void ReOpen();
+        void Close();
+        bool EndOfFile();
+        void ReadInt(int& num);
+        void ReadDouble(double& dbl);
+        void ReadFloat(float& flt);
+        void ReadStringWithFixSize(std::string& str,int strsize);
+        protected:
+            std::string m_file_name;
+            std::ifstream m_istream;
+        private:
+    };
+
+    void parse_chunk_file_bydef(CBinaryFileReader& infile,chunk& chunk_def,IChunkFactory* factory);
 
 }
 

@@ -1,0 +1,7 @@
+3
+name,坦克,2
+label,坦克,2
+icon,图鉴,2
+t1,tank1,point_right
+t2,tank2,point_right
+t3,tank3,point_right

@@ -1,0 +1,8 @@
+5
+name,怪名,2
+label,怪物,2
+hp,血量,1
+hpmax,最大血量,1
+sprite,精灵,2
+e1,e1,10,10,type1
+e2,e2,20,20,type1

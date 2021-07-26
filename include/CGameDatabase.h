@@ -46,6 +46,7 @@ public:
 
     virtual void CreateList(std::string list_name)=0;
     virtual void AddObjectToList(std::string list_name,int obj_id)=0;
+    virtual void AddObjectToList(std::string list_name,std::string object_name)=0;
     virtual void RemoveObjectFromList(std::string list_name,int obj_id)=0;
 
     virtual void CreateInventory(std::string list_name)=0;

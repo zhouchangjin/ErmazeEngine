@@ -249,6 +249,13 @@ void CSimpleGameDB::AddObjectToList(std::string list_name,int obj_id)
     }
 }
 
+
+void CSimpleGameDB::AddObjectToList(std::string list_name,std::string object_name){
+   int oid= GetObjectId(object_name);
+   AddObjectToList(list_name,oid);
+}
+
+
 void CSimpleGameDB::RemoveObjectFromList(std::string list_name,int obj_id)
 {
     if(m_object_list.find(list_name)!=m_object_list.end())

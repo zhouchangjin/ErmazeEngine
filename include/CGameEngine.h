@@ -5,6 +5,8 @@
 #include <vector>
 #include <map>
 
+
+#include <CDatabaseLoader.h>
 #include <CSpriteDB.h>
 
 #include "CServiceLocator.h"
@@ -17,7 +19,8 @@
 #include "CSdlGameContext.h"
 #include "CRPGGameData.h"
 #include "CSimpleGameDB.h"
-#include <File_Util.h>
+#include "CGameDataChunkFactory.h"
+
 class CGameEngine
 {
 
@@ -33,6 +36,7 @@ class CGameEngine
         CGameSettings GetGameSetting(){return m_game_setting;};
         void ChangeState(CGameState* state);
     protected:
+        void LoadDatabase(CGameDatabase* db);
         void LoadSetting();
         void SetFrameTime();
         int FrameDiff();

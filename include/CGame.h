@@ -1,7 +1,6 @@
 #ifndef CGAME_H
 #define CGAME_H
 #include "CGameEngine.h"
-
 class CGame
 {
     public:

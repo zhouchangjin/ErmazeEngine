@@ -66,12 +66,14 @@
 		<Unit filename="include/CBaseParticleEmitter.h" />
 		<Unit filename="include/CCamera2D.h" />
 		<Unit filename="include/CChoiceDialog.h" />
+		<Unit filename="include/CDatabaseLoader.h" />
 		<Unit filename="include/CDomWindow.h" />
 		<Unit filename="include/CEquipMenu.h" />
 		<Unit filename="include/CEventManager.h" />
 		<Unit filename="include/CGame.h" />
 		<Unit filename="include/CGameContext.h" />
 		<Unit filename="include/CGameData.h" />
+		<Unit filename="include/CGameDataChunkFactory.h" />
 		<Unit filename="include/CGameDatabase.h" />
 		<Unit filename="include/CGameDialog.h" />
 		<Unit filename="include/CGameEngine.h" />
@@ -140,11 +142,13 @@
 		<Unit filename="src/CBaseParticleEmitter.cpp" />
 		<Unit filename="src/CCamera2D.cpp" />
 		<Unit filename="src/CChoiceDialog.cpp" />
+		<Unit filename="src/CDatabaseLoader.cpp" />
 		<Unit filename="src/CDomWindow.cpp" />
 		<Unit filename="src/CEquipMenu.cpp" />
 		<Unit filename="src/CGame.cpp" />
 		<Unit filename="src/CGameContext.cpp" />
 		<Unit filename="src/CGameData.cpp" />
+		<Unit filename="src/CGameDataChunkFactory.cpp" />
 		<Unit filename="src/CGameDatabase.cpp" />
 		<Unit filename="src/CGameDialog.cpp" />
 		<Unit filename="src/CGameEngine.cpp" />
@@ -187,6 +191,7 @@
 		<Unit filename="src/CTransferArea.cpp" />
 		<Unit filename="src/CUIActionManager.cpp" />
 		<Unit filename="src/CUIManager.cpp" />
+		<Unit filename="src/File_Util.cpp" />
 		<Unit filename="src/GameFileLoader.cpp" />
 		<Unit filename="src/IDefaultActionEventProcess.cpp" />
 		<Unit filename="src/IDefaultEventProcess.cpp" />

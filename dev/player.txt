@@ -1,0 +1,11 @@
+6
+name,玩家,2
+label,玩家名称,2
+hp,血量,1
+hpmax,最大血量,1
+icon,头像,2
+sprite,精灵,2
+p1,zcj,10,10,point_right,mage
+p2,mht,20,20,point_right,mage
+p3,wolf,30,30,point_right,mage
+p4,fish,30,30,point_right,mage
