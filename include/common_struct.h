@@ -475,6 +475,17 @@ struct resource_def{
     int direction;
 };
 
+struct command_item{
+    std::string command_name;
+    int  source_obj_id;
+    int  center_target_obj_id;
+    bool all_enemy;
+    int  target_x;
+    int  target_y;
+    int  using_obj_id;
+    int  object_type;  //magic/weapon/tech/item/escape/special
+};
+
 void FreeDomNode(dom_node* node);
 
 void FreeDomVector(std::vector<dom_node*>& nodes);

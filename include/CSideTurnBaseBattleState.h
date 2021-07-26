@@ -48,9 +48,6 @@ class CSideTurnBaseBattleState: public CGameState
 
        CAnimationManager m_animation_manager;
 
-       //粒子动画系统
-       //CParticleSystem m_particle_system;
-
        //精灵库
        CSpriteDB* m_sprite_db=nullptr;
        //数据库
@@ -68,6 +65,8 @@ class CSideTurnBaseBattleState: public CGameState
        uint32_t m_last_timer=0;
 
        uint32_t m_current_command_player=0;
+
+       std::vector<ge_common_struct::command_item> m_command_list;
 
        int m_player_scale=3;
        int m_enemy_scale=2;
@@ -91,6 +90,8 @@ class CSideTurnBaseBattleState: public CGameState
         void DrawMenu();
 
         void InitMenu(ge_common_struct::input_event& event);
+
+        void AddCommand(ge_common_struct::command_item item);
 
 };
 

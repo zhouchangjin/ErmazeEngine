@@ -33,6 +33,7 @@ class CSpriteGameObject  : public CGameObject
         bool IsMoving();
         void StopMoving();
         void MoveUpdate();
+        void SetRenderScale(int scale){m_render_scale=scale;};
         int GetLayer()const{return m_layer;};
         int GetShowLayer();
         int GetFootY()const{return m_y+GetObjectHeight()-1;}
@@ -42,7 +43,8 @@ class CSpriteGameObject  : public CGameObject
         int GetObjectWidth()const{return m_sprite->
         GetSpriteSheet()->GetSpriteWidth();};
         int GetObjectHeight()const{return m_sprite->GetSpriteSheet()->GetSpriteHeight();};
-        int GetFrameIdx(){return m_frame_idx;};
+        int GetFrameIdx()const{return m_frame_idx;};
+        int GetRenderScale()const{return m_render_scale;};
         CSprite* GetSprite(){return m_sprite;};
         void AddActionLog(ge_common_struct::action_type log);
         void ClearActionLog();
@@ -61,6 +63,7 @@ class CSpriteGameObject  : public CGameObject
         int m_move_speed=8;
         int m_layer=1;
         int m_show_layer=1;
+        int m_render_scale=1;
         bool m_onstair=false;
         unsigned int m_pop_size=2;
         std::queue<ge_common_struct::action_type> m_action_log;

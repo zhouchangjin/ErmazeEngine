@@ -29,8 +29,8 @@ void CAnimationManager::Update()
 
     for(size_t i=0; i<m_animation_list.size(); i++)
     {
-        AnimationItem& item= m_animation_list[i];
-        AnimationItem::AnimateType type=item.GetAnimateType();
+        CAnimationItem& item= m_animation_list[i];
+        CAnimationItem::AnimateType type=item.GetAnimateType();
         //if(item is dead) remove item
         int frame=m_frame-item.GetGlobalFrame();
         if(frame>item.GetEndFrame())
@@ -52,7 +52,7 @@ void CAnimationManager::Update()
         {
 
 
-            if(type==AnimationItem::AnimateType::MOVE_SPRITE)
+            if(type==CAnimationItem::AnimateType::MOVE_SPRITE)
             {
                 //TODO
                 CSpriteGameObject* object=item.GetObject();
@@ -80,7 +80,7 @@ void CAnimationManager::Update()
                 }
 
             }
-            else if(type==AnimationItem::AnimateType::FLASH_SPRITE)
+            else if(type==CAnimationItem::AnimateType::FLASH_SPRITE)
             {
                 CSpriteGameObject* object=item.GetObject();
                 object->PlayAction(item.GetActionName());
@@ -104,8 +104,8 @@ void CAnimationManager::Update()
                     }
                     if(frame%2==0)
                     {
-                        object->SetX(-10000);
-                        object->SetY(-10000);
+                        object->SetX(-10000); //TODO modify this
+                        object->SetY(-10000); //TODO modify this
                     }
                     else
                     {
@@ -116,12 +116,12 @@ void CAnimationManager::Update()
                 }
 
             }
-            else if(type==AnimationItem::AnimateType::PARTICLE)
+            else if(type==CAnimationItem::AnimateType::PARTICLE)
             {
                 //update particle emitter position
 
             }
-            else if(type==AnimationItem::AnimateType::PROJECTILE)
+            else if(type==CAnimationItem::AnimateType::PROJECTILE)
             {
                 //update projectile emitter position,nothing useful
                 int frame=m_frame-item.GetGlobalFrame();
@@ -131,7 +131,7 @@ void CAnimationManager::Update()
                 }
 
             }
-            else if(type==AnimationItem::AnimateType::SHOW_VFX)
+            else if(type==CAnimationItem::AnimateType::SHOW_VFX)
             {
                 //TODO
 
@@ -150,10 +150,10 @@ void CAnimationManager::Update()
 
 }
 
-void CAnimationManager::AddAnimateItem(AnimationItem item)
+void CAnimationManager::AddAnimateItem(CAnimationItem item)
 {
     //if item is particle effect,create emmiter;
-    if(item.GetAnimateType()==AnimationItem::AnimateType::SHOW_VFX)
+    if(item.GetAnimateType()==CAnimationItem::AnimateType::SHOW_VFX)
     {
         CSprite* sprite=m_sprite_db->GetSprite(item.GetSpriteName());
         item.SetVfxSprite(sprite);
@@ -166,7 +166,7 @@ void CAnimationManager::AddAnimateItem(AnimationItem item)
             item.SetEndLoc(ge_common_struct::ge_point(x,y));
         }
     }
-    else if(item.GetAnimateType()==AnimationItem::AnimateType::MOVE_SPRITE)
+    else if(item.GetAnimateType()==CAnimationItem::AnimateType::MOVE_SPRITE)
     {
         CSpriteGameObject* obj=item.GetObject();
         if(obj!=nullptr)
@@ -185,7 +185,7 @@ void CAnimationManager::AddAnimateItem(AnimationItem item)
 
         //DO NOTHING
     }
-    else if(item.GetAnimateType()==AnimationItem::AnimateType::PARTICLE)
+    else if(item.GetAnimateType()==CAnimationItem::AnimateType::PARTICLE)
     {
         //Create particle
         CSpriteGameObject* object=item.GetObject();
@@ -204,7 +204,7 @@ void CAnimationManager::AddAnimateItem(AnimationItem item)
         }
 
     }
-    else if(item.GetAnimateType()==AnimationItem::AnimateType::PROJECTILE)
+    else if(item.GetAnimateType()==CAnimationItem::AnimateType::PROJECTILE)
     {
         //Create projectile
         CSpriteGameObject* object=item.GetObject();
@@ -219,11 +219,15 @@ void CAnimationManager::AddAnimateItem(AnimationItem item)
         {
             int px=tar_obj->GetX();
             int py=tar_obj->GetY();
-            item.SetEndLoc(ge_common_struct::ge_point(px,py));
+            int width=tar_obj->GetObjectWidth()*tar_obj->GetRenderScale();   // TODO hard coding enemy scale is 2
+            int height=tar_obj->GetObjectHeight()*tar_obj->GetRenderScale(); // TODO hard coding enemy scale is 2
+            int shoot_loc_x=px+width/2;
+            int shoot_loc_y=py+height/2;
+            item.SetEndLoc(ge_common_struct::ge_point(shoot_loc_x,shoot_loc_y));
         }
 
     }
-    else if(item.GetAnimateType()==AnimationItem::AnimateType::TEXT_MOTION)
+    else if(item.GetAnimateType()==CAnimationItem::AnimateType::TEXT_MOTION)
     {
 
         //sdlutil2::RenderText()
@@ -238,7 +242,7 @@ void CAnimationManager::AddAnimateItem(AnimationItem item)
 
 
     }
-    else if(item.GetAnimateType()==AnimationItem::AnimateType::FLASH_SPRITE)
+    else if(item.GetAnimateType()==CAnimationItem::AnimateType::FLASH_SPRITE)
     {
         CSpriteGameObject* obj=item.GetObject();
         if(obj!=nullptr)
@@ -260,9 +264,9 @@ void CAnimationManager::Draw()
     //GE_LOG("========animate_item num=%d\n",m_animation_list.size());
     for(size_t i=0; i<m_animation_list.size(); i++)
     {
-        AnimationItem& item= m_animation_list[i];
-        AnimationItem::AnimateType type=item.GetAnimateType();
-        if(type==AnimationItem::AnimateType::SHOW_VFX)
+        CAnimationItem& item= m_animation_list[i];
+        CAnimationItem::AnimateType type=item.GetAnimateType();
+        if(type==CAnimationItem::AnimateType::SHOW_VFX)
         {
             std::string action_name=item.GetActionName();
             int frame=m_frame-item.GetGlobalFrame();
@@ -289,7 +293,7 @@ void CAnimationManager::Draw()
             }
 
         }
-        else if(type==AnimationItem::AnimateType::TEXT_MOTION)
+        else if(type==CAnimationItem::AnimateType::TEXT_MOTION)
         {
             int frame=m_frame-item.GetGlobalFrame();
             int f_start=item.GetStartFrame();
@@ -322,7 +326,7 @@ void CAnimationManager::Draw()
 }
 
 
-void CAnimationManager::CreateProjectile(AnimationItem item)
+void CAnimationManager::CreateProjectile(CAnimationItem item)
 {
     std::string texture_name=item.GetSpriteName();
     int x=item.GetStartLoc().x;

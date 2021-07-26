@@ -20,18 +20,12 @@ void CSideTurnBaseBattleState::Init()
 {
     LoadComponents();
 
-
     m_ui_manager.SetGameContext(m_context);
     m_ui_manager.Init();
     m_ui_manager.SetMenuPointerName(m_menu_pointer);
-
     m_event_manager.EventSubscribe(&m_ui_manager,CUIManager::ProcessInput);
-
-
-
     m_animation_manager.SetGameContext(m_context);
     m_animation_manager.Init();
-
     //0代表状态不改变
     m_state_value=0;
 
@@ -134,8 +128,8 @@ void CSideTurnBaseBattleState::Update()
         }else if(m_frame-m_last_timer==10){
             GE_LOG("play animation\n");
             for(size_t i=0;i<m_enemies.size();i++){
-                AnimationItem item;
-                item.SetAnimateType(AnimationItem::AnimateType::SHOW_VFX);
+                CAnimationItem item;
+                item.SetAnimateType(CAnimationItem::AnimateType::SHOW_VFX);
                 item.SetActionName("thunder");
                 item.SetSpriteName("magic");
                 item.SetStartFrame(3);
@@ -143,8 +137,8 @@ void CSideTurnBaseBattleState::Update()
                 item.SetObject(&m_enemies[i]);
                 m_animation_manager.AddAnimateItem(item);
 
-                AnimationItem item2;
-                item2.SetAnimateType(AnimationItem::AnimateType::TEXT_MOTION);
+                CAnimationItem item2;
+                item2.SetAnimateType(CAnimationItem::AnimateType::TEXT_MOTION);
                 item2.SetStartFrame(11);
                 item2.SetEndFrame(20);
                 item2.SetObject(&m_enemies[i]);
@@ -156,8 +150,8 @@ void CSideTurnBaseBattleState::Update()
                 item2.SetFontColor(color);
                 m_animation_manager.AddAnimateItem(item2);
 
-                AnimationItem item3;
-                item3.SetAnimateType(AnimationItem::AnimateType::FLASH_SPRITE);
+                CAnimationItem item3;
+                item3.SetAnimateType(CAnimationItem::AnimateType::FLASH_SPRITE);
                 item3.SetStartFrame(3);
                 item3.SetEndFrame(10);
                 item3.SetActionName("stand");
@@ -165,8 +159,8 @@ void CSideTurnBaseBattleState::Update()
                 item3.SetObject(&m_enemies[i]);
                 m_animation_manager.AddAnimateItem(item3);
 
-                AnimationItem item4;
-                item4.SetAnimateType(AnimationItem::AnimateType::PROJECTILE);
+                CAnimationItem item4;
+                item4.SetAnimateType(CAnimationItem::AnimateType::PROJECTILE);
                 item4.SetStartFrame(3);
                 item4.SetEndFrame(10);
                 item4.SetSpriteName("bullet");
@@ -174,8 +168,8 @@ void CSideTurnBaseBattleState::Update()
                 item4.SetTargetObject(&m_enemies[i]);
                 m_animation_manager.AddAnimateItem(item4);
             }
-            AnimationItem item;
-            item.SetAnimateType(AnimationItem::AnimateType::MOVE_SPRITE);
+            CAnimationItem item;
+            item.SetAnimateType(CAnimationItem::AnimateType::MOVE_SPRITE);
             item.SetActionName("leftward");
             item.SetStartFrame(0);
             item.SetEndFrame(3);
@@ -357,7 +351,7 @@ void CSideTurnBaseBattleState::DrawEnemy()
         obj.Play();
         int frameidx=obj.GetFrameIdx();
         sdlutil2::RenderSprite(m_context,obj.GetSprite(),screenx,
-                               screeny,frameidx,m_enemy_scale);
+                               screeny,frameidx,obj.GetRenderScale());
     }
 
 }
@@ -437,7 +431,7 @@ void CSideTurnBaseBattleState::LoadSprites()
         enemy.UpdateDirection("stand");
         enemy.SetX(curx);
         enemy.SetY(cury);
-
+        enemy.SetRenderScale(m_enemy_scale);
         int xnew=curx+sprite->GetSpriteSheet()->GetSpriteWidth()*m_enemy_scale;
         if(xnew<maxx){
             curx=xnew;
