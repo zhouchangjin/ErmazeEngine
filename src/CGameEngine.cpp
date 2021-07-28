@@ -127,47 +127,46 @@ void CGameEngine::SetFrameTime()
     m_frametime=m_game_context->GetTicks();
 }
 
+void CGameEngine::LoadObjectList(std::string file_path,
+                                 ge_fileutil::chunk& chunk,CGameDatabase* db){
+
+    ge_fileutil::CBinaryFileReader filereader(file_path);
+    filereader.ReOpen();
+    CGameDataChunkFactory factory;
+    ge_fileutil::parse_chunk_file_bydef(filereader,chunk,&factory);
+    filereader.Close();
+    m_dbloader.LoadObjects(&factory);
+
+}
+
 void CGameEngine::LoadDatabase(CGameDatabase* db)
 {
+
+    m_dbloader.SetGameDatabase(db);
+
     std::string filepath="./data/metadata.xml";
     xmlutils::MyXMLDoc doc=xmlutils::LoadXML(filepath);
     xmlutils::MyXMLNode xml_node=doc.GetNode("/filedef/chunk");
     ge_fileutil::chunk chunk;
     ge_fileutil::parse_chunk(xml_node,chunk);
+
     std::string playerdata="./data/player.dat";
     std::string tankdata="./data/tank.dat";
     std::string enemydata="./data/enemy.dat";
+    std::string weapondata="./data/weapon.dat";
+    std::vector<std::string> filelist;
+    filelist.push_back(playerdata);
+    filelist.push_back(tankdata);
+    filelist.push_back(enemydata);
+    filelist.push_back(weapondata);
+
+    for(size_t i=0;i<filelist.size();i++){
+        LoadObjectList(filelist[i],chunk,db);
+    }
 
     db->CreateList("players");
     db->CreateList("tanks");
     db->CreateList("battle");
-
-    ge_fileutil::CBinaryFileReader filereader(playerdata);
-    filereader.ReOpen();
-    CGameDataChunkFactory factory;
-    ge_fileutil::parse_chunk_file_bydef(filereader,chunk,&factory);
-    filereader.Close();
-
-    ge_fileutil::CBinaryFileReader tankreader(tankdata);
-    tankreader.ReOpen();
-    CGameDataChunkFactory tfactory;
-    ge_fileutil::parse_chunk_file_bydef(tankreader,chunk,&tfactory);
-    tankreader.Close();
-
-    ge_fileutil::CBinaryFileReader enereader(enemydata);
-    enereader.ReOpen();
-    CGameDataChunkFactory efactory;
-    ge_fileutil::parse_chunk_file_bydef(enereader,chunk,&efactory);
-
-    //factory.PrintAll();
-    //tfactory.PrintAll();
-
-    CDatabaseLoader loader;
-    loader.SetGameDatabase(db);
-    loader.LoadObjects(&factory);
-    loader.LoadObjects(&tfactory);
-    loader.LoadObjects(&efactory);
-
     db->AddObjectToList("players","p1");
     db->AddObjectToList("players","p2");
     db->AddObjectToList("players","p3");
@@ -178,6 +177,30 @@ void CGameEngine::LoadDatabase(CGameDatabase* db)
     db->AddObjectToList("battle","e1");
     db->AddObjectToList("battle","e2");
 
+    int p1Id=db->GetObjectId("p1");
+    int p2Id=db->GetObjectId("p2");
+    int p3Id=db->GetObjectId("p3");
+    int p4Id=db->GetObjectId("p4");
+
+    db->AddPropToType("equipment","lefthand","左手",CGameDatabase::DataType::OBJECT_ID);
+
+    int e1id=db->StoreObject("e1","装备","equipment");
+    int e2id=db->StoreObject("e2","装备","equipment");
+    int e3id=db->StoreObject("e3","装备","equipment");
+    int e4id=db->StoreObject("e4","装备","equipment");
+
+    db->AddPropToType("player","equipment","装备",CGameDatabase::DataType::OBJECT_ID);
+    db->SetObjectData(p1Id,"equipment",e1id);
+    db->SetObjectData(p2Id,"equipment",e2id);
+    db->SetObjectData(p3Id,"equipment",e3id);
+    db->SetObjectData(p4Id,"equipment",e4id);
+    int weaponid=db->GetObjectId("knife");
+    std::string s=db->GetObjectText(weaponid,"animation");
+    GE_LOG("weapon id is %d  %s\n",weaponid,s.c_str());
+    db->SetObjectData(e1id,"lefthand",weaponid);
+    db->SetObjectData(e2id,"lefthand",-1);
+    db->SetObjectData(e3id,"lefthand",-1);
+    db->SetObjectData(e4id,"lefthand",-1);
 }
 
 void CGameEngine::LoadSetting()

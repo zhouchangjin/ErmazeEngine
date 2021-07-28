@@ -37,6 +37,7 @@ class CGameEngine
         void ChangeState(CGameState* state);
     protected:
         void LoadDatabase(CGameDatabase* db);
+        void LoadObjectList(std::string file_path,ge_fileutil::chunk& chunk,CGameDatabase* db);
         void LoadSetting();
         void SetFrameTime();
         int FrameDiff();
@@ -44,6 +45,7 @@ class CGameEngine
     private:
             std::string m_setting_file="game.xml";
             CGameData* m_gamedata;
+            CDatabaseLoader m_dbloader;
             bool m_cap_frame=true; //限制帧数
             bool m_running=true;   //游戏关闭状态
             CGameSettings m_game_setting;

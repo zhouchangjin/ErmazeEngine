@@ -29,6 +29,12 @@ class CSideTurnBaseBattleState: public CGameState
             INDI_TURN_BASED,
             ATB_TURN_BASED
         };
+        enum objecttype{
+            PLAYER,
+            ENEMY,
+            NEUTRAL,
+            OTHER
+        };
         CSideTurnBaseBattleState();
         CSideTurnBaseBattleState(CGameContext * context);
         virtual ~CSideTurnBaseBattleState();
@@ -57,6 +63,7 @@ class CSideTurnBaseBattleState: public CGameState
 
        std::vector<CSpriteGameObject> m_players;
        std::vector<CSpriteGameObject> m_enemies;
+       std::vector<int> m_enemy_hps;
 
        //状态标志
        substate m_substate=substate::BATTLE_INIT_STATE;
@@ -104,6 +111,10 @@ class CSideTurnBaseBattleState: public CGameState
         void TranslateCommand(std::vector<ge_common_struct::menu_command>& command);
         void SortCommand();
 
+
+        void MoveForwardPlayer(int player_no);
+        objecttype GetObjectType(int obj_id);
+        void HitEnemy(int player_no,int enemy_no,int with_obj=-1);
 };
 
 #endif // CSIDETURNBASEBATTLESTATE_H

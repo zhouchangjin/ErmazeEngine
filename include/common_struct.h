@@ -496,7 +496,7 @@ struct command_item
     std::string command_name;  //attack,magic,item,etc
     int  source_obj_id;
     int  center_target_obj_id;
-    bool group_target;
+    bool group_target=false;
     int  target_x;
     int  target_y;
     int  using_obj_id;       //translate to different animation

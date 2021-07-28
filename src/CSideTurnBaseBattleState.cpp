@@ -74,12 +74,17 @@ void CSideTurnBaseBattleState::TranslateCommand(std::vector<ge_common_struct
                     item.center_target_obj_id=obj_id;//4
                 }
             }
-            else if(menu_name.compare("enemy_list")==0)
+            else if(menu_name.compare("attack_comand")==0)
             {
                 if(obj_id>0)
                 {
                     item.center_target_obj_id=obj_id; //4
                 }
+                std::vector<int> ids=m_database->GetListObjectIds("players");
+                int player_id=ids[m_current_command_player];
+                int eid=m_database->GetObjectData(player_id,"equipment");
+                int wid=m_database->GetObjectData(eid,"lefthand");
+                item.using_obj_id=wid;
             }
         }
         m_seq_command_list.push_back(item);
@@ -87,7 +92,8 @@ void CSideTurnBaseBattleState::TranslateCommand(std::vector<ge_common_struct
     }
     else
     {
-        if(m_seq_command_list.size()>0){
+        if(m_seq_command_list.size()>0)
+        {
             m_current_command_player--;
             m_seq_command_list.pop_back();
         }
@@ -391,6 +397,7 @@ void CSideTurnBaseBattleState::LoadSprites()
     {
         int id=ids_ene[i];
         std::string sprite_name=m_database->GetObjectText(id,"sprite");
+        int hp_max=m_database->GetObjectData(id,"hpmax");
         CSprite* sprite=m_sprite_db->GetSprite(sprite_name);
         CSpriteGameObject enemy(sprite);
         enemy.UpdateDirection("stand");
@@ -408,6 +415,7 @@ void CSideTurnBaseBattleState::LoadSprites()
             cury=cury+sprite->GetSpriteSheet()->GetSpriteHeight()*m_enemy_scale;
         }
         m_enemies.push_back(enemy);
+        m_enemy_hps.push_back(hp_max);
     }
 }
 
@@ -485,18 +493,47 @@ void CSideTurnBaseBattleState::UpdateBattle()
                     }
 
                 }
-                CSpriteGameObject* player=&m_players[player_no];
-                CAnimationItem move_player;
-                move_player.SetAnimateType(CAnimationItem::AnimateType::MOVE_SPRITE);
-                move_player.SetActionName("leftward");
-                move_player.SetStartFrame(0);
-                move_player.SetEndFrame(3);
-                move_player.SetObject(player);
-                move_player.SetEndLoc(ge_common_struct::ge_point(
-                                          player->GetX()-50,player->GetY()));
-                move_player.SetResetPosition(true);
-                m_animation_manager.AddAnimateItem(move_player);
+                MoveForwardPlayer(player_no);
+                if(item.group_target)
+                {
+                    //群体攻击
+
+                }
+                else
+                {
+                    //单体攻击
+                    int tar_obj_id=item.center_target_obj_id;
+                    if(tar_obj_id>-1)
+                    {
+                        //有具体对象
+                        objecttype type=GetObjectType(tar_obj_id);
+                        if(type==objecttype::ENEMY)
+                        {
+                            std::vector<int>ids=m_database->
+                                                GetListObjectIds("battle");
+                            int enemy_seq=-1;
+                            for(size_t i=0; i<ids.size(); i++)
+                            {
+                                if(tar_obj_id==ids[i])
+                                {
+                                    enemy_seq=i;
+                                    break;
+                                }
+                            }
+                            HitEnemy(player_no,enemy_seq,item.using_obj_id);
+                        }
+                    }
+                }
+
+
                 item.end_frame=m_frame+30;
+
+            }
+            else if(obj_type.compare("enemy")==0)
+            {
+
+
+
             }
         }
     }
@@ -507,6 +544,94 @@ void CSideTurnBaseBattleState::UpdateBattle()
         //else
         m_substate=substate::COMMAND_INIT_STATE;
         m_current_command_player=0;
+    }
+
+}
+
+void CSideTurnBaseBattleState::MoveForwardPlayer(int player_no)
+{
+    CSpriteGameObject* player=&m_players[player_no];
+    CAnimationItem move_player;
+    move_player.SetAnimateType(CAnimationItem::AnimateType::MOVE_SPRITE);
+    move_player.SetActionName("leftward");
+    move_player.SetStartFrame(0);
+    move_player.SetEndFrame(4);
+    move_player.SetObject(player);
+    move_player.SetEndLoc(ge_common_struct::ge_point(
+                              player->GetX()-50,player->GetY()));
+    move_player.SetResetPosition(true);
+    m_animation_manager.AddAnimateItem(move_player);
+
+}
+
+CSideTurnBaseBattleState::objecttype
+CSideTurnBaseBattleState::GetObjectType(int obj_id)
+{
+    std::string obj_type=m_database->GetObjectType(obj_id);
+    if(obj_type.compare("player")==0)
+    {
+        return objecttype::PLAYER;
+    }
+    else if(obj_type.compare("enemy")==0)
+    {
+        return objecttype::ENEMY;
+    }
+    else
+    {
+        return objecttype::OTHER;
+    }
+}
+
+void CSideTurnBaseBattleState::HitEnemy(int player_no,int enemy_no
+                                        ,int with_object)
+{
+    CAnimationItem hit_enemy;
+    hit_enemy.SetAnimateType(CAnimationItem::AnimateType::FLASH_SPRITE);
+    hit_enemy.SetStartFrame(3);
+    hit_enemy.SetEndFrame(10);
+    hit_enemy.SetActionName("stand");
+    hit_enemy.SetResetPosition(true);
+    hit_enemy.SetObject(&m_enemies[enemy_no]);
+    m_animation_manager.AddAnimateItem(hit_enemy);
+    if(with_object>-1)
+    {
+        std::string otype= m_database->GetObjectType(with_object);
+        if(otype.compare("weapon")==0)
+        {
+            std::string animation_type=m_database->
+                                       GetObjectText(with_object,"animation");
+            if(animation_type.compare("bullet")==0)
+            {
+                CAnimationItem shoot;
+                shoot.SetAnimateType(CAnimationItem::AnimateType::PROJECTILE);
+                shoot.SetStartFrame(3);
+                shoot.SetEndFrame(10);
+                shoot.SetSpriteName("bullet");
+                shoot.SetObject(&m_players[player_no]);
+                shoot.SetTargetObject(&m_enemies[enemy_no]);
+                m_animation_manager.AddAnimateItem(shoot);
+
+            }
+        }
+    }
+
+    int num=rand()%100;
+    CAnimationItem text_item;
+    text_item.SetAnimateType(CAnimationItem::AnimateType::TEXT_MOTION);
+    text_item.SetStartFrame(11);
+    text_item.SetEndFrame(20);
+    text_item.SetObject(&m_enemies[enemy_no]);
+    text_item.SetText(std::to_string(num));
+    ge_common_struct::ge_color color;
+    color.r=255;
+    color.g=255;
+    color.b=255;
+    text_item.SetFontColor(color);
+    m_animation_manager.AddAnimateItem(text_item);
+
+    m_enemy_hps[enemy_no]-=num;
+    if(m_enemy_hps[enemy_no]<0){
+        GE_LOG("enemy %d died \n",enemy_no);
     }
 
 }

@@ -1,0 +1,10 @@
+8
+name,equipment,2
+label,武器,2
+attack,攻击力,1
+defense,防御力,1
+typelabel,类型,1
+range,攻击距离,1
+scope,攻击范围,1
+animation,动画,2
+knife,小刀,4,0,0,0,0,bullet
