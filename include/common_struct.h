@@ -124,7 +124,8 @@ enum exp_node_type
     OR
 };
 
-enum val_type{
+enum val_type
+{
     INT_VAL,
     DECIMAL_VAL,
     STRING_VAL
@@ -156,9 +157,11 @@ struct ge_sides
     int left=0;
     int bottom=0;
     int right=0;
-    ge_sides(){
+    ge_sides()
+    {
     };
-    ge_sides(int width){
+    ge_sides(int width)
+    {
         top=width;
         left=width;
         bottom=width;
@@ -312,7 +315,8 @@ struct dialog_tree_node
     }
 };
 
-struct attribute{
+struct attribute
+{
     std::string attribute_name;
     val_type val_type;
     int int_value;
@@ -453,7 +457,8 @@ struct input_event
     }
 };
 
-struct image_def{
+struct image_def
+{
     std::string id;
     std::string path;
     int width;
@@ -462,28 +467,32 @@ struct image_def{
     int col;
 };
 
-struct sprite_action{
+struct sprite_action
+{
     std::string sheet_id;
     std::string sprite_id;
     std::string action_name;
     std::vector<int> ids;
 };
 
-struct resource_def{
+struct resource_def
+{
     std::string resource_id;
     std::string resource_name;
     int id;
     int direction;
 };
 
-struct menu_command{
+struct menu_command
+{
     std::string menu_name;
     std::string command_name;
     int obj_id;
     int menu_order;
 };
 
-struct command_item{
+struct command_item
+{
     std::string command_name;  //attack,magic,item,etc
     int  source_obj_id;
     int  center_target_obj_id;
@@ -492,6 +501,13 @@ struct command_item{
     int  target_y;
     int  using_obj_id;       //translate to different animation
     int command_type;        // redundant
+    int sort_num;           //for sort purpose
+    uint32_t end_frame;    // end frame cannot use for sort
+    bool prossesed=false;
+    friend bool operator<(const command_item& l,const command_item& r)
+    {
+        return l.sort_num>r.sort_num;
+    }
 };
 
 void FreeDomNode(dom_node* node);

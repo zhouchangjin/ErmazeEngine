@@ -38,46 +38,61 @@ void CSideTurnBaseBattleState::LogCommand(std::vector<ge_common_struct
 void CSideTurnBaseBattleState::TranslateCommand(std::vector<ge_common_struct
         ::menu_command> &cmd_list)
 {
-    ge_common_struct::command_item item;
-    int player_order=m_current_command_player;
-    std::vector<int> ids=m_database->GetListObjectIds("players");
-    int pid=ids[player_order];
-
-    item.source_obj_id=pid; //1
-    for(size_t i=0; i<cmd_list.size(); i++)
+    uint32_t cmd_size=cmd_list.size();
+    if(cmd_size>0)
     {
-        ge_common_struct::menu_command menu_cmd=cmd_list[i];
-        std::string menu_name=menu_cmd.menu_name;
-        std::string cmd_name=menu_cmd.command_name;
-        int obj_id=menu_cmd.obj_id;
-        if(menu_name.compare("battle_command")==0)
+        ge_common_struct::command_item item;
+        int player_order=m_current_command_player;
+        std::vector<int> ids=m_database->GetListObjectIds("players");
+        int pid=ids[player_order];
+
+        item.source_obj_id=pid; //1
+        for(size_t i=0; i<cmd_list.size(); i++)
         {
-            if(cmd_name.compare("")!=0)
+            ge_common_struct::menu_command menu_cmd=cmd_list[i];
+            std::string menu_name=menu_cmd.menu_name;
+            std::string cmd_name=menu_cmd.command_name;
+            int obj_id=menu_cmd.obj_id;
+            if(menu_name.compare("battle_command")==0)
             {
-                item.command_name=cmd_name; //2
+                if(cmd_name.compare("")!=0)
+                {
+                    item.command_name=cmd_name; //2
+                }
+            }
+            else if(menu_name.compare("item_comand")==0)
+            {
+                if(obj_id>0)
+                {
+                    item.using_obj_id=obj_id; //3
+                }
+            }
+            else if(menu_name.compare("player_list")==0)
+            {
+                if(obj_id>0)
+                {
+                    item.center_target_obj_id=obj_id;//4
+                }
+            }
+            else if(menu_name.compare("enemy_list")==0)
+            {
+                if(obj_id>0)
+                {
+                    item.center_target_obj_id=obj_id; //4
+                }
             }
         }
-        else if(menu_name.compare("item_comand")==0)
-        {
-            if(obj_id>0)
-            {
-                item.using_obj_id=obj_id; //3
-            }
-        }
-        else if(menu_name.compare("player_list")==0)
-        {
-            if(obj_id>0)
-            {
-                item.center_target_obj_id=obj_id;//4
-            }
-        }
-        else if(menu_name.compare("enemy_list")==0){
-            if(obj_id>0){
-                item.center_target_obj_id=obj_id; //4
-            }
+        m_seq_command_list.push_back(item);
+        m_current_command_player++;
+    }
+    else
+    {
+        if(m_seq_command_list.size()>0){
+            m_current_command_player--;
+            m_seq_command_list.pop_back();
         }
     }
-    m_seq_command_list.push_back(item);
+
 }
 
 void CSideTurnBaseBattleState::Init()
@@ -145,7 +160,7 @@ void CSideTurnBaseBattleState::HandleEvent(ge_common_struct::input_event event)
 
 void CSideTurnBaseBattleState::Update()
 {
-    m_frame++;
+
     if(m_substate==substate::BATTLE_INIT_STATE)
     {
         GE_LOG("Prepare battle scene....\n");
@@ -189,7 +204,8 @@ void CSideTurnBaseBattleState::Update()
     {
         ProcessBattle();//only once change state
     }
-    else if(m_substate==substate::BATTLE_STATE){
+    else if(m_substate==substate::BATTLE_STATE)
+    {
         UpdateBattle();
     }
     m_animation_manager.Update();
@@ -211,6 +227,7 @@ void CSideTurnBaseBattleState::Draw()
 
     //绘制菜单
     sdlutil2::RenderPresent(m_context);
+    m_frame++;
 
 }
 
@@ -230,24 +247,7 @@ void CSideTurnBaseBattleState::LoadComponents()
                 (CServiceLocator::ServiceID::SPRITE_DB);
     m_database=CServiceLocator::GetService<CGameDatabase>
                (CServiceLocator::ServiceID::DATABASE);
-    //Test code
-    /**
-    CBaseParticleEmitter* emmiter=
-        new CBaseParticleEmitter(m_particle_system.GetParticlePool());
-    m_particle_system.AddEmitter(emmiter);
-    CProjectileEmitter* projectile_emitter=new CProjectileEmitter();
-    m_particle_system.AddEmitter(projectile_emitter);
-    CProjectile pj;
-    pj.SetPosX(800);
-    pj.SetPosY(120);
-    pj.SetVelocityX(-3);
-    pj.SetVelocityY(3);
-    pj.SetAX(-3);
-    pj.SetAY(1);
-    pj.SetLife(30);
-    pj.SetTextureName("bullet");
-    projectile_emitter->SetProjectile(pj);
-    **/
+
 }
 
 void CSideTurnBaseBattleState::LoadUIDef()
@@ -304,7 +304,6 @@ void CSideTurnBaseBattleState::InitMenu(ge_common_struct::input_event& event)
     inputevent.setMenuInitPanel("battle_command");
     m_event_manager.EventPublish(inputevent);
     m_substate=substate::COMMAND_STATE;
-    m_current_command_player++;
 }
 
 void CSideTurnBaseBattleState::DrawEnemy()
@@ -332,7 +331,7 @@ void CSideTurnBaseBattleState::DrawPlayer()
         int screenx=obj.GetX();
         int screeny=obj.GetY();
         obj.Play();
-        if(i==m_current_command_player-1 && m_substate!=substate::BATTLE_STATE)
+        if(i==m_current_command_player && m_substate!=substate::BATTLE_STATE)
         {
             screenx-=80;
         }
@@ -412,19 +411,102 @@ void CSideTurnBaseBattleState::LoadSprites()
     }
 }
 
+void CSideTurnBaseBattleState::SortCommand()
+{
 
-void CSideTurnBaseBattleState::ProcessBattle(){
+    for(size_t i=0; i<m_seq_command_list.size(); i++)
+    {
+        m_seq_command_list[i].sort_num=i; //注意引用和赋值
+    }
+    std::sort(m_seq_command_list.begin(),m_seq_command_list.end());
+
+}
+
+
+void CSideTurnBaseBattleState::ProcessBattle()
+{
 
     //prepare
+    SortCommand();
     m_substate=substate::BATTLE_STATE;
 }
 
-void CSideTurnBaseBattleState::UpdateBattle(){
-    //添加动画 流程
+bool CSideTurnBaseBattleState::IsPast(uint32_t time)
+{
+    //由于uint32有循环特质，防止超越边界
+    if(m_frame-time>=0 && m_frame-time<TIMECHECK)
+    {
+        //当前时间距离结束帧不能太久
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 
+}
+
+void CSideTurnBaseBattleState::UpdateBattle()
+{
     //两种策略，一种策略是上一个行动结束后，才能进行下一个行动，需要获取行动结束标志
+    //另一种策略根据行动时间添加动画，多个行动可以并行，需要复杂的数据结构
+    //指令结束后，需要根据状态进入结算还是下一行动
+    if(m_seq_command_list.size()>0)
+    {
+        ge_common_struct::command_item& item=m_seq_command_list.back();
+        if(item.prossesed)
+        {
+            if(IsPast(item.end_frame))
+            {
+                m_seq_command_list.pop_back();
+            }
+            else
+            {
+                //do nothing except update painting data
+            }
+        }
+        else
+        {
+            item.prossesed=true;
+            //Calculate damage only once
+            //添加动画
+            int obj_id=item.source_obj_id;
+            std::string obj_type=m_database->GetObjectType(obj_id);
+            if(obj_type.compare("player")==0)
+            {
+                std::vector<int>ids=m_database->GetListObjectIds("players");
+                int player_no=0;
+                for(size_t i=0; i<ids.size(); i++)
+                {
+                    if(obj_id==ids[i])
+                    {
+                        player_no=i;
+                        break;
+                    }
 
-    //另一种策略根据行动时间来确定下一行动，添加动画
+                }
+                CSpriteGameObject* player=&m_players[player_no];
+                CAnimationItem move_player;
+                move_player.SetAnimateType(CAnimationItem::AnimateType::MOVE_SPRITE);
+                move_player.SetActionName("leftward");
+                move_player.SetStartFrame(0);
+                move_player.SetEndFrame(3);
+                move_player.SetObject(player);
+                move_player.SetEndLoc(ge_common_struct::ge_point(
+                                          player->GetX()-50,player->GetY()));
+                move_player.SetResetPosition(true);
+                m_animation_manager.AddAnimateItem(move_player);
+                item.end_frame=m_frame+30;
+            }
+        }
+    }
+    else
+    {
+        //结束指令状态
+        //if enemy is dead into ending phase
+        //else
+        m_substate=substate::COMMAND_INIT_STATE;
+        m_current_command_player=0;
+    }
 
-    //判断是否所有行动动画播放完毕，结束战斗循环进入指令状态或结算状态
 }

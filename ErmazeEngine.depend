@@ -5,7 +5,7 @@
 1605575700 c:\work\cplusworkspace\ermazeengine\include\cgamecontext.h
 	"common_struct.h"
 
-1627373412 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
+1627439213 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
 	<map>
 	<vector>
 	<string>
@@ -846,10 +846,10 @@
 	<common_struct.h>
 	<IMenuProcess.h>
 
-1627372920 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
+1627450374 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
 	"CSideTurnBaseBattleState.h"
 
-1627434368 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
+1627445831 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
 	<XML_Utilities.h>
 	<GameFileLoader.h>
 	<CGameState.h>
@@ -892,7 +892,7 @@
 	<CImageDB.h>
 	<CUIActionManager.h>
 
-1627370583 source:c:\work\cplusworkspace\ermazeengine\src\cuimanager.cpp
+1627449057 source:c:\work\cplusworkspace\ermazeengine\src\cuimanager.cpp
 	"CUIManager.h"
 
 1627370950 c:\work\cplusworkspace\ermazeengine\include\cuimanager.h
@@ -994,7 +994,7 @@
 	<CSpriteGameObject.h>
 	<IEmitter.h>
 
-1627288320 source:c:\work\cplusworkspace\ermazeengine\src\canimationmanager.cpp
+1627444874 source:c:\work\cplusworkspace\ermazeengine\src\canimationmanager.cpp
 	"CAnimationManager.h"
 
 1627288464 c:\work\cplusworkspace\ermazeengine\include\canimationmanager.h

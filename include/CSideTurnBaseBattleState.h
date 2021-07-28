@@ -16,6 +16,7 @@
 class CSideTurnBaseBattleState: public CGameState
 {
     public:
+        static const uint32_t TIMECHECK=UINT_MAX+100;
         enum substate{
             BATTLE_STATE,
             COMMAND_INIT_STATE,
@@ -66,9 +67,10 @@ class CSideTurnBaseBattleState: public CGameState
        uint32_t m_last_timer=0;
 
        uint32_t m_current_command_player=0;
-       uint32_t m_current_animation_item=-1;
 
        std::vector<ge_common_struct::command_item> m_seq_command_list;
+
+       std::map<int,int> m_frame_command_map;
 
        int m_player_scale=3;
        int m_enemy_scale=2;
@@ -93,12 +95,14 @@ class CSideTurnBaseBattleState: public CGameState
 
         void ProcessBattle();
         void UpdateBattle();
+        bool IsPast(uint32_t time);
 
         void InitMenu(ge_common_struct::input_event& event);
 
         void AddCommand(ge_common_struct::command_item item);
         void LogCommand(std::vector<ge_common_struct::menu_command>& command);
         void TranslateCommand(std::vector<ge_common_struct::menu_command>& command);
+        void SortCommand();
 
 };
 

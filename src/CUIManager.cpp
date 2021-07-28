@@ -200,6 +200,8 @@ void CUIManager::CloseCurrentPopPanel()
     else
     {
         m_el_pointer=0;
+        m_current_command.clear();
+        m_last_command.clear();
     }
 }
 

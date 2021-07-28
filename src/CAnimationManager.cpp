@@ -32,7 +32,7 @@ void CAnimationManager::Update()
         CAnimationItem& item= m_animation_list[i];
         CAnimationItem::AnimateType type=item.GetAnimateType();
         //if(item is dead) remove item
-        int frame=m_frame-item.GetGlobalFrame();
+        int frame=m_frame-item.GetGlobalFrame();  //正常情况 uint32 a<b a-b>0,但这里不需要注意
         if(frame>item.GetEndFrame())
         {
             bool reset=item.GetResetPosition();
