@@ -41,7 +41,7 @@
 <border type="box" width="5" color="(255,255,255,255)"/>
 <font color="(255,255,255)"/>	
 <container layout="grid" row="5" col="1">
-<button action="attack_comand">攻击</button>
+<button action_type="attack" action="attack_comand">攻击</button>
 <button>防御</button>
 <button action="magic_command" >法术</button>
 <button action="item_comand" >道具</button>

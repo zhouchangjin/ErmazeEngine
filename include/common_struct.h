@@ -366,6 +366,7 @@ struct dom_node
     int child_seq_no=-1;
     int obj_id=-1;
     std::string action_name; //菜单跳转
+    std::string action_type_name; //菜单类别
     std::string type; //菜单类型
     bool use_template=false;
     bool enable_page=false;
@@ -475,15 +476,22 @@ struct resource_def{
     int direction;
 };
 
-struct command_item{
+struct menu_command{
+    std::string menu_name;
     std::string command_name;
+    int obj_id;
+    int menu_order;
+};
+
+struct command_item{
+    std::string command_name;  //attack,magic,item,etc
     int  source_obj_id;
     int  center_target_obj_id;
-    bool all_enemy;
+    bool group_target;
     int  target_x;
     int  target_y;
-    int  using_obj_id;
-    int  object_type;  //magic/weapon/tech/item/escape/special
+    int  using_obj_id;       //translate to different animation
+    int command_type;        // redundant
 };
 
 void FreeDomNode(dom_node* node);

@@ -145,6 +145,7 @@ bool CUIManager::IsPopPanelHidden()
     return res;
 }
 
+
 void CUIManager::HideAllPopPanel()
 {
     m_el_pointer=0;
@@ -163,8 +164,10 @@ void CUIManager::HideAllPopPanel()
 
         m_elp_stack.clear();
     }
-
-
+    if(m_current_command.size()>0){
+        m_last_command=m_current_command;
+        m_current_command.clear();
+    }
 }
 
 void CUIManager::CloseCurrentPopPanel()
@@ -173,12 +176,21 @@ void CUIManager::CloseCurrentPopPanel()
     {
         return;
     }
+    //Hide current Panel
     std::string panel_name=m_pop_panel_stack.back();
     m_pop_panel_stack.pop_back();
     ge_common_struct::dom_node* panel_node=m_panels[panel_name];
     panel_node->style.visibility=false;
+
     if(m_elp_stack.size()>0)
     {
+        //Show Last Panel with Correct Selection
+        if(m_elp_stack.size()==m_current_command.size()){
+            //ensure m_current_command size is equal to m_elp_stack size
+            m_current_command.pop_back();
+        }else{
+            //TODO　some exception happens
+        }
         m_el_pointer=m_elp_stack.back();
         m_elp_stack.pop_back();
         std::string last_panel_name=m_pop_panel_stack.back();
@@ -336,14 +348,21 @@ void CUIManager::ProcessInput(CMenuInputEvent event)
                             IMenuProcess * process=m_action_manager.GetMenuInterface(panel_name);
                             if(sel)
                             {
+                                int obj_id=sel->obj_id;
+                                ge_common_struct::menu_command command;
+                                command.menu_name=panel_name;
+                                command.menu_order=m_el_pointer;
+                                command.obj_id=obj_id;
+                                command.command_name=sel->action_type_name;
+                                m_current_command.push_back(command);
                                 if(process)
                                 {
-                                    int obj_id=sel->obj_id;
                                     process->Choose(obj_id,m_el_pointer);
                                 }
                                 if(sel->action_name.compare("")==0)
                                 {
                                     //如果没有子菜单隐藏所有菜单。
+                                    //command generated
                                     HideAllPopPanel();
                                 }
                                 else
@@ -357,7 +376,6 @@ void CUIManager::ProcessInput(CMenuInputEvent event)
                         else if(event_type==ge_common_struct::key_event_type::KEY_CANCLE)
                         {
                             CloseCurrentPopPanel();
-
                         }
                     }
                     else

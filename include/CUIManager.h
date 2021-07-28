@@ -34,6 +34,7 @@ class CUIManager :public IDefaultMenuEventProcess
         void Update();
         void ProcessInput(CMenuInputEvent event);
         bool IsPopPanelHidden();
+        std::vector<ge_common_struct::menu_command> GetCommand(){return m_last_command;};
     protected:
 
         CUIActionManager m_action_manager;
@@ -47,12 +48,15 @@ class CUIManager :public IDefaultMenuEventProcess
 
         std::vector<std::string> m_pop_panel_stack;
         std::vector<int> m_elp_stack;
+        std::vector<ge_common_struct::menu_command> m_current_command;
+        std::vector<ge_common_struct::menu_command> m_last_command;
         std::vector<std::string> m_panel_list;
         std::vector<std::string> m_pop_panel_list;
         std::map<std::string,ge_common_struct::dom_node*> m_panels;
         std::map<std::string,int> m_panel_page_start;
 
     private:
+
 };
 
 #endif // CUIMANAGER_H

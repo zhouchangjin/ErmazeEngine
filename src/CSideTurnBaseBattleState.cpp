@@ -16,6 +16,70 @@ CSideTurnBaseBattleState::~CSideTurnBaseBattleState()
     //dtor release m_panels m_menu
 }
 
+void CSideTurnBaseBattleState::LogCommand(std::vector<ge_common_struct
+        ::menu_command> &cmd)
+{
+    for(size_t i=0; i<cmd.size(); i++)
+    {
+        ge_common_struct::menu_command mcmd=cmd[i];
+        std::string mname=mcmd.menu_name;
+        std::string cname=mcmd.command_name;
+        int order=mcmd.menu_order;
+        int obj_id=mcmd.obj_id;
+        GE_LOG("=>%s#%s(%d) ",mname.c_str(),cname.c_str(),order);
+        if(obj_id>-1)
+        {
+            GE_LOG(" target obj ($%d)",obj_id);
+        }
+    }
+    GE_LOG("\n");
+}
+
+void CSideTurnBaseBattleState::TranslateCommand(std::vector<ge_common_struct
+        ::menu_command> &cmd_list)
+{
+    ge_common_struct::command_item item;
+    int player_order=m_current_command_player;
+    std::vector<int> ids=m_database->GetListObjectIds("players");
+    int pid=ids[player_order];
+
+    item.source_obj_id=pid; //1
+    for(size_t i=0; i<cmd_list.size(); i++)
+    {
+        ge_common_struct::menu_command menu_cmd=cmd_list[i];
+        std::string menu_name=menu_cmd.menu_name;
+        std::string cmd_name=menu_cmd.command_name;
+        int obj_id=menu_cmd.obj_id;
+        if(menu_name.compare("battle_command")==0)
+        {
+            if(cmd_name.compare("")!=0)
+            {
+                item.command_name=cmd_name; //2
+            }
+        }
+        else if(menu_name.compare("item_comand")==0)
+        {
+            if(obj_id>0)
+            {
+                item.using_obj_id=obj_id; //3
+            }
+        }
+        else if(menu_name.compare("player_list")==0)
+        {
+            if(obj_id>0)
+            {
+                item.center_target_obj_id=obj_id;//4
+            }
+        }
+        else if(menu_name.compare("enemy_list")==0){
+            if(obj_id>0){
+                item.center_target_obj_id=obj_id; //4
+            }
+        }
+    }
+    m_seq_command_list.push_back(item);
+}
+
 void CSideTurnBaseBattleState::Init()
 {
     LoadComponents();
@@ -97,10 +161,14 @@ void CSideTurnBaseBattleState::Update()
         //检查命令是否完备，如果完备则转下一个状态
         if(m_ui_manager.IsPopPanelHidden())
         {
+            std::vector<ge_common_struct::menu_command> clist
+                =m_ui_manager.GetCommand();
+            //LogCommand(clist);
+            TranslateCommand(clist);
             if(m_current_command_player>3)
             {
                 //全部完毕
-                m_substate=substate::BATTLE_STATE;
+                m_substate=substate::BATTLE_COMMAND_PREPARE_STATE;
                 m_last_timer=m_frame;
             }
             else
@@ -117,115 +185,13 @@ void CSideTurnBaseBattleState::Update()
         event.add_event(etype);
         InitMenu(event);
     }
-    else if(m_substate==substate::BATTLE_STATE)
+    else if(m_substate==substate::BATTLE_COMMAND_PREPARE_STATE)
     {
-
-        if(m_frame-m_last_timer>50)
-        {
-            GE_LOG("battle done\n");
-            m_substate=substate::COMMAND_INIT_STATE;
-            m_current_command_player=0;
-        }else if(m_frame-m_last_timer==10){
-            GE_LOG("play animation\n");
-            for(size_t i=0;i<m_enemies.size();i++){
-                CAnimationItem item;
-                item.SetAnimateType(CAnimationItem::AnimateType::SHOW_VFX);
-                item.SetActionName("thunder");
-                item.SetSpriteName("magic");
-                item.SetStartFrame(3);
-                item.SetEndFrame(10);
-                item.SetObject(&m_enemies[i]);
-                m_animation_manager.AddAnimateItem(item);
-
-                CAnimationItem item2;
-                item2.SetAnimateType(CAnimationItem::AnimateType::TEXT_MOTION);
-                item2.SetStartFrame(11);
-                item2.SetEndFrame(20);
-                item2.SetObject(&m_enemies[i]);
-                item2.SetText("38");
-                ge_common_struct::ge_color color;
-                color.r=255;
-                color.g=255;
-                color.b=255;
-                item2.SetFontColor(color);
-                m_animation_manager.AddAnimateItem(item2);
-
-                CAnimationItem item3;
-                item3.SetAnimateType(CAnimationItem::AnimateType::FLASH_SPRITE);
-                item3.SetStartFrame(3);
-                item3.SetEndFrame(10);
-                item3.SetActionName("stand");
-                item3.SetResetPosition(true);
-                item3.SetObject(&m_enemies[i]);
-                m_animation_manager.AddAnimateItem(item3);
-
-                CAnimationItem item4;
-                item4.SetAnimateType(CAnimationItem::AnimateType::PROJECTILE);
-                item4.SetStartFrame(3);
-                item4.SetEndFrame(10);
-                item4.SetSpriteName("bullet");
-                item4.SetObject(&m_players[1]);
-                item4.SetTargetObject(&m_enemies[i]);
-                m_animation_manager.AddAnimateItem(item4);
-            }
-            CAnimationItem item;
-            item.SetAnimateType(CAnimationItem::AnimateType::MOVE_SPRITE);
-            item.SetActionName("leftward");
-            item.SetStartFrame(0);
-            item.SetEndFrame(3);
-            CSpriteGameObject* p=&m_players[1];
-            item.SetObject(p);
-            item.SetEndLoc(ge_common_struct::ge_point(p->GetX()-50,p->GetY()));
-            item.SetResetPosition(true);
-            m_animation_manager.AddAnimateItem(item);
-
-        }else
-        {
-            GE_LOG("battle proceding\n");
-        }
+        ProcessBattle();//only once change state
     }
-    /***
-    if(m_substate==substate::COMMAND_STATE)
-    {
-        if(m_ui_manager.IsPopPanelHidden())
-        {
-            if(m_temp_timer>104)
-            {
-                m_temp_timer=0;
-                m_substate=substate::BATTLE_STATE;
-            }
-            else
-            {
-                m_substate=substate::COMMAND_INIT_STATE;
-                m_temp_timer++;
-                GE_LOG("command control %d....\n",m_temp_timer);
-            }
-        }
+    else if(m_substate==substate::BATTLE_STATE){
+        UpdateBattle();
     }
-    else if(m_substate==substate::COMMAND_INIT_STATE)
-    {
-        ge_common_struct::input_event event;
-        ge_common_struct::key_event_type etype=ge_common_struct
-                                               ::key_event_type::KEY_CONFIRM;
-        event.add_event(etype);
-        InitMenu(event);
-    }
-    else
-    {
-        if(m_temp_timer<100)
-        {
-            m_temp_timer++;
-            GE_LOG("combat running....\n");
-        }
-        else
-        {
-            m_substate=substate::COMMAND_STATE;
-            GE_LOG("command control....\n");
-        }
-
-    }
-    **/
-    //m_particle_system.Update();
     m_animation_manager.Update();
     UpdatePlayer();
 
@@ -433,12 +399,32 @@ void CSideTurnBaseBattleState::LoadSprites()
         enemy.SetY(cury);
         enemy.SetRenderScale(m_enemy_scale);
         int xnew=curx+sprite->GetSpriteSheet()->GetSpriteWidth()*m_enemy_scale;
-        if(xnew<maxx){
+        if(xnew<maxx)
+        {
             curx=xnew;
-        }else{
+        }
+        else
+        {
             curx=startx;
             cury=cury+sprite->GetSpriteSheet()->GetSpriteHeight()*m_enemy_scale;
         }
         m_enemies.push_back(enemy);
     }
+}
+
+
+void CSideTurnBaseBattleState::ProcessBattle(){
+
+    //prepare
+    m_substate=substate::BATTLE_STATE;
+}
+
+void CSideTurnBaseBattleState::UpdateBattle(){
+    //添加动画 流程
+
+    //两种策略，一种策略是上一个行动结束后，才能进行下一个行动，需要获取行动结束标志
+
+    //另一种策略根据行动时间来确定下一行动，添加动画
+
+    //判断是否所有行动动画播放完毕，结束战斗循环进入指令状态或结算状态
 }
