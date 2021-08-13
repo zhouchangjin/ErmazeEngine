@@ -43,6 +43,11 @@ void CAnimationManager::Update()
                 {
                     obj->SetX(item.GetStartLoc().x);
                     obj->SetY(item.GetStartLoc().y);
+                    if(item.GetAnimateType()==
+                            CAnimationItem::AnimateType::FLASH_SPRITE)
+                    {
+                        obj->SetAlpha(1.0f);
+                    }
                 }
             }
             m_animation_list.erase(m_animation_list.begin()+i);
@@ -80,6 +85,20 @@ void CAnimationManager::Update()
                 }
 
             }
+            else if(type==CAnimationItem::AnimateType::DISAPPEAR)
+            {
+                CSpriteGameObject* object=item.GetObject();
+                object->PlayAction(item.GetActionName());
+                int frame=m_frame-item.GetGlobalFrame();
+                int f_start=item.GetStartFrame();
+                int framespan=item.GetEndFrame()-item.GetStartFrame();
+                if(frame>=f_start && frame<=item.GetEndFrame())
+                {
+                    float alpha=1.0f-((frame-f_start)*1.0f/framespan);
+                    GE_LOG("%f=====\n",alpha);
+                    object->SetAlpha(alpha);
+                }
+            }
             else if(type==CAnimationItem::AnimateType::FLASH_SPRITE)
             {
                 CSpriteGameObject* object=item.GetObject();
@@ -104,13 +123,11 @@ void CAnimationManager::Update()
                     }
                     if(frame%2==0)
                     {
-                        object->SetX(-10000); //TODO modify this
-                        object->SetY(-10000); //TODO modify this
+                        object->SetAlpha(0.0f);
                     }
                     else
                     {
-                        object->SetX(cur_loc_x);
-                        object->SetY(cur_loc_y);
+                        object->SetAlpha(1.0f);
                     }
 
                 }
@@ -126,7 +143,8 @@ void CAnimationManager::Update()
                 //update projectile emitter position,nothing useful
                 int frame=m_frame-item.GetGlobalFrame();
                 int f_start=item.GetStartFrame();
-                if(frame==f_start){
+                if(frame==f_start)
+                {
                     CreateProjectile(item);
                 }
 
@@ -219,8 +237,8 @@ void CAnimationManager::AddAnimateItem(CAnimationItem item)
         {
             int px=tar_obj->GetX();
             int py=tar_obj->GetY();
-            int width=tar_obj->GetObjectWidth()*tar_obj->GetRenderScale();   // TODO hard coding enemy scale is 2
-            int height=tar_obj->GetObjectHeight()*tar_obj->GetRenderScale(); // TODO hard coding enemy scale is 2
+            int width=tar_obj->GetObjectWidth()*tar_obj->GetRenderScale();
+            int height=tar_obj->GetObjectHeight()*tar_obj->GetRenderScale();
             int shoot_loc_x=px+width/2;
             int shoot_loc_y=py+height/2;
             item.SetEndLoc(ge_common_struct::ge_point(shoot_loc_x,shoot_loc_y));
@@ -252,6 +270,18 @@ void CAnimationManager::AddAnimateItem(CAnimationItem item)
             item.SetStartLoc(ge_common_struct::ge_point(x,y));
             item.SetEndLoc(ge_common_struct::ge_point(x,y));
         }
+    }
+    else if(item.GetAnimateType()==CAnimationItem::AnimateType::DISAPPEAR)
+    {
+        CSpriteGameObject* obj=item.GetObject();
+        if(obj!=nullptr)
+        {
+            int x=obj->GetX();
+            int y=obj->GetY();
+            item.SetStartLoc(ge_common_struct::ge_point(x,y));
+            item.SetEndLoc(ge_common_struct::ge_point(x,y));
+        }
+
     }
     item.SetGlobalFrame(m_frame);
     m_animation_list.push_back(item);
@@ -314,9 +344,11 @@ void CAnimationManager::Draw()
                     cur_loc_y+=dy;
                 }
                 //font size is not using currently
+                ge_common_struct::ge_color color=item.GetFontColor();
+                //GE_LOG("%d,%d,%d,\n",color.r,color.g,color.b);
                 sdlutil2::RenderText(m_context,m_context->GetFont(),cur_loc_x,
                                      cur_loc_y,item.GetText(),
-                                     item.GetFontColor());
+                                     color);
             }
         }
 

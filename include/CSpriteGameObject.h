@@ -53,6 +53,12 @@ class CSpriteGameObject  : public CGameObject
         bool CheckCollision(const CSpriteGameObject& other);
         std::string GetCurrentAction()const{return m_current_action;};
         int GetCurrentOrientation()const;
+
+        bool IsEnableTransparency()const{return m_enable_transparency;};
+        void SetTransparency(bool enable){m_enable_transparency=enable;};
+        float GetAlpha()const{return m_alpha;};
+        void SetAlpha(float alpha){m_alpha=alpha;};
+
     protected:
         CSprite* m_sprite;
         int m_frame_idx=0;
@@ -61,10 +67,24 @@ class CSpriteGameObject  : public CGameObject
         int m_move_x=0;
         int m_move_y=0;
         int m_move_speed=8;
+
+        //####显示层级相关属性
+        //当前层级
         int m_layer=1;
+        //当前显示层级
         int m_show_layer=1;
-        int m_render_scale=1;
+        //是否在阶梯之上
         bool m_onstair=false;
+
+        //####显示相关属性
+        //渲染尺寸
+        int m_render_scale=1;
+        //渲染生命(透明度)
+        float m_alpha=1.0f;
+        bool m_enable_transparency=true;
+
+
+        //存储动作历史记录栈大小（应该与人数相同）
         unsigned int m_pop_size=2;
         std::queue<ge_common_struct::action_type> m_action_log;
 

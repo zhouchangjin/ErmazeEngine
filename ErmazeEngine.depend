@@ -408,7 +408,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1615200559 c:\work\cplusworkspace\ermazeengine\include\sdl_utilities.h
+1628777372 c:\work\cplusworkspace\ermazeengine\include\sdl_utilities.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -459,7 +459,7 @@
 1607513094 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
 	"CSdlGameContext.h"
 
-1615200732 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
+1628777449 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
 	"SDL_Utilities.h"
 
 1627021993 source:c:\work\cplusworkspace\ermazeengine\src\main.cpp
@@ -496,11 +496,11 @@
 	"SDL_Utilities.h"
 	"common_struct.h"
 
-1625225553 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
+1628819247 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
 	"Render_Util.h"
 	"CSdlGameContext.h"
 
-1624353490 c:\work\cplusworkspace\ermazeengine\include\render_util.h
+1628773616 c:\work\cplusworkspace\ermazeengine\include\render_util.h
 	<string>
 	"SDL_Utilities.h"
 	"Str_Utilities.h"
@@ -586,7 +586,7 @@
 1605949120 source:c:\work\cplusworkspace\ermazeengine\src\cspritegameobject.cpp
 	"CSpriteGameObject.h"
 
-1627281138 c:\work\cplusworkspace\ermazeengine\include\cspritegameobject.h
+1628768263 c:\work\cplusworkspace\ermazeengine\include\cspritegameobject.h
 	<CGameObject.h>
 	<CSprite.h>
 	<CCamera2D.h>
@@ -846,10 +846,10 @@
 	<common_struct.h>
 	<IMenuProcess.h>
 
-1627469735 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
+1628849234 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
 	"CSideTurnBaseBattleState.h"
 
-1627471595 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
+1628851467 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
 	<XML_Utilities.h>
 	<GameFileLoader.h>
 	<CGameState.h>
@@ -994,7 +994,7 @@
 	<CSpriteGameObject.h>
 	<IEmitter.h>
 
-1627444874 source:c:\work\cplusworkspace\ermazeengine\src\canimationmanager.cpp
+1628817280 source:c:\work\cplusworkspace\ermazeengine\src\canimationmanager.cpp
 	"CAnimationManager.h"
 
 1627288464 c:\work\cplusworkspace\ermazeengine\include\canimationmanager.h
@@ -1036,8 +1036,14 @@
 1627288416 source:c:\work\cplusworkspace\ermazeengine\src\canimationitem.cpp
 	"CAnimationItem.h"
 
-1627288056 c:\work\cplusworkspace\ermazeengine\include\canimationitem.h
+1628765138 c:\work\cplusworkspace\ermazeengine\include\canimationitem.h
 	<common_struct.h>
 	<CSpriteGameObject.h>
 	<IEmitter.h>
+
+1628764248 source:c:\work\cplusworkspace\ermazeengine\src\cbattleevent.cpp
+	"CBattleEvent.h"
+
+1628764349 c:\work\cplusworkspace\ermazeengine\include\cbattleevent.h
+	<CGameEvent.h>
 

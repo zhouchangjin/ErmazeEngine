@@ -194,7 +194,7 @@ void SetAlphaMode(C2DGameScene& scene,int alpha)
 
 
 void RenderSprite(CGameContext* p_context,CSprite* sprite,int screenx,
-                  int screeny,int sprite_idx,int scale)
+                  int screeny,int sprite_idx,int scale,int alpha)
 {
     CSpriteSheet* spritesheet=sprite->GetSpriteSheet();
     void * texture=spritesheet->GetTexture();
@@ -206,10 +206,20 @@ void RenderSprite(CGameContext* p_context,CSprite* sprite,int screenx,
         texture=spritesheet->GetTexture();
     }
     SDL_Texture* sdl_texture=(SDL_Texture* )texture;
+    if(alpha<=255 && alpha>=0)
+    {
+
+        sdlutil::EnableAndSetTextureAlpha(sdl_texture,alpha);
+    }
+    else if(alpha<0)
+    {
+        return;
+    }
     SDL_Renderer * renderer=GetRenderer(p_context);
     ge_common_struct::ge_rect rect=sprite->GetRectByIdx(sprite_idx);
     SDL_Rect sdlrect=TransformRect(rect);
     sdlutil::RenderTexture(screenx,screeny,&sdlrect,sdl_texture,renderer,scale);
+
 }
 
 
@@ -259,6 +269,10 @@ void RenderText(CGameContext* p_context,void* font,int x,int y,
                 std::string textureText,ge_common_struct::ge_color text_color,
                 int scale)
 {
+    if(textureText.compare("")==0)
+    {
+        return;
+    }
     SDL_Renderer * renderer=GetRenderer(p_context);
     TTF_Font * ttlfont=(TTF_Font*)font;
     SDL_Color sdlcolor=TransformColor(text_color);
@@ -998,13 +1012,17 @@ int GetMaxPageCntOfDomNode(ge_common_struct::dom_node* node
 void RenderParticles(CGameContext* p_context,std::vector<CParticle*> particles,
                      CTiledTexture tiledtexture)
 {
-    for(size_t i=0;i<particles.size();i++){
+    for(size_t i=0; i<particles.size(); i++)
+    {
         CParticle* p=particles[i];
-        if(!p->IsDead()){
+        if(!p->IsDead())
+        {
             std::string texture_name=p->GetTextureName();
+            /**
             if(particles.size()==1){
                GE_LOG("=======%s\n",texture_name.c_str());
             }
+            **/
             int pos=tiledtexture.GetTexturePos(texture_name);
             RenderSprite(p_context,&tiledtexture,p->GetX(),p->GetY()
                          ,pos,p->GetSize());

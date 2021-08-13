@@ -25,7 +25,7 @@ namespace sdlutil2{
 
     void RenderSceneLayer(CGameContext* p_context,C2DGameScene& scene,int layer_idx,int camerax,int cameray,ge_common_struct::ge_rect window,int scale);
 
-    void RenderSprite(CGameContext* p_context,CSprite* sprite,int screenx,int screeny,int sprite_idx,int scale);
+    void RenderSprite(CGameContext* p_context,CSprite* sprite,int screenx,int screeny,int sprite_idx,int scale,int alpha=255);
 
     void RenderGameObject(CGameContext* p_context,CSpriteGameObject* object,ge_common_struct::ge_rect window,int camerax,int cameray,int scale);
 

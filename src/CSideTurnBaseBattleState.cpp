@@ -170,7 +170,25 @@ void CSideTurnBaseBattleState::Update()
     if(m_substate==substate::BATTLE_INIT_STATE)
     {
         GE_LOG("Prepare battle scene....\n");
-        if(m_frame>20)
+        int draw_x=m_player_rect.x;
+        ge_common_struct::ge_rect rect=sdlutil2::LoadWindowRect(m_context);
+        int screenx=rect.w*draw_x/100;
+        int speed=m_player_accerleration*m_batterprepare_time;
+        for(size_t i=0; i<m_players.size(); i++)
+        {
+            int x=m_players[i].GetX();
+            x-=speed;
+            if(x>=screenx)
+            {
+                m_players[i].SetX(x);
+            }
+            else
+            {
+                m_players[i].SetX(screenx);
+            }
+
+        }
+        if(m_frame>m_batterprepare_time)
         {
             GE_LOG("Prepare battle scene done.\n");
             m_substate=substate::COMMAND_INIT_STATE;
@@ -213,6 +231,8 @@ void CSideTurnBaseBattleState::Update()
     else if(m_substate==substate::BATTLE_STATE)
     {
         UpdateBattle();
+    }else if(m_substate==substate::ENDING_STATE){
+
     }
     m_animation_manager.Update();
     UpdatePlayer();
@@ -222,6 +242,8 @@ void CSideTurnBaseBattleState::Update()
 
 void CSideTurnBaseBattleState::Draw()
 {
+    //SDL_Renderer * renderer=sdlutil2::GetRenderer(m_context);
+    //SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     //绘制界面
     m_ui_manager.Draw();
     //绘制sprites
@@ -316,13 +338,25 @@ void CSideTurnBaseBattleState::DrawEnemy()
 {
     for(size_t i=0; i<m_enemies.size(); i++)
     {
-        CSpriteGameObject& obj=m_enemies[i];
-        int screenx=obj.GetX();
-        int screeny=obj.GetY();
-        obj.Play();
-        int frameidx=obj.GetFrameIdx();
-        sdlutil2::RenderSprite(m_context,obj.GetSprite(),screenx,
-                               screeny,frameidx,obj.GetRenderScale());
+        if(m_enemy_alive[i])
+        {
+            CSpriteGameObject& obj=m_enemies[i];
+            int screenx=obj.GetX();
+            int screeny=obj.GetY();
+            obj.Play();
+            int frameidx=obj.GetFrameIdx();
+            float alpha=obj.GetAlpha();
+            int iAlpha=std::round(alpha*255.0f);
+            //if(iAlpha<255)
+            //{
+            //      GE_LOG("%d===%f==%f===\n",iAlpha,alpha*255.0f,alpha);
+            //}
+            sdlutil2::RenderSprite(m_context,obj.GetSprite(),screenx,
+                                   screeny,frameidx,obj.GetRenderScale(),iAlpha);
+        }else{
+
+            //GE_LOG("enemy %zu is dead \n",i);
+        }
     }
 
 }
@@ -337,7 +371,7 @@ void CSideTurnBaseBattleState::DrawPlayer()
         int screenx=obj.GetX();
         int screeny=obj.GetY();
         obj.Play();
-        if(i==m_current_command_player && m_substate!=substate::BATTLE_STATE)
+        if(i==m_current_command_player && m_substate==substate::COMMAND_STATE)
         {
             screenx-=80;
         }
@@ -360,14 +394,15 @@ void CSideTurnBaseBattleState::UpdatePlayer()
 
 void CSideTurnBaseBattleState::LoadSprites()
 {
-    int draw_x=m_player_rect.x;
+    //int draw_x=m_player_rect.x;
     int draw_y=m_player_rect.y;
     ge_common_struct::ge_rect rect=sdlutil2::LoadWindowRect(m_context);
     std::vector<int> ids=m_database->GetListObjectIds("players");
     std::vector<int> ids_ene=m_database->GetListObjectIds("battle");
 
     //hard coding
-    int screenx=rect.w*draw_x/100;
+    //int screenx=rect.w*draw_x/100;
+    int screenx=rect.w;
     int screeny=rect.h*draw_y/100;
     int height=80;
 
@@ -416,6 +451,8 @@ void CSideTurnBaseBattleState::LoadSprites()
         }
         m_enemies.push_back(enemy);
         m_enemy_hps.push_back(hp_max);
+        m_enemy_ids.push_back(id);
+        m_enemy_alive.push_back(true);
     }
 }
 
@@ -459,6 +496,30 @@ void CSideTurnBaseBattleState::UpdateBattle()
     //两种策略，一种策略是上一个行动结束后，才能进行下一个行动，需要获取行动结束标志
     //另一种策略根据行动时间添加动画，多个行动可以并行，需要复杂的数据结构
     //指令结束后，需要根据状态进入结算还是下一行动
+
+    for(size_t i=0; i<m_timer_event.size(); i++)
+    {
+        timer_event event= m_timer_event[i];
+        if(m_frame-event.frame<=10)
+        {
+            ProcessTimerEvent(event);
+            m_timer_event.erase(m_timer_event.begin()+i);
+            i--;
+        }
+    }
+    //结束战斗
+    //if enemy is dead into ending phase
+    bool flag=true;
+    for(size_t i=0;i<m_enemy_alive.size();i++){
+        if(m_enemy_alive[i]){
+            flag=false;
+        }
+    }
+    if(flag){
+        //没有活着的敌人
+        m_substate=substate::ENDING_STATE;
+    }
+    //标记去世的对象为死亡状态
     if(m_seq_command_list.size()>0)
     {
         ge_common_struct::command_item& item=m_seq_command_list.back();
@@ -506,17 +567,16 @@ void CSideTurnBaseBattleState::UpdateBattle()
                     if(tar_obj_id>-1)
                     {
                         //有具体对象
-                        objecttype type=GetObjectType(tar_obj_id);
-                        if(type==objecttype::ENEMY)
+                        object_type type=GetObjectType(tar_obj_id);
+                        if(type==object_type::ENEMY)
                         {
-                            std::vector<int>ids=m_database->
-                                                GetListObjectIds("battle");
                             int enemy_seq=-1;
-                            for(size_t i=0; i<ids.size(); i++)
+                            for(size_t i=0; i<m_enemy_ids.size(); i++)
                             {
-                                if(tar_obj_id==ids[i])
+                                if(tar_obj_id==m_enemy_ids[i])
                                 {
                                     enemy_seq=i;
+                                    //Choose another enemy is enemy is dead;
                                     break;
                                 }
                             }
@@ -539,9 +599,7 @@ void CSideTurnBaseBattleState::UpdateBattle()
     }
     else
     {
-        //结束指令状态
-        //if enemy is dead into ending phase
-        //else
+
         m_substate=substate::COMMAND_INIT_STATE;
         m_current_command_player=0;
     }
@@ -564,35 +622,82 @@ void CSideTurnBaseBattleState::MoveForwardPlayer(int player_no)
 
 }
 
-CSideTurnBaseBattleState::objecttype
+CSideTurnBaseBattleState::object_type
 CSideTurnBaseBattleState::GetObjectType(int obj_id)
 {
     std::string obj_type=m_database->GetObjectType(obj_id);
     if(obj_type.compare("player")==0)
     {
-        return objecttype::PLAYER;
+        return object_type::PLAYER;
     }
     else if(obj_type.compare("enemy")==0)
     {
-        return objecttype::ENEMY;
+        return object_type::ENEMY;
     }
     else
     {
-        return objecttype::OTHER;
+        return object_type::OTHER;
     }
 }
 
 void CSideTurnBaseBattleState::HitEnemy(int player_no,int enemy_no
                                         ,int with_object)
 {
-    CAnimationItem hit_enemy;
-    hit_enemy.SetAnimateType(CAnimationItem::AnimateType::FLASH_SPRITE);
-    hit_enemy.SetStartFrame(3);
-    hit_enemy.SetEndFrame(10);
-    hit_enemy.SetActionName("stand");
-    hit_enemy.SetResetPosition(true);
-    hit_enemy.SetObject(&m_enemies[enemy_no]);
-    m_animation_manager.AddAnimateItem(hit_enemy);
+    int enemy_id=m_enemy_ids[enemy_no];
+    if(m_enemy_hps[enemy_no]>0)
+    {
+        CAnimationItem hit_enemy;
+        hit_enemy.SetAnimateType(CAnimationItem::AnimateType::FLASH_SPRITE);
+        hit_enemy.SetStartFrame(3);
+        hit_enemy.SetEndFrame(10);
+        hit_enemy.SetActionName("stand");
+        hit_enemy.SetResetPosition(true);
+        hit_enemy.SetObject(&m_enemies[enemy_no]);
+        m_animation_manager.AddAnimateItem(hit_enemy);
+
+        int num=rand()%100;
+        CAnimationItem text_item;
+        text_item.SetAnimateType(CAnimationItem::AnimateType::TEXT_MOTION);
+        text_item.SetStartFrame(11);
+        text_item.SetEndFrame(20);
+        text_item.SetObject(&m_enemies[enemy_no]);
+        text_item.SetText(std::to_string(num));
+        ge_common_struct::ge_color color;
+        color.r=255;
+        color.g=255;
+        color.b=255;
+        text_item.SetFontColor(color);
+        m_animation_manager.AddAnimateItem(text_item);
+        m_enemy_hps[enemy_no]-=num;
+
+    }
+    else
+    {
+        //change target
+        std::vector<int> ids_ene=m_database->GetListObjectIds("battle");
+        size_t s=ids_ene.size();
+        if(s>0)
+        {
+            int rand_enemy=rand()%s;
+            int e_id=ids_ene[rand_enemy];
+            for(size_t i=0; i<m_enemy_ids.size(); i++)
+            {
+                if(e_id==m_enemy_ids[i])
+                {
+                    HitEnemy(player_no,i,with_object);
+                    return;
+                }
+            }
+        }
+        else
+        {
+
+            //TODO wining state
+            return;
+        }
+
+    }
+
     if(with_object>-1)
     {
         std::string otype= m_database->GetObjectType(with_object);
@@ -615,23 +720,51 @@ void CSideTurnBaseBattleState::HitEnemy(int player_no,int enemy_no
         }
     }
 
-    int num=rand()%100;
-    CAnimationItem text_item;
-    text_item.SetAnimateType(CAnimationItem::AnimateType::TEXT_MOTION);
-    text_item.SetStartFrame(11);
-    text_item.SetEndFrame(20);
-    text_item.SetObject(&m_enemies[enemy_no]);
-    text_item.SetText(std::to_string(num));
-    ge_common_struct::ge_color color;
-    color.r=255;
-    color.g=255;
-    color.b=255;
-    text_item.SetFontColor(color);
-    m_animation_manager.AddAnimateItem(text_item);
 
-    m_enemy_hps[enemy_no]-=num;
-    if(m_enemy_hps[enemy_no]<0){
+
+
+    if(m_enemy_hps[enemy_no]<0)
+    {
         GE_LOG("enemy %d died \n",enemy_no);
+        std::vector<int> ids=m_database->GetListObjectIds("battle");
+        for(size_t i=0; i<ids.size(); i++)
+        {
+            int obj_id=ids[i];
+            if(obj_id==enemy_id)
+            {
+                m_database->RemoveObjectFromList("battle",obj_id);
+                DisappearEnemy(enemy_no);
+                break;
+            }
+        }
     }
 
+}
+
+
+void CSideTurnBaseBattleState::DisappearEnemy(int enemy_no)
+{
+    CAnimationItem item;
+    item.SetAnimateType(CAnimationItem::AnimateType::DISAPPEAR);
+    item.SetStartFrame(20);
+    item.SetEndFrame(25);
+    item.SetObject(&m_enemies[enemy_no]);
+    item.SetResetPosition(false);
+    item.SetActionName(m_enemies[enemy_no].GetCurrentAction());
+    m_animation_manager.AddAnimateItem(item);
+
+    timer_event event;
+    event.object_no=enemy_no;
+    event.event_type=event_type::ENEMY_DIED;
+    event.frame=m_frame+25;
+    event.object_type=object_type::ENEMY;
+    m_timer_event.push_back(event);
+}
+
+void CSideTurnBaseBattleState::ProcessTimerEvent(CSideTurnBaseBattleState
+        ::timer_event event)
+{
+    if(event.event_type==CSideTurnBaseBattleState::event_type::ENEMY_DIED){
+        m_enemy_alive[event.object_no]=false;
+    }
 }

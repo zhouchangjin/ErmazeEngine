@@ -64,6 +64,7 @@
 		<Unit filename="include/CAnimationItem.h" />
 		<Unit filename="include/CAnimationManager.h" />
 		<Unit filename="include/CBaseParticleEmitter.h" />
+		<Unit filename="include/CBattleEvent.h" />
 		<Unit filename="include/CCamera2D.h" />
 		<Unit filename="include/CChoiceDialog.h" />
 		<Unit filename="include/CDatabaseLoader.h" />
@@ -140,6 +141,7 @@
 		<Unit filename="src/CAnimationItem.cpp" />
 		<Unit filename="src/CAnimationManager.cpp" />
 		<Unit filename="src/CBaseParticleEmitter.cpp" />
+		<Unit filename="src/CBattleEvent.cpp" />
 		<Unit filename="src/CCamera2D.cpp" />
 		<Unit filename="src/CChoiceDialog.cpp" />
 		<Unit filename="src/CDatabaseLoader.cpp" />

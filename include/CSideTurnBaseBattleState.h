@@ -22,19 +22,33 @@ class CSideTurnBaseBattleState: public CGameState
             COMMAND_INIT_STATE,
             COMMAND_STATE,
             BATTLE_INIT_STATE,
-            BATTLE_COMMAND_PREPARE_STATE
+            BATTLE_COMMAND_PREPARE_STATE,
+            ENDING_STATE
         };
         enum battletype{
             PARTY_TURN_BASED,
             INDI_TURN_BASED,
             ATB_TURN_BASED
         };
-        enum objecttype{
+        enum object_type{
             PLAYER,
             ENEMY,
             NEUTRAL,
             OTHER
         };
+
+        enum event_type{
+            ENEMY_DIED
+        };
+
+        struct timer_event{
+            uint32_t frame;
+            int object_id;
+            int object_no;
+            object_type object_type;
+            event_type event_type;
+        };
+
         CSideTurnBaseBattleState();
         CSideTurnBaseBattleState(CGameContext * context);
         virtual ~CSideTurnBaseBattleState();
@@ -64,6 +78,8 @@ class CSideTurnBaseBattleState: public CGameState
        std::vector<CSpriteGameObject> m_players;
        std::vector<CSpriteGameObject> m_enemies;
        std::vector<int> m_enemy_hps;
+       std::vector<int> m_enemy_ids;
+       std::vector<bool> m_enemy_alive;
 
        //状态标志
        substate m_substate=substate::BATTLE_INIT_STATE;
@@ -72,6 +88,10 @@ class CSideTurnBaseBattleState: public CGameState
 
        uint32_t m_frame=0;
        uint32_t m_last_timer=0;
+
+       uint32_t m_batterprepare_time=10;
+       float m_playerinit_position=1.0f;
+       int m_player_accerleration=5;
 
        uint32_t m_current_command_player=0;
 
@@ -84,6 +104,8 @@ class CSideTurnBaseBattleState: public CGameState
 
        ge_common_struct::ge_rect m_enemy_rect;
        ge_common_struct::ge_rect m_player_rect;
+
+       std::vector<timer_event> m_timer_event;
 
     private:
         void LoadComponents();
@@ -112,9 +134,12 @@ class CSideTurnBaseBattleState: public CGameState
         void SortCommand();
 
 
+        object_type GetObjectType(int obj_id);
+
         void MoveForwardPlayer(int player_no);
-        objecttype GetObjectType(int obj_id);
         void HitEnemy(int player_no,int enemy_no,int with_obj=-1);
+        void DisappearEnemy(int enemy_no);
+        void ProcessTimerEvent(timer_event event);
 };
 
 #endif // CSIDETURNBASEBATTLESTATE_H

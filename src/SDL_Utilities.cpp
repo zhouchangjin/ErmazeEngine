@@ -92,6 +92,15 @@ void RenderText(TTF_Font* font,SDL_Renderer* renderer,int x,int y,std::string te
 
 }
 
+void SetTextureBlendMode(SDL_Texture* texture,SDL_BlendMode blending){
+     SDL_SetTextureBlendMode( texture, blending );
+}
+
+void EnableAndSetTextureAlpha(SDL_Texture* texture,int alpha){
+    SetTextureBlendMode(texture,SDL_BLENDMODE_BLEND);
+    SetTextureAlpha(texture,alpha);
+}
+
 void SetTextureAlpha(SDL_Texture* texture,int alpha)
 {
     SDL_SetTextureAlphaMod(texture,alpha);

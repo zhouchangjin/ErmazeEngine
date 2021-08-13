@@ -15,7 +15,8 @@ class CAnimationItem
             MOVE_SPRITE,
             SHOW_VFX,
             VECTOR_ANIMATION,
-            FLASH_SPRITE
+            FLASH_SPRITE,
+            DISAPPEAR
         };
         CAnimationItem();
         virtual ~CAnimationItem();
