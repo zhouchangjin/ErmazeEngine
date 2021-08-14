@@ -846,10 +846,10 @@
 	<common_struct.h>
 	<IMenuProcess.h>
 
-1628849234 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
+1628936123 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
 	"CSideTurnBaseBattleState.h"
 
-1628851467 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
+1628935970 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
 	<XML_Utilities.h>
 	<GameFileLoader.h>
 	<CGameState.h>

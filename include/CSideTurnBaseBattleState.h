@@ -99,7 +99,7 @@ class CSideTurnBaseBattleState: public CGameState
 
        std::map<int,int> m_frame_command_map;
 
-       int m_player_scale=3;
+       int m_player_scale=2;
        int m_enemy_scale=2;
 
        ge_common_struct::ge_rect m_enemy_rect;
@@ -124,6 +124,7 @@ class CSideTurnBaseBattleState: public CGameState
 
         void ProcessBattle();
         void UpdateBattle();
+        void Accounting();
         bool IsPast(uint32_t time);
 
         void InitMenu(ge_common_struct::input_event& event);

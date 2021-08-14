@@ -232,7 +232,7 @@ void CSideTurnBaseBattleState::Update()
     {
         UpdateBattle();
     }else if(m_substate==substate::ENDING_STATE){
-
+        Accounting();
     }
     m_animation_manager.Update();
     UpdatePlayer();
@@ -382,7 +382,7 @@ void CSideTurnBaseBattleState::DrawPlayer()
 
 void CSideTurnBaseBattleState::UpdatePlayer()
 {
-    if(m_frame%10==0)
+    if(m_frame%5==0)
     {
         for(size_t i=0; i<m_players.size(); i++)
         {
@@ -518,6 +518,10 @@ void CSideTurnBaseBattleState::UpdateBattle()
     if(flag){
         //没有活着的敌人
         m_substate=substate::ENDING_STATE;
+        for(size_t i=0;i<m_players.size();i++){
+            //TODO 死了的人保持死亡状态
+            m_players[i].UpdateDirection("win");
+        }
     }
     //标记去世的对象为死亡状态
     if(m_seq_command_list.size()>0)
@@ -767,4 +771,9 @@ void CSideTurnBaseBattleState::ProcessTimerEvent(CSideTurnBaseBattleState
     if(event.event_type==CSideTurnBaseBattleState::event_type::ENEMY_DIED){
         m_enemy_alive[event.object_no]=false;
     }
+}
+
+void CSideTurnBaseBattleState::Accounting(){
+
+
 }
