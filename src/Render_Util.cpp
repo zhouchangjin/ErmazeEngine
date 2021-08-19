@@ -582,6 +582,42 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImage
         }
         else
         {
+
+            if(node->has_attribute("indicator_texture"))
+            {
+                uint32_t frame=node->frame;
+                std::string texture_name=node->attr_str("indicator_texture");
+                std::string show_text=ge_str_utilities::TrimStr(node->text);
+                if(texture_name.compare("")!=0 && show_text.compare(" ")!=0
+                   && show_text.compare("")!=0)
+                {
+                    CTexture indicator=imagedb->GetTexture(texture_name);
+
+                    if(indicator)
+                    {
+                        int width=indicator.GetTiledTexture()->
+                                  GetSpriteSheet()->GetSpriteWidth();
+                        int height=indicator.GetTiledTexture()->
+                                   GetSpriteSheet()->GetSpriteHeight();
+                        ge_common_struct::ge_rect indicator_rect;
+                        int cnt=indicator.GetTiledTexture()
+                                ->ActionStepCnt(texture_name);
+                        int offsetY=0;
+                        if(cnt==1){
+                            offsetY+=(frame/2)%4;
+                        }
+                        indicator_rect.w=width;
+                        indicator_rect.h=height;
+                        indicator_rect.x=actual_rect.x+actual_rect.w
+                                         -width-padding.right;
+                        indicator_rect.y=actual_rect.y+actual_rect.h
+                                         -height-padding.bottom+offsetY;
+                        DrawTexture2(p_context,indicator_rect,indicator);
+                    }
+
+                }
+
+            }
             //TODO 当文字超过一行
             if(align==ge_common_struct::text_align::LEFT)
             {
@@ -864,7 +900,7 @@ void FillRectTexture(CGameContext* p_context,ge_common_struct::ge_rect rect,
 void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,
                    int context_obj,int page_start)
 {
-
+    node->frame++;
     if(node->list_template!=nullptr)
     {
         //当前节点是一个列表
@@ -928,6 +964,13 @@ void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,
     }
     else
     {
+        if(node->has_attribute("show_indicator")
+                && node->has_attribute("indicator"))
+        {
+            std::string indicator=node->attr_str("indicator");
+            std::string text_prop=gamedb->GetTextData(indicator);
+            node->attr_str("indicator_texture",text_prop);
+        }
         if(node->use_template && context_obj>=0)
         {
             std::string template_text=node->template_text;
@@ -964,6 +1007,18 @@ void UpdateDomNode(ge_common_struct::dom_node* node,CGameDatabase* gamedb,
                 }
                 node->text=template_text;
             }
+        }
+        else if(node->use_template && context_obj<0)
+        {
+            std::string template_text=node->template_text;
+            std::vector<std::string>& var_list=node->var_list;
+            for(auto prop_name:var_list)
+            {
+                std::string replace_str="{"+prop_name+"}";
+                std::string value=gamedb->GetTextData(prop_name);
+                ge_str_utilities::ReplaceAll(template_text,replace_str,value);
+            }
+            node->text=template_text;
         }
 
     }

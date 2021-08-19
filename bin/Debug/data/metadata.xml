@@ -1,0 +1,29 @@
+<filedef id="datastorage">
+<chunk name="datafile" datatype="CHUNK" list="0">
+
+<chunk name="obj_type" size="10" mandatory="1" datatype="STRING" list="0" />
+
+<chunk name="property_count" size="1" mandatory="1" datatype="INT" list="0" />
+
+<chunk name="meta_data" mandatory="1" datatype="CHUNK" list="1" ref_chunk="property_count">
+	<chunk name="meta_ele" mandatory="1" datatype="CHUNK" list="0">
+		<chunk name="prop_name" size="20" mandatory="1" datatype="STRING"/>
+		<chunk name="prop_label" size="20" mandatory="1" datatype="STRING"/>
+		<chunk name="prop_type"  mandatory="1" datatype="INT"/>
+	</chunk>
+</chunk>
+
+<chunk name="data" mandatory="1" datatype="CHUNK" list="1">
+	<chunk name="data_ele" mandatory="1" datatype="CHUNK" list="1" ref_chunk="meta_ele">
+		<chunk name="data_prop_ele" mandatory="1" datatype="CHUNK" list="0">
+			<chunk name="data_prop" mandatory="1" datatype="UNKNOWN" list="0" ref_chunk="prop_type">
+				<rule value="1" datatype="INT" size="1"/>
+				<rule value="2" datatype="STRING" size="20" />
+			</chunk>
+		</chunk>
+	</chunk>
+</chunk>
+
+</chunk>
+
+</filedef>

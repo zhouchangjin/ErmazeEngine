@@ -11,6 +11,8 @@ class MyXMLDoc;
 
 class MyXMLNode;
 
+class MyXMLAttribute;
+
 
 MyXMLDoc LoadXML(std::string filepath);
 
@@ -28,10 +30,14 @@ public:
     MyXMLNode NextSlibing();
     MyXMLNode Child(std::string nodename);
     MyXMLNode NextSlibing(std::string slibingname);
+    MyXMLAttribute FirstAttribute();
     int IntAttribute(std::string attributename);
     std::string StrAttribute(std::string attributename);
     std::string ValueStr();
-    std::string Name(){return m_node.name();};
+    std::string Name()
+    {
+        return m_node.name();
+    };
     explicit operator bool();
 
 private:
@@ -56,6 +62,25 @@ private:
     pugi::xml_document m_doc;
     pugi::xml_parse_result m_parsed_content;
 };
+
+class MyXMLAttribute
+{
+public:
+    MyXMLAttribute();
+    MyXMLAttribute NextAttribute();
+    std::string StrValue();
+    std::string Name();
+    void SetAttribute(pugi::xml_attribute attribute)
+    {
+        m_attribute=attribute;
+    }
+    explicit operator bool();
+private:
+    pugi::xml_attribute m_attribute;
+
+
+};
+
 }
 
 #endif // XML_UTILITIES_HPP_INCLUDED

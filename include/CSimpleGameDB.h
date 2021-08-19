@@ -11,6 +11,10 @@ public:
     virtual ~CSimpleGameDB();
     void SetIntData(std::string global_prop,int data);
     int GetIntData(std::string global_prop);
+    std::string GetTextData(std::string global_prop);
+    void SetTextData(std::string global_prop,std::string text);
+    bool HasData(std::string global_prop);
+
     void SetObjectData(int obj_id,int prop_id,int data);
     void SetObjectData(int obj_id,std::string prop_name,int data);
     void SetObjectText(int obj_id,std::string prop_name,std::string text);
@@ -67,7 +71,8 @@ private:
     std::string GetPropIntKey(std::string obj_type,std::string prop_name);
 
     std::map<std::string,int> m_database;
-
+    //global_type
+    std::map<std::string,DataType> m_globaltype_map;
     //object
     std::map<std::string,int> m_object_id;
     std::vector<std::string> m_object_type;

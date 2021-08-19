@@ -52,6 +52,13 @@ namespace xmlutils{
         return value;
     }
 
+    MyXMLAttribute MyXMLNode::FirstAttribute(){
+        pugi::xml_attribute attribute=m_node.first_attribute();
+        MyXMLAttribute xmlattribute;
+        xmlattribute.SetAttribute(attribute);
+        return xmlattribute;
+    }
+
     MyXMLDoc::MyXMLDoc(std::string path){
         m_parsed_content=m_doc.load_file(path.c_str());
     }
@@ -82,6 +89,29 @@ namespace xmlutils{
     MyXMLDoc LoadXML(std::string path){
         MyXMLDoc doc(path);
         return doc;
+    }
+
+    MyXMLAttribute::MyXMLAttribute(){
+    }
+
+    MyXMLAttribute::operator bool(){
+        return m_attribute;
+    }
+
+    MyXMLAttribute MyXMLAttribute::NextAttribute(){
+        MyXMLAttribute nextxmlattr;
+        pugi::xml_attribute attribute=m_attribute.next_attribute();
+        nextxmlattr.SetAttribute(attribute);
+        return nextxmlattr;
+    }
+
+    std::string   MyXMLAttribute::Name(){
+
+        return m_attribute.name();
+    }
+
+    std::string MyXMLAttribute::StrValue(){
+        return m_attribute.value();
     }
 
 }

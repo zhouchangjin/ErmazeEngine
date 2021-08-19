@@ -5,11 +5,15 @@ std::string TrimStr(std::string input)
 {
     std::string::size_type start_pos = input.find_first_not_of(' ');
     std::string::size_type end_pos = input.find_last_not_of(' ');
-    std::string res = input.substr(start_pos == std::string::npos ? 0
-                                   : start_pos,end_pos == std::string::npos
-                                   ? input.length() - 1
-                                   : end_pos - start_pos + 1);
-    return res;
+    start_pos=(start_pos == std::string::npos ? input.length(): start_pos);
+    end_pos=(end_pos == std::string::npos? input.length()-1: end_pos);
+    if(start_pos<input.length()){
+        std::string res = input.substr(start_pos,end_pos - start_pos + 1);
+        return res;
+    }else{
+        return "";
+    }
+
 }
 
 std::vector<std::string> SplitByUTF8CharPos(const std::string& input,

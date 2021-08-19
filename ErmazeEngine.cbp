@@ -93,6 +93,7 @@
 		<Unit filename="include/CMenuInputEvent.h" />
 		<Unit filename="include/CMenuState.h" />
 		<Unit filename="include/CNPCGameObject.h" />
+		<Unit filename="include/CObjectData.h" />
 		<Unit filename="include/COrthoTileState.h" />
 		<Unit filename="include/CPCSpriteGameObject.h" />
 		<Unit filename="include/CParticle.h" />
@@ -101,7 +102,9 @@
 		<Unit filename="include/CProjectile.h" />
 		<Unit filename="include/CProjectileEmitter.h" />
 		<Unit filename="include/CRPGCommand.h" />
+		<Unit filename="include/CRPGEnemyData.h" />
 		<Unit filename="include/CRPGGameData.h" />
+		<Unit filename="include/CRPGPlayerData.h" />
 		<Unit filename="include/CSDLRenderService.h" />
 		<Unit filename="include/CSceneData.h" />
 		<Unit filename="include/CSdlGameContext.h" />
@@ -168,6 +171,7 @@
 		<Unit filename="src/CMenuInputEvent.cpp" />
 		<Unit filename="src/CMenuState.cpp" />
 		<Unit filename="src/CNPCGameObject.cpp" />
+		<Unit filename="src/CObjectData.cpp" />
 		<Unit filename="src/COrthoTileState.cpp" />
 		<Unit filename="src/CPCSpriteGameObject.cpp" />
 		<Unit filename="src/CParticle.cpp" />
@@ -176,7 +180,9 @@
 		<Unit filename="src/CProjectile.cpp" />
 		<Unit filename="src/CProjectileEmitter.cpp" />
 		<Unit filename="src/CRPGCommand.cpp" />
+		<Unit filename="src/CRPGEnemyData.cpp" />
 		<Unit filename="src/CRPGGameData.cpp" />
+		<Unit filename="src/CRPGPlayerData.cpp" />
 		<Unit filename="src/CSDLRenderService.cpp" />
 		<Unit filename="src/CSceneData.cpp" />
 		<Unit filename="src/CSdlGameContext.cpp" />

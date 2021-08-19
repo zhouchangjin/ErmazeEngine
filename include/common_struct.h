@@ -360,10 +360,11 @@ struct dom_node
     std::string text;
     std::string template_text;
     std::vector<dom_node*> children;
-    AttMap attributes; //尚未使用节点属性
+    AttMap attributes; //节点属性（非样式才有） attribute 和var_list是两个概念
     ge_rect box;  //真实box
     int row=1;
     int col=1;
+    uint32_t frame=0;
     dom_node* parent_node=nullptr; //经过复制之后就是无效的属性了
     dom_node* list_template=nullptr; //经过复制后还是有效的
     std::string list_name;
@@ -377,6 +378,25 @@ struct dom_node
     int page_size=0;
     std::vector<std::string> var_list; //模板变量名称集合
     dom_node* template_node=nullptr; //拷贝模板
+    bool has_attribute(std::string attr_name){
+        if(attributes.find(attr_name)!=attributes.end()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    std::string attr_str(std::string attr_name){
+        return attributes[attr_name].str_value;
+    }
+
+    void attr_str(std::string attr_name,std::string value){
+        attribute attr;
+        attr.attribute_name=attr_name;
+        attr.val_type=val_type::STRING_VAL;
+        attr.str_value=value;
+        attributes[attr_name]=attr;
+    }
 };
 
 

@@ -10,3 +10,11 @@ CTexture::~CTexture()
 {
     //dtor
 }
+
+CTexture::operator bool(){
+   if(m_texture==nullptr){
+        return false;
+   }else{
+        return true;
+   }
+}

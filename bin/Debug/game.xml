@@ -2,6 +2,14 @@
 <settings>
 	<window type="window" width="1024" height="768" />
 	<framerate>15</framerate>
+	<keysetting>
+		<keybinding keyname='j' event_type="KEY_CONFIRM"/>
+		<keybinding keyname='k' event_type="KEY_CANCLE" />
+		<keybinding keyname='w' event_type="KEY_UP"/>
+		<keybinding keyname='s' event_type="KEY_DOWN"/>
+		<keybinding keyname='a' event_type="KEY_LEFT"/>
+		<keybinding keyname='d' event_type="KEY_RIGHT"/>
+	</keysetting>
 </settings>
 
 <game>
@@ -27,6 +35,7 @@
 	
 	</canvasstate>
   </gamestate>
+  
   <dialog>
 	<window type="main">
 		<rect x="0" y="66" w="100" h="34" num_type="percentage">
@@ -50,9 +59,11 @@
 		</rect>
 	</window>	
   </dialog>
+  
   <spritesheets>
 	 <spritesheet  id="1" path="sprites.png" width="16" height="16" col="8" row="10" />
   </spritesheets>
+  
   <characters>
 	 <character id="p1" sheet_id="1">
 		<actions>
@@ -71,6 +82,7 @@
 		<character refid="p1"/>
 	</player>
   </players>
+  
   <startpoint scene="01" x="368" y="480" direction="upward" layer="1" />
   
   <scenes>
@@ -81,6 +93,8 @@
 		<tilemap collide_prop="collidable" layerswitch_prop="layer_switch" name="FF3-02"/>
 	 </scene>
    </scenes>
+   
+   
 </game>
 
 </ermaze>

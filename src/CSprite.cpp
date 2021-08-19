@@ -28,6 +28,14 @@ void CSprite::AddAction(std::string action_name,std::vector<int> frames){
     }
 }
 
+int CSprite::ActionStepCnt(std::string action_name){
+    if(m_action_map.find(action_name)!=m_action_map.end()){
+        return m_action_map[action_name].size();
+    }else{
+        return 0;
+    }
+}
+
 int CSprite::PlayAction(std::string action_name,int step){
 
    std::vector<int> frames= m_action_map[action_name];

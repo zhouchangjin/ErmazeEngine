@@ -435,6 +435,25 @@ void parse_sheets(xmlutils::MyXMLNode xml_node,
     }
 }
 
+void parse_attributes(xmlutils::MyXMLNode xml_node,
+                      ge_common_struct::dom_node* node){
+
+   xmlutils::MyXMLAttribute attr= xml_node.FirstAttribute();
+   for(;attr;attr=attr.NextAttribute()){
+
+        std::string name=attr.Name();
+        std::string value=attr.StrValue();
+        ge_common_struct::attribute geAttr;
+        geAttr.attribute_name=name;
+        geAttr.str_value=value;
+        geAttr.val_type=ge_common_struct::val_type::STRING_VAL;
+        //TODO int double float etc
+        node->attributes[name]=geAttr;
+        //printf("load parsing attribute %s =  %s \n",name.c_str(),value.c_str());
+   }
+
+}
+
 ge_common_struct::dom_node* parse_dom(xmlutils::MyXMLNode xml_node,
                                       ge_common_struct::dom_node* parent)
 {
@@ -462,6 +481,7 @@ ge_common_struct::dom_node* parse_dom(xmlutils::MyXMLNode xml_node,
         node->enable_page=true;
         node->page_size=xml_node.IntAttribute("page_size");
     }
+    parse_attributes(xml_node,node);
     ge_common_struct::box_style style=parse_window_style(xml_node,parent);
     node->style=style;
 

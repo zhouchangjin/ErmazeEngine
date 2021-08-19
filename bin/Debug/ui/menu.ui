@@ -1,8 +1,8 @@
 <ui>
 <window id="guide_menu">
-	<rect x="0" y="66" w="100" h="34" num_type="percentage">
-			<background color="(0,0,0,200)" />			
-			<border type="box" width="5" color="(255,255,255)"/>
+	<rect x="40" y="40" w="17" h="16" num_type="percentage" radius="10">
+			<background color="(88,120,64,200)" />			
+			<border type="box" width="5" color="(136,176,96,240)"/>
 			<font color="(255,255,255)"/>
 			<container layout="grid" row="3" col="2">
 				<button icon="" action="package_window">包裹</button>
@@ -14,4 +14,26 @@
 			</container>
 	</rect>
 </window>
+
+<window id="equip_menu">
+	<rect x="40" y="40" w="38" h="0" num_type="percentage" radius="10">
+		<background color="(88,120,64,200)" />			
+		<border type="box" width="5" color="(136,176,96,240)"/>
+		<font color="(255,255,255)"/>	
+		<container layout="grid" row="1" col="2">
+			<list list="players">
+				<template>
+					<icon>{icon}</icon><text>{label}</text>
+				</template>
+			</list>
+			<list list="tanks">
+				<template>
+					<icon>{icon}</icon><text>{label}</text>
+				</template>
+			</list>
+		</container>
+	</rect>
+</window>
+
+
 </ui>

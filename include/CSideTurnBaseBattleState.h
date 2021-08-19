@@ -12,6 +12,8 @@
 #include <CSpriteDB.h>
 #include <CServiceLocator.h>
 #include <CAnimationManager.h>
+#include <CRPGEnemyData.h>
+#include <CRPGPlayerData.h>
 
 class CSideTurnBaseBattleState: public CGameState
 {
@@ -23,7 +25,8 @@ class CSideTurnBaseBattleState: public CGameState
             COMMAND_STATE,
             BATTLE_INIT_STATE,
             BATTLE_COMMAND_PREPARE_STATE,
-            ENDING_STATE
+            ENDING_STATE,
+            EXIT_STATE
         };
         enum battletype{
             PARTY_TURN_BASED,
@@ -38,7 +41,8 @@ class CSideTurnBaseBattleState: public CGameState
         };
 
         enum event_type{
-            ENEMY_DIED
+            ENEMY_DIED,
+            ACCOUNT_END
         };
 
         struct timer_event{
@@ -75,29 +79,29 @@ class CSideTurnBaseBattleState: public CGameState
        //数据库
        CGameDatabase* m_database=nullptr;
 
-       std::vector<CSpriteGameObject> m_players;
-       std::vector<CSpriteGameObject> m_enemies;
-       std::vector<int> m_enemy_hps;
-       std::vector<int> m_enemy_ids;
-       std::vector<bool> m_enemy_alive;
+       std::vector<CSpriteGameObject> m_players;  //need reset
+       std::vector<CSpriteGameObject> m_enemies;  //need reset
+
+       std::vector<CRPGPlayerData> m_player_data;  //reset
+       std::vector<CRPGEnemyData> m_enemy_data;   // reset require
 
        //状态标志
-       substate m_substate=substate::BATTLE_INIT_STATE;
+       substate m_substate;                        // reset
        //菜单指示名称
        std::string m_menu_pointer="point_right";
 
-       uint32_t m_frame=0;
-       uint32_t m_last_timer=0;
+       uint32_t m_frame;                        //need reset
+       uint32_t m_last_timer;                   //need reset
 
        uint32_t m_batterprepare_time=10;
        float m_playerinit_position=1.0f;
        int m_player_accerleration=5;
 
-       uint32_t m_current_command_player=0;
+       uint32_t m_current_command_player;        //need reset
 
-       std::vector<ge_common_struct::command_item> m_seq_command_list;
+       std::vector<ge_common_struct::command_item> m_seq_command_list; //reset
 
-       std::map<int,int> m_frame_command_map;
+       //std::map<int,int> m_frame_command_map;
 
        int m_player_scale=2;
        int m_enemy_scale=2;
@@ -105,11 +109,14 @@ class CSideTurnBaseBattleState: public CGameState
        ge_common_struct::ge_rect m_enemy_rect;
        ge_common_struct::ge_rect m_player_rect;
 
-       std::vector<timer_event> m_timer_event;
+       std::vector<timer_event> m_timer_event;        //reset
+
+       std::vector<std::string> m_log_text;           //reset
 
     private:
         void LoadComponents();
         void LoadUIDef();
+        void ResetBattle();
         void LoadSprites();
 
         void UpdateEnemy();
@@ -140,7 +147,11 @@ class CSideTurnBaseBattleState: public CGameState
         void MoveForwardPlayer(int player_no);
         void HitEnemy(int player_no,int enemy_no,int with_obj=-1);
         void DisappearEnemy(int enemy_no);
+
+        void CheckEvent();
         void ProcessTimerEvent(timer_event event);
+
+        int CalcDamage(int player_no,int enemy_no,int with_object);
 };
 
 #endif // CSIDETURNBASEBATTLESTATE_H

@@ -21,6 +21,11 @@ public:
     virtual ~CGameDatabase();
     virtual void SetIntData(std::string global_prop,int data)=0;
     virtual int GetIntData(std::string global_prop)=0;
+    virtual std::string GetTextData(std::string global_prop)=0;
+    virtual void SetTextData(std::string global_prop,std::string text)=0;
+
+    virtual bool HasData(std::string global_prop)=0;
+
     virtual void SetObjectData(int obj_id,
                                int prop_id,int data)=0;
     virtual void SetObjectData(int obj_id,std::string prop_name,int data)=0;

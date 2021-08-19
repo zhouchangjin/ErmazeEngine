@@ -13,6 +13,7 @@ class CSprite
         ge_common_struct::ge_rect GetRectByIdx(int sprite_idx);
         void AddAction(std::string action_name,std::vector<int> frame_idx_arr);
         int PlayAction(std::string action_name,int step);
+        int ActionStepCnt(std::string action_name);
         void SetSheet(CSpriteSheet* sheet){m_sprite_sheet=sheet;};
     protected:
         std::map<std::string,std::vector<int>> m_action_map;

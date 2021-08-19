@@ -177,6 +177,8 @@ void CGameEngine::LoadDatabase(CGameDatabase* db)
     db->AddObjectToList("battle","e1");
     db->AddObjectToList("battle","e2");
 
+    db->SetTextData("ui_ind","point_right");
+
     int p1Id=db->GetObjectId("p1");
     int p2Id=db->GetObjectId("p2");
     int p3Id=db->GetObjectId("p3");
@@ -196,7 +198,7 @@ void CGameEngine::LoadDatabase(CGameDatabase* db)
     db->SetObjectData(p4Id,"equipment",e4id);
     int weaponid=db->GetObjectId("knife");
     std::string s=db->GetObjectText(weaponid,"animation");
-    GE_LOG("weapon id is %d  %s\n",weaponid,s.c_str());
+    //GE_LOG("weapon id is %d  %s\n",weaponid,s.c_str());
     db->SetObjectData(e1id,"lefthand",weaponid);
     db->SetObjectData(e2id,"lefthand",-1);
     db->SetObjectData(e3id,"lefthand",-1);

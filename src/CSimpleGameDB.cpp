@@ -46,6 +46,70 @@ int CSimpleGameDB::GetIntData(std::string global_prop)
     return m_database[global_prop];
 }
 
+void CSimpleGameDB::SetTextData(std::string global_prop,std::string text)
+{
+    //TODO 判断insert还是update,update 的时候不应该push back
+    if(m_globaltype_map.find(global_prop)!=m_globaltype_map.end())
+    {
+        if(m_globaltype_map[global_prop]==DataType::TEXT)
+        {
+            int pos=GetIntData(global_prop);
+            //update element
+            m_text_data[pos]=text;
+        }
+    }
+    else
+    {
+        m_globaltype_map[global_prop]=DataType::TEXT;
+        m_text_data.push_back(text);
+        int pos=m_text_data.size()-1;
+        SetIntData(global_prop,pos);
+    }
+}
+
+std::string CSimpleGameDB::GetTextData(std::string global_prop)
+{
+    if(HasData(global_prop))
+    {
+        if(m_globaltype_map.find(global_prop)!=m_globaltype_map.end())
+        {
+            if(m_globaltype_map[global_prop]==DataType::TEXT)
+            {
+                int pos= GetIntData(global_prop);
+                return m_text_data[pos];
+            }
+            else
+            {
+                int intval= GetIntData(global_prop);
+                return std::to_string(intval);
+            }
+        }
+        else
+        {
+            int intval= GetIntData(global_prop);
+            return std::to_string(intval);
+        }
+    }
+    else
+    {
+        return "";
+    }
+
+
+}
+
+bool CSimpleGameDB::HasData(std::string global_prop)
+{
+    if(m_database.find(global_prop)!=m_database.end())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 void CSimpleGameDB::SetObjectData(int obj_id,int prop_id,int data)
 {
     std::string key_name=GetKeyName(obj_id,prop_id);
@@ -250,9 +314,10 @@ void CSimpleGameDB::AddObjectToList(std::string list_name,int obj_id)
 }
 
 
-void CSimpleGameDB::AddObjectToList(std::string list_name,std::string object_name){
-   int oid= GetObjectId(object_name);
-   AddObjectToList(list_name,oid);
+void CSimpleGameDB::AddObjectToList(std::string list_name,std::string object_name)
+{
+    int oid= GetObjectId(object_name);
+    AddObjectToList(list_name,oid);
 }
 
 

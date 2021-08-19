@@ -103,6 +103,7 @@ void CSideTurnBaseBattleState::TranslateCommand(std::vector<ge_common_struct
 
 void CSideTurnBaseBattleState::Init()
 {
+    GE_LOG("init battle state\n");
     LoadComponents();
 
     m_ui_manager.SetGameContext(m_context);
@@ -122,7 +123,6 @@ void CSideTurnBaseBattleState::Init()
     m_enemy_rect.h=50;
 
     LoadUIDef();
-    LoadSprites();
 
 }
 
@@ -136,9 +136,43 @@ void CSideTurnBaseBattleState::Pause()
 
 }
 
+void CSideTurnBaseBattleState::ResetBattle()
+{
+    m_players.clear();
+    m_enemies.clear();
+    m_enemy_data.clear();
+    m_player_data.clear();
+
+
+
+    if(m_timer_event.size()>0)
+    {
+        GE_LOG("Abnormal event size ================\n");
+    }
+    if(m_log_text.size()>0)
+    {
+        GE_LOG("Abnormal log size ================\n");
+    }
+    if(m_seq_command_list.size()>0)
+    {
+        GE_LOG("Abnormal cmd size ================\n");
+    }
+    m_seq_command_list.clear();
+    m_timer_event.clear();
+    m_log_text.clear();
+
+    m_frame=0;
+    m_last_timer=0;
+    m_current_command_player=0;
+    m_substate=substate::BATTLE_INIT_STATE;
+
+}
+
 void CSideTurnBaseBattleState::Resume()
 {
     m_state_value=0;
+    ResetBattle();
+    LoadSprites();
 }
 
 void CSideTurnBaseBattleState::HandleEvent(ge_common_struct::input_event event)
@@ -160,12 +194,27 @@ void CSideTurnBaseBattleState::HandleEvent(ge_common_struct::input_event event)
         {
             inputevent.SetCurrentSubState(2);
         }
+        else if(m_substate==substate::ENDING_STATE)
+        {
+            ge_common_struct::key_event kevent=event.get_top_event();
+            if(m_log_text.size()>0 &&
+                    kevent.press==ge_common_struct::key_press_type::KEY_PRESS)
+            {
+                //持续按键的事件过滤掉
+                m_log_text.pop_back();
+                if(m_log_text.size()==0)
+                {
+                    m_database->SetTextData("log","  ");
+                }
+            }
+        }
         m_event_manager.EventPublish(inputevent);
     }
 }
 
 void CSideTurnBaseBattleState::Update()
 {
+    CheckEvent();
 
     if(m_substate==substate::BATTLE_INIT_STATE)
     {
@@ -231,8 +280,14 @@ void CSideTurnBaseBattleState::Update()
     else if(m_substate==substate::BATTLE_STATE)
     {
         UpdateBattle();
-    }else if(m_substate==substate::ENDING_STATE){
+    }
+    else if(m_substate==substate::ENDING_STATE)
+    {
         Accounting();
+    }
+    else if(m_substate==substate::EXIT_STATE)
+    {
+
     }
     m_animation_manager.Update();
     UpdatePlayer();
@@ -338,7 +393,7 @@ void CSideTurnBaseBattleState::DrawEnemy()
 {
     for(size_t i=0; i<m_enemies.size(); i++)
     {
-        if(m_enemy_alive[i])
+        if(m_enemy_data[i].IsAlive())
         {
             CSpriteGameObject& obj=m_enemies[i];
             int screenx=obj.GetX();
@@ -353,7 +408,9 @@ void CSideTurnBaseBattleState::DrawEnemy()
             //}
             sdlutil2::RenderSprite(m_context,obj.GetSprite(),screenx,
                                    screeny,frameidx,obj.GetRenderScale(),iAlpha);
-        }else{
+        }
+        else
+        {
 
             //GE_LOG("enemy %zu is dead \n",i);
         }
@@ -411,6 +468,8 @@ void CSideTurnBaseBattleState::LoadSprites()
     {
         int id=ids[i];
         std::string sprite_name= m_database->GetObjectText(id,"sprite");
+        int hp_max=m_database->GetObjectData(id,"hpmax");
+        int hp=m_database->GetObjectData(id,"hp");
         CSprite* sprite=m_sprite_db->GetSprite(sprite_name);
         CSpriteGameObject player(sprite);
         player.UpdateDirection("leftward");//TODO 增加方法名称
@@ -419,6 +478,21 @@ void CSideTurnBaseBattleState::LoadSprites()
         player.SetX(x);
         player.SetY(y);
         m_players.push_back(player);
+
+        CRPGPlayerData playerdata;
+        playerdata.SetHpmax(hp_max);
+        playerdata.SetHp(hp);
+        if(hp<0)
+        {
+            playerdata.SetAlive(false);
+        }
+        else
+        {
+            playerdata.SetAlive(true);
+        }
+        playerdata.SetObjectId(id);
+        m_player_data.push_back(playerdata);
+
     }
     int startx=m_enemy_rect.x*rect.w/100;
     int starty=m_enemy_rect.y*rect.h/100;
@@ -450,9 +524,14 @@ void CSideTurnBaseBattleState::LoadSprites()
             cury=cury+sprite->GetSpriteSheet()->GetSpriteHeight()*m_enemy_scale;
         }
         m_enemies.push_back(enemy);
-        m_enemy_hps.push_back(hp_max);
-        m_enemy_ids.push_back(id);
-        m_enemy_alive.push_back(true);
+
+        CRPGEnemyData enemydata;
+        enemydata.SetAlive(true);
+        enemydata.SetHp(hp_max);
+        enemydata.SetHpmax(hp_max);
+        enemydata.SetObjectId(id);
+        m_enemy_data.push_back(enemydata);
+
     }
 }
 
@@ -491,11 +570,8 @@ bool CSideTurnBaseBattleState::IsPast(uint32_t time)
 
 }
 
-void CSideTurnBaseBattleState::UpdateBattle()
+void CSideTurnBaseBattleState::CheckEvent()
 {
-    //两种策略，一种策略是上一个行动结束后，才能进行下一个行动，需要获取行动结束标志
-    //另一种策略根据行动时间添加动画，多个行动可以并行，需要复杂的数据结构
-    //指令结束后，需要根据状态进入结算还是下一行动
 
     for(size_t i=0; i<m_timer_event.size(); i++)
     {
@@ -507,21 +583,37 @@ void CSideTurnBaseBattleState::UpdateBattle()
             i--;
         }
     }
+
+}
+
+void CSideTurnBaseBattleState::UpdateBattle()
+{
+    //两种策略，一种策略是上一个行动结束后，才能进行下一个行动，需要获取行动结束标志
+    //另一种策略根据行动时间添加动画，多个行动可以并行，需要复杂的数据结构
+    //指令结束后，需要根据状态进入结算还是下一行动
+
     //结束战斗
     //if enemy is dead into ending phase
     bool flag=true;
-    for(size_t i=0;i<m_enemy_alive.size();i++){
-        if(m_enemy_alive[i]){
+    for(size_t i=0; i<m_enemy_data.size(); i++)
+    {
+        if(m_enemy_data[i].IsAlive())
+        {
             flag=false;
         }
     }
-    if(flag){
+    if(flag)
+    {
         //没有活着的敌人
         m_substate=substate::ENDING_STATE;
-        for(size_t i=0;i<m_players.size();i++){
+        for(size_t i=0; i<m_players.size(); i++)
+        {
             //TODO 死了的人保持死亡状态
             m_players[i].UpdateDirection("win");
         }
+        m_log_text.push_back(u8"获得1000经验");
+        m_log_text.push_back(u8"获得200金钱");
+        return;
     }
     //标记去世的对象为死亡状态
     if(m_seq_command_list.size()>0)
@@ -575,9 +667,9 @@ void CSideTurnBaseBattleState::UpdateBattle()
                         if(type==object_type::ENEMY)
                         {
                             int enemy_seq=-1;
-                            for(size_t i=0; i<m_enemy_ids.size(); i++)
+                            for(size_t i=0; i<m_enemy_data.size(); i++)
                             {
-                                if(tar_obj_id==m_enemy_ids[i])
+                                if(tar_obj_id==m_enemy_data[i].GetObjectId())
                                 {
                                     enemy_seq=i;
                                     //Choose another enemy is enemy is dead;
@@ -647,8 +739,9 @@ CSideTurnBaseBattleState::GetObjectType(int obj_id)
 void CSideTurnBaseBattleState::HitEnemy(int player_no,int enemy_no
                                         ,int with_object)
 {
-    int enemy_id=m_enemy_ids[enemy_no];
-    if(m_enemy_hps[enemy_no]>0)
+    int enemy_id=m_enemy_data[enemy_no].GetObjectId();
+    int hp_now=m_enemy_data[enemy_no].GetHp();
+    if(hp_now>0)
     {
         CAnimationItem hit_enemy;
         hit_enemy.SetAnimateType(CAnimationItem::AnimateType::FLASH_SPRITE);
@@ -659,20 +752,22 @@ void CSideTurnBaseBattleState::HitEnemy(int player_no,int enemy_no
         hit_enemy.SetObject(&m_enemies[enemy_no]);
         m_animation_manager.AddAnimateItem(hit_enemy);
 
-        int num=rand()%100;
+        int damage=CalcDamage(player_no,enemy_no,with_object);
+
         CAnimationItem text_item;
         text_item.SetAnimateType(CAnimationItem::AnimateType::TEXT_MOTION);
         text_item.SetStartFrame(11);
         text_item.SetEndFrame(20);
         text_item.SetObject(&m_enemies[enemy_no]);
-        text_item.SetText(std::to_string(num));
+        text_item.SetText(std::to_string(damage));
         ge_common_struct::ge_color color;
         color.r=255;
         color.g=255;
         color.b=255;
         text_item.SetFontColor(color);
         m_animation_manager.AddAnimateItem(text_item);
-        m_enemy_hps[enemy_no]-=num;
+
+        m_enemy_data[enemy_no].SetHp(hp_now-damage);
 
     }
     else
@@ -684,9 +779,9 @@ void CSideTurnBaseBattleState::HitEnemy(int player_no,int enemy_no
         {
             int rand_enemy=rand()%s;
             int e_id=ids_ene[rand_enemy];
-            for(size_t i=0; i<m_enemy_ids.size(); i++)
+            for(size_t i=0; i<m_enemy_data.size(); i++)
             {
-                if(e_id==m_enemy_ids[i])
+                if(e_id==m_enemy_data[i].GetObjectId())
                 {
                     HitEnemy(player_no,i,with_object);
                     return;
@@ -727,7 +822,7 @@ void CSideTurnBaseBattleState::HitEnemy(int player_no,int enemy_no
 
 
 
-    if(m_enemy_hps[enemy_no]<0)
+    if(m_enemy_data[enemy_no].GetHp()<=0)
     {
         GE_LOG("enemy %d died \n",enemy_no);
         std::vector<int> ids=m_database->GetListObjectIds("battle");
@@ -768,12 +863,60 @@ void CSideTurnBaseBattleState::DisappearEnemy(int enemy_no)
 void CSideTurnBaseBattleState::ProcessTimerEvent(CSideTurnBaseBattleState
         ::timer_event event)
 {
-    if(event.event_type==CSideTurnBaseBattleState::event_type::ENEMY_DIED){
-        m_enemy_alive[event.object_no]=false;
+    if(event.event_type==CSideTurnBaseBattleState::event_type::ENEMY_DIED)
+    {
+        m_enemy_data[event.object_no].SetAlive(false);
+    }
+    else if(event.event_type==CSideTurnBaseBattleState::event_type::ACCOUNT_END)
+    {
+        //quit state
+        this->m_state_value=2;
     }
 }
 
-void CSideTurnBaseBattleState::Accounting(){
+void CSideTurnBaseBattleState::Accounting()
+{
+    if(m_log_text.size()>0)
+    {
+        std::string log_text=m_log_text.back();
+        std::string log=m_database->GetTextData("log");
+        if(log.compare(log_text)==0)
+        {
 
+        }
+        else
+        {
+            m_database->SetTextData("log",log_text);
+        }
+    }
+    else
+    {
+        timer_event event;
+        event.event_type=event_type::ACCOUNT_END;
+        event.frame=m_frame+30;
+        m_timer_event.push_back(event);
+        m_substate=substate::EXIT_STATE;
+    }
 
+}
+
+int CSideTurnBaseBattleState::CalcDamage(int player_no,
+        int enemy_no,int with_obj)
+{
+
+    //int player_id=m_player_data[player_no].GetObjectId();
+    //int enemy_id=m_enemy_data[enemy_no].GetObjectId();
+    //int strength=m_enemy_data[enemy_no].GetStrength();
+    int strength=m_player_data[player_no].GetStrength();
+    int defence=m_enemy_data[enemy_no].GetConstitution();
+    int attack_point=0;
+    if(with_obj>-1){
+        attack_point+=m_database->GetObjectData(with_obj,"attack");
+    }
+
+    int damage=attack_point+strength/2-defence/2;
+    if(damage<0){
+        damage=1;
+    }
+    return damage+10;
 }
