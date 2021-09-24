@@ -26,11 +26,14 @@ void CGameEngine::Init()
     CSimpleGameDB* db=new CSimpleGameDB();
     CImageDB* image_db=new CImageDB();
     CSpriteDB* sprite_db=new CSpriteDB();
+    CRandomGenerator* generator=new CRandomGenerator();
+
     m_game_context=new CSdlGameContext();
 
     CServiceLocator::Register(CServiceLocator::DATABASE,db);
     CServiceLocator::Register(CServiceLocator::TEXTURE_DB,image_db);
     CServiceLocator::Register(CServiceLocator::SPRITE_DB,sprite_db);
+    CServiceLocator::Register(CServiceLocator::RANDOM_ENGINE,generator);
 
     image_db->Initialize();
     sprite_db->Initialize();
@@ -174,8 +177,8 @@ void CGameEngine::LoadDatabase(CGameDatabase* db)
     db->AddObjectToList("tanks","t1");
     db->AddObjectToList("tanks","t2");
     db->AddObjectToList("tanks","t3");
-    db->AddObjectToList("battle","e1");
-    db->AddObjectToList("battle","e2");
+    //db->AddObjectToList("battle","e1");
+    //db->AddObjectToList("battle","e1");
 
     db->SetTextData("ui_ind","point_right");
 
@@ -186,10 +189,10 @@ void CGameEngine::LoadDatabase(CGameDatabase* db)
 
     db->AddPropToType("equipment","lefthand","左手",CGameDatabase::DataType::OBJECT_ID);
 
-    int e1id=db->StoreObject("e1","装备","equipment");
-    int e2id=db->StoreObject("e2","装备","equipment");
-    int e3id=db->StoreObject("e3","装备","equipment");
-    int e4id=db->StoreObject("e4","装备","equipment");
+    int e1id=db->StoreObject("w1","装备","equipment");
+    int e2id=db->StoreObject("w2","装备","equipment");
+    int e3id=db->StoreObject("w3","装备","equipment");
+    int e4id=db->StoreObject("w4","装备","equipment");
 
     db->AddPropToType("player","equipment","装备",CGameDatabase::DataType::OBJECT_ID);
     db->SetObjectData(p1Id,"equipment",e1id);

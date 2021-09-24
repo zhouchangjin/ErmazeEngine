@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 
-
+#include <CRandomGenerator.h>
 #include <CDatabaseLoader.h>
 #include <CSpriteDB.h>
 

@@ -526,7 +526,7 @@ struct command_item
     bool prossesed=false;
     friend bool operator<(const command_item& l,const command_item& r)
     {
-        return l.sort_num>r.sort_num;
+        return l.sort_num<r.sort_num;
     }
 };
 

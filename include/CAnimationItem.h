@@ -16,6 +16,7 @@ class CAnimationItem
             SHOW_VFX,
             VECTOR_ANIMATION,
             FLASH_SPRITE,
+            SHINE_SPRITE,
             DISAPPEAR
         };
         CAnimationItem();

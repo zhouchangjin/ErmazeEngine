@@ -26,6 +26,7 @@ class CGameUISystem :public IDefaultEventProcess
         bool EventLock();
         void LoadUI();
         void LoadDatabase();
+        CGameDatabase* GetDatabase(){return m_database;};
         void LoadActions();
         void SetDialogStyle(ge_common_struct::dialog_style_node style);
     protected:

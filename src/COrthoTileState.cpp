@@ -213,7 +213,10 @@ void COrthoTileState::Update()
 
     int rand_num=rand()%100;
     if(rand_num==1){
-        GE_LOG("encounter==\n");
+        GE_LOG("Encounter!!                \n");
+        CGameDatabase* db=m_ui_system.GetDatabase();
+        db->AddObjectToList("battle","e1");
+        db->AddObjectToList("battle","e1");
         m_state_value=3;
     }
 }

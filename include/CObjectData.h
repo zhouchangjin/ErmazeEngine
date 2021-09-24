@@ -19,6 +19,7 @@ class CObjectData
         void SetConstitution(int con){m_constitution=con;};
         void SetInteligence(int inteli){m_inteligence=inteli;};
         void SetDexterity(int dex){m_dexterity=dex;};
+        void SetSpeed(int spd){m_speed=spd;};
 
         int GetHp()const{return m_hp;};
         int GetHpmax()const{return m_hpmax;};
@@ -29,6 +30,7 @@ class CObjectData
         int GetConstitution()const{return m_constitution;};
         int GetInteligence()const{return m_inteligence;};
         int GetDexterity()const{return m_dexterity;};
+        int GetSpeed()const{return m_speed;};
 
     protected:
 
@@ -40,6 +42,7 @@ class CObjectData
         int m_constitution=1;
         int m_inteligence=1;
         int m_dexterity=1;
+        int m_speed=1;
 
         bool m_alive;
 

@@ -9,7 +9,8 @@ class CServiceLocator
             DATABASE,
             TEXTURE_DB,
             SPRITE_DB,
-            GAME_CONTEXT
+            GAME_CONTEXT,
+            RANDOM_ENGINE
         };
         template<class ServiceType>
         static ServiceType* GetService(CServiceLocator::ServiceID id){

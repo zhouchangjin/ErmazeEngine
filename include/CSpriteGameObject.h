@@ -58,6 +58,17 @@ class CSpriteGameObject  : public CGameObject
         void SetTransparency(bool enable){m_enable_transparency=enable;};
         float GetAlpha()const{return m_alpha;};
         void SetAlpha(float alpha){m_alpha=alpha;};
+        void EnableMask(){m_enable_mask=true;};
+        void DisableMask(){m_enable_mask=false;};
+        void EnableOutline(){m_enable_outline=true;};
+        void DisableOutline(){m_enable_outline=false;};
+        bool IsEnableMask(){return m_enable_mask;};
+        bool IsEnableOutline(){return m_enable_outline;};
+
+        void SetOutlineColor(ge_common_struct::ge_adv_color c){m_outline_color=c;};
+        void SetMaskColor(ge_common_struct::ge_adv_color c){m_mask_color=c;};
+        ge_common_struct::ge_adv_color GetOutlineColor()const{return m_outline_color;};
+        ge_common_struct::ge_adv_color GetMaskColor()const{return m_mask_color;};
 
     protected:
         CSprite* m_sprite;
@@ -81,6 +92,15 @@ class CSpriteGameObject  : public CGameObject
         int m_render_scale=1;
         //渲染生命(透明度)
         float m_alpha=1.0f;
+
+        ge_common_struct::ge_adv_color m_outline_color;
+
+        ge_common_struct::ge_adv_color m_mask_color;
+
+        bool m_enable_outline=false;
+
+        bool m_enable_mask=false;
+
         bool m_enable_transparency=true;
 
 

@@ -1,6 +1,7 @@
 #ifndef CSIDETURNBASEBATTLESTATE_H
 #define CSIDETURNBASEBATTLESTATE_H
 
+#include <EngineHelper.h>
 #include <XML_Utilities.h>
 #include <GameFileLoader.h>
 #include <CGameState.h>
@@ -83,7 +84,9 @@ class CSideTurnBaseBattleState: public CGameState
        std::vector<CSpriteGameObject> m_enemies;  //need reset
 
        std::vector<CRPGPlayerData> m_player_data;  //reset
-       std::vector<CRPGEnemyData> m_enemy_data;   // reset require
+       std::vector<CRPGEnemyData> m_enemy_data;   // reset
+
+       std::vector<CRPGEnemyData> m_defeat_enemies;  //reset
 
        //状态标志
        substate m_substate;                        // reset
@@ -113,6 +116,7 @@ class CSideTurnBaseBattleState: public CGameState
 
        std::vector<std::string> m_log_text;           //reset
 
+
     private:
         void LoadComponents();
         void LoadUIDef();
@@ -140,10 +144,12 @@ class CSideTurnBaseBattleState: public CGameState
         void LogCommand(std::vector<ge_common_struct::menu_command>& command);
         void TranslateCommand(std::vector<ge_common_struct::menu_command>& command);
         void SortCommand();
+        void AddEnemyCommand();
 
 
         object_type GetObjectType(int obj_id);
 
+        void FlashEnemy(int enemy_no);
         void MoveForwardPlayer(int player_no);
         void HitEnemy(int player_no,int enemy_no,int with_obj=-1);
         void DisappearEnemy(int enemy_no);

@@ -48,6 +48,12 @@ void CAnimationManager::Update()
                     {
                         obj->SetAlpha(1.0f);
                     }
+                    else if(item.GetAnimateType()==
+                            CAnimationItem::AnimateType::SHINE_SPRITE)
+                    {
+                        obj->DisableMask();
+                        obj->DisableOutline();
+                    }
                 }
             }
             m_animation_list.erase(m_animation_list.begin()+i);
@@ -128,6 +134,53 @@ void CAnimationManager::Update()
                     else
                     {
                         object->SetAlpha(1.0f);
+                    }
+
+                }
+
+            }
+            else if(type==CAnimationItem::AnimateType::SHINE_SPRITE)
+            {
+
+                CSpriteGameObject* object=item.GetObject();
+                object->PlayAction(item.GetActionName());
+                object->EnableOutline();
+                object->EnableMask();
+                int frame=m_frame-item.GetGlobalFrame();
+                int f_start=item.GetStartFrame();
+                int framespan=item.GetEndFrame()-item.GetStartFrame();
+                if(frame>=f_start && frame<=item.GetEndFrame())
+                {
+                    int start_loc_x=item.GetStartLoc().x;
+                    int start_loc_y=item.GetStartLoc().y;
+                    int end_loc_x=item.GetEndLoc().x;
+                    int end_loc_y=item.GetEndLoc().y;
+                    int cur_loc_x=start_loc_x;
+                    int cur_loc_y=start_loc_y;
+                    if(framespan>0)
+                    {
+                        int dx=(end_loc_x-start_loc_x)*(frame-f_start)/framespan;
+                        int dy=(end_loc_y-start_loc_y)*(frame-f_start)/framespan;
+                        cur_loc_x+=dx;
+                        cur_loc_y+=dy;
+                    }
+                    ge_common_struct::ge_adv_color white;
+                    white.r=255;
+                    white.g=255;
+                    white.b=255;
+                    ge_common_struct::ge_adv_color black;
+                    black.r=0;
+                    black.g=0;
+                    black.b=0;
+                    if(frame%2==0)
+                    {
+                        object->SetOutlineColor(white);
+                        object->SetMaskColor(black);
+                    }
+                    else
+                    {
+                        object->SetOutlineColor(black);
+                        object->SetMaskColor(white);
                     }
 
                 }
@@ -270,6 +323,18 @@ void CAnimationManager::AddAnimateItem(CAnimationItem item)
             item.SetStartLoc(ge_common_struct::ge_point(x,y));
             item.SetEndLoc(ge_common_struct::ge_point(x,y));
         }
+    }
+    else if(item.GetAnimateType()==CAnimationItem::AnimateType::SHINE_SPRITE)
+    {
+        CSpriteGameObject* obj=item.GetObject();
+        if(obj!=nullptr)
+        {
+            int x=obj->GetX();
+            int y=obj->GetY();
+            item.SetStartLoc(ge_common_struct::ge_point(x,y));
+            item.SetEndLoc(ge_common_struct::ge_point(x,y));
+        }
+
     }
     else if(item.GetAnimateType()==CAnimationItem::AnimateType::DISAPPEAR)
     {

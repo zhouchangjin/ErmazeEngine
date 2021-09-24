@@ -32,8 +32,9 @@
 <container layout="vertical">
 
 <list list="players">
-<template item_width="100" item_height="15" layout="grid" col="2">
+<template item_width="100" item_height="15" layout="grid" row="2" col="2">
 <text>{label}</text><text>{hp}/{hpmax}</text>
+<text></text><text>{tp}/{tpmax}</text>
 </template>
 </list>
 

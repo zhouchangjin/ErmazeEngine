@@ -43,10 +43,10 @@ void CSideTurnBaseBattleState::TranslateCommand(std::vector<ge_common_struct
     {
         ge_common_struct::command_item item;
         int player_order=m_current_command_player;
-        std::vector<int> ids=m_database->GetListObjectIds("players");
-        int pid=ids[player_order];
+        int player_id=m_player_data[player_order].GetObjectId();
 
-        item.source_obj_id=pid; //1
+        item.source_obj_id=player_id; //1
+        item.sort_num=m_player_data[player_order].GetSpeed();
         for(size_t i=0; i<cmd_list.size(); i++)
         {
             ge_common_struct::menu_command menu_cmd=cmd_list[i];
@@ -80,8 +80,6 @@ void CSideTurnBaseBattleState::TranslateCommand(std::vector<ge_common_struct
                 {
                     item.center_target_obj_id=obj_id; //4
                 }
-                std::vector<int> ids=m_database->GetListObjectIds("players");
-                int player_id=ids[m_current_command_player];
                 int eid=m_database->GetObjectData(player_id,"equipment");
                 int wid=m_database->GetObjectData(eid,"lefthand");
                 item.using_obj_id=wid;
@@ -142,7 +140,7 @@ void CSideTurnBaseBattleState::ResetBattle()
     m_enemies.clear();
     m_enemy_data.clear();
     m_player_data.clear();
-
+    m_defeat_enemies.clear();
 
 
     if(m_timer_event.size()>0)
@@ -402,10 +400,6 @@ void CSideTurnBaseBattleState::DrawEnemy()
             int frameidx=obj.GetFrameIdx();
             float alpha=obj.GetAlpha();
             int iAlpha=std::round(alpha*255.0f);
-            //if(iAlpha<255)
-            //{
-            //      GE_LOG("%d===%f==%f===\n",iAlpha,alpha*255.0f,alpha);
-            //}
             sdlutil2::RenderSprite(m_context,obj.GetSprite(),screenx,
                                    screeny,frameidx,obj.GetRenderScale(),iAlpha);
         }
@@ -470,6 +464,13 @@ void CSideTurnBaseBattleState::LoadSprites()
         std::string sprite_name= m_database->GetObjectText(id,"sprite");
         int hp_max=m_database->GetObjectData(id,"hpmax");
         int hp=m_database->GetObjectData(id,"hp");
+        int tp=m_database->GetObjectData(id,"tp");
+        int tpmax=m_database->GetObjectData(id,"tpmax");
+        int strength=m_database->GetObjectData(id,"strength");
+        int con=m_database->GetObjectData(id,"con");
+        int inteli=m_database->GetObjectData(id,"int");
+        int dex=m_database->GetObjectData(id,"dex");
+        int spd=m_database->GetObjectData(id,"speed");
         CSprite* sprite=m_sprite_db->GetSprite(sprite_name);
         CSpriteGameObject player(sprite);
         player.UpdateDirection("leftward");//TODO 增加方法名称
@@ -482,6 +483,12 @@ void CSideTurnBaseBattleState::LoadSprites()
         CRPGPlayerData playerdata;
         playerdata.SetHpmax(hp_max);
         playerdata.SetHp(hp);
+        playerdata.SetStrength(strength);
+        playerdata.SetConstitution(con);
+        playerdata.SetInteligence(inteli);
+        playerdata.SetDexterity(dex);
+        playerdata.SetSpeed(spd);
+
         if(hp<0)
         {
             playerdata.SetAlive(false);
@@ -507,6 +514,14 @@ void CSideTurnBaseBattleState::LoadSprites()
         int id=ids_ene[i];
         std::string sprite_name=m_database->GetObjectText(id,"sprite");
         int hp_max=m_database->GetObjectData(id,"hpmax");
+        int strength=m_database->GetObjectData(id,"strength");
+        int con=m_database->GetObjectData(id,"con");
+        int inteli=m_database->GetObjectData(id,"int");
+        int dex=m_database->GetObjectData(id,"dex");
+        int spd=m_database->GetObjectData(id,"speed");
+        int gold=m_database->GetObjectData(id,"gold");
+        int exp=m_database->GetObjectData(id,"exp");
+
         CSprite* sprite=m_sprite_db->GetSprite(sprite_name);
         CSpriteGameObject enemy(sprite);
         enemy.UpdateDirection("stand");
@@ -529,7 +544,14 @@ void CSideTurnBaseBattleState::LoadSprites()
         enemydata.SetAlive(true);
         enemydata.SetHp(hp_max);
         enemydata.SetHpmax(hp_max);
+        enemydata.SetStrength(strength);
+        enemydata.SetInteligence(inteli);
+        enemydata.SetConstitution(con);
+        enemydata.SetDexterity(dex);
         enemydata.SetObjectId(id);
+        enemydata.SetSpeed(spd);
+        enemydata.SetExp(exp);
+        enemydata.SetGold(gold);
         m_enemy_data.push_back(enemydata);
 
     }
@@ -540,9 +562,42 @@ void CSideTurnBaseBattleState::SortCommand()
 
     for(size_t i=0; i<m_seq_command_list.size(); i++)
     {
-        m_seq_command_list[i].sort_num=i; //注意引用和赋值
+        ge_common_struct::command_item& item=m_seq_command_list[i];
+        item.sort_num=item.sort_num+(rand()%(item.sort_num+1));
+        //GE_LOG("item %lld speed  %d\n",i,m_seq_command_list[i].sort_num);
     }
     std::sort(m_seq_command_list.begin(),m_seq_command_list.end());
+
+}
+
+void CSideTurnBaseBattleState::AddEnemyCommand(){
+
+    std::vector<int> alive_players;
+
+    for(size_t i=0;i<m_player_data.size();i++){
+        if(m_player_data[i].IsAlive()){
+            alive_players.push_back(i);
+        }
+    }
+    int alive_size=alive_players.size();
+    auto roll=ge_helper::GetDiceRoller(0,alive_size-1);
+    for(size_t i=0;i<m_enemy_data.size();i++){
+        if(m_enemy_data[i].IsAlive()){
+            ge_common_struct::command_item item;
+            CRPGEnemyData& data=m_enemy_data[i];
+            int spd=data.GetSpeed();
+            item.sort_num=spd+rand()%(spd+1);
+            item.command_name="attack";
+            item.source_obj_id=i;
+            item.using_obj_id=-1;
+
+            int roll_result=roll();
+            GE_LOG("===auto attack= player=%d  initiaty %d\n",roll_result,item.sort_num);
+            int player_no=alive_players[roll_result];
+            item.center_target_obj_id=player_no;
+            m_seq_command_list.push_back(item);
+        }
+    }
 
 }
 
@@ -551,6 +606,7 @@ void CSideTurnBaseBattleState::ProcessBattle()
 {
 
     //prepare
+    AddEnemyCommand();
     SortCommand();
     m_substate=substate::BATTLE_STATE;
 }
@@ -611,8 +667,18 @@ void CSideTurnBaseBattleState::UpdateBattle()
             //TODO 死了的人保持死亡状态
             m_players[i].UpdateDirection("win");
         }
-        m_log_text.push_back(u8"获得1000经验");
-        m_log_text.push_back(u8"获得200金钱");
+        int gold=0;
+        int exp=0;
+        for(size_t i=0;i<m_defeat_enemies.size();i++){
+            gold+=m_defeat_enemies[i].GetGold();
+            exp+=m_defeat_enemies[i].GetExp();
+        }
+        std::string exp_log="";
+        exp_log+=u8"获得"+std::to_string(exp)+u8"经验";
+        std::string gold_log="";
+        gold_log+=u8"获得"+std::to_string(gold)+u8"金钱";
+        m_log_text.push_back(gold_log);
+        m_log_text.push_back(exp_log);
         return;
     }
     //标记去世的对象为死亡状态
@@ -636,14 +702,13 @@ void CSideTurnBaseBattleState::UpdateBattle()
             //Calculate damage only once
             //添加动画
             int obj_id=item.source_obj_id;
-            std::string obj_type=m_database->GetObjectType(obj_id);
-            if(obj_type.compare("player")==0)
+            object_type obj_type=GetObjectType(obj_id);
+            if(obj_type==object_type::PLAYER)
             {
-                std::vector<int>ids=m_database->GetListObjectIds("players");
                 int player_no=0;
-                for(size_t i=0; i<ids.size(); i++)
+                for(size_t i=0; i<m_player_data.size(); i++)
                 {
-                    if(obj_id==ids[i])
+                    if(obj_id==m_player_data[i].GetObjectId())
                     {
                         player_no=i;
                         break;
@@ -685,11 +750,10 @@ void CSideTurnBaseBattleState::UpdateBattle()
                 item.end_frame=m_frame+30;
 
             }
-            else if(obj_type.compare("enemy")==0)
+            else if(obj_type==object_type::ENEMY)
             {
-
-
-
+                FlashEnemy(obj_id);
+                item.end_frame=m_frame+30;
             }
         }
     }
@@ -699,6 +763,19 @@ void CSideTurnBaseBattleState::UpdateBattle()
         m_substate=substate::COMMAND_INIT_STATE;
         m_current_command_player=0;
     }
+
+}
+
+void CSideTurnBaseBattleState::FlashEnemy(int enemy_no){
+    CSpriteGameObject* object=&m_enemies[enemy_no];
+    CAnimationItem flash_enemy;
+    flash_enemy.SetAnimateType(CAnimationItem::AnimateType::SHINE_SPRITE);
+    flash_enemy.SetAnimateName("stand");
+    flash_enemy.SetStartFrame(0);
+    flash_enemy.SetEndFrame(10);
+    flash_enemy.SetObject(object);
+    flash_enemy.SetResetPosition(true);
+    m_animation_manager.AddAnimateItem(flash_enemy);
 
 }
 
@@ -774,14 +851,17 @@ void CSideTurnBaseBattleState::HitEnemy(int player_no,int enemy_no
     {
         //change target
         std::vector<int> ids_ene=m_database->GetListObjectIds("battle");
+
         size_t s=ids_ene.size();
+
         if(s>0)
         {
             int rand_enemy=rand()%s;
             int e_id=ids_ene[rand_enemy];
             for(size_t i=0; i<m_enemy_data.size(); i++)
             {
-                if(e_id==m_enemy_data[i].GetObjectId())
+                if(m_enemy_data[i].GetHp()>0 &&
+                   e_id==m_enemy_data[i].GetObjectId())
                 {
                     HitEnemy(player_no,i,with_object);
                     return;
@@ -866,6 +946,7 @@ void CSideTurnBaseBattleState::ProcessTimerEvent(CSideTurnBaseBattleState
     if(event.event_type==CSideTurnBaseBattleState::event_type::ENEMY_DIED)
     {
         m_enemy_data[event.object_no].SetAlive(false);
+        m_defeat_enemies.push_back(m_enemy_data[event.object_no]);
     }
     else if(event.event_type==CSideTurnBaseBattleState::event_type::ACCOUNT_END)
     {
