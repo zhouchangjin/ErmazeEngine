@@ -13,10 +13,12 @@ class CSpriteSheet
                      int height,int col,int row);
         virtual ~CSpriteSheet();
         void* GetTexture(){return m_texture;};
+        void* GetSurface(){return m_surface;};
         std::string GetSpritePath(){return m_sprite_path;};
         int GetSpriteWidth(){return m_sprite_width;};
         int GetSpriteHeight(){return m_sprite_height;};
         void SetTexture(void* pointer){m_texture=pointer;};
+        void SetSurface(void* surface_pointer){m_surface=surface_pointer;};
         ge_common_struct::ge_rect GetRectByIdx(int index);
 
     protected:
@@ -24,6 +26,7 @@ class CSpriteSheet
     private:
         std::string m_sprite_path;
         void * m_texture=nullptr;
+        void * m_surface=nullptr;
         int m_sprite_width=32;
         int m_sprite_height=32;
         int m_resource_width=8;

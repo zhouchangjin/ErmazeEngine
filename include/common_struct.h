@@ -515,7 +515,9 @@ struct command_item
 {
     std::string command_name;  //attack,magic,item,etc
     int  source_obj_id;
-    int  center_target_obj_id;
+    int  source_obj_no;
+    int  center_target_obj_id=-1;
+    int  center_target_no=-1;
     bool group_target=false;
     int  target_x;
     int  target_y;

@@ -13,6 +13,10 @@ namespace sdlutil{
 
     SDL_Texture* LoadPngTexture(std::string filePath,SDL_Renderer * renderer);
 
+    SDL_Surface* LoadSurface(std::string filePath);
+
+    SDL_Surface* LoadFormatSurface(std::string path,SDL_Window* window);
+
     void RenderTexture(int x,int y,SDL_Rect* clip,SDL_Texture* texture,SDL_Renderer* renderer,int scale);
 
     TTF_Font* LoadFont(std::string fontPath);

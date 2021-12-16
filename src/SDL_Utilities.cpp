@@ -8,6 +8,25 @@ void LoadTextureWidthHeight(SDL_Texture* texture,int* w,int* h)
     SDL_QueryTexture(texture,NULL,NULL,w,h);
 }
 
+SDL_Surface* LoadSurface(std::string filePath){
+
+    SDL_Surface* loadedSurface = IMG_Load( filePath.c_str() );
+    return loadedSurface;
+}
+
+SDL_Surface* LoadFormatSurface(std::string path,SDL_Window* window){
+     SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
+     if(loadedSurface==NULL){ //这里不用nullptr
+        return nullptr;
+     }else{
+         SDL_Surface* formattedSurface = SDL_ConvertSurfaceFormat( loadedSurface
+                                    , SDL_GetWindowPixelFormat( window ), 0 );
+
+         SDL_FreeSurface( loadedSurface );
+         return formattedSurface;
+     }
+}
+
 
 SDL_Texture* LoadPngTexture(std::string path,SDL_Renderer * renderer)
 {

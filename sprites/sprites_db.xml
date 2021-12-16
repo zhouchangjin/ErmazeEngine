@@ -5,12 +5,15 @@
 	 <spritesheet  id="2" path="./sprites/monsters.png" width="45" height="45" col="8" row="8" />
 	 <spritesheet  id="3" path="./sprites/magic.png" width="17" height="17" col="8" row="8" />
 	 <spritesheet  id="4" path="./sprites/battle.png" width="32" height="32" col="16" row="16" />
+	 <spritesheet  id="5" path="./sprites/vfx.png" width="16" height="16" col="16" row="12" />
 </spritesheets>
 <sprites>
 	<sprite id="mage" sheet_id="4">
 		<actions>
 			<action name="leftward" ids="0" />
 			<action name="win" ids="0,1" />
+			<action name="hit" ids="2" />
+			<action name="dead" ids="3" />
 		</actions>
 	</sprite>
 	<sprite id="type1" sheet_id="2">
@@ -21,6 +24,11 @@
 	<sprite id="magic" sheet_id="3">
 		<actions>
 			<action name="thunder" ids="0,1"  />
+		</actions>
+	</sprite>
+	<sprite id="vfx_slash_sword" sheet_id="5">
+		<actions>
+			<action name="slash" ids="0,1,2,3" />
 		</actions>
 	</sprite>
 </sprites>

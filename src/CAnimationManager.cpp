@@ -54,6 +54,7 @@ void CAnimationManager::Update()
                         obj->DisableMask();
                         obj->DisableOutline();
                     }
+                    obj->UpdateDirection(item.GetActionName());
                 }
             }
             m_animation_list.erase(m_animation_list.begin()+i);
@@ -67,7 +68,7 @@ void CAnimationManager::Update()
             {
                 //TODO
                 CSpriteGameObject* object=item.GetObject();
-                object->PlayAction(item.GetActionName());
+                //GE_LOG("====%s=-=%d==\n",item.GetActionName().c_str(),object->GetStep());
                 int frame=m_frame-item.GetGlobalFrame();
                 int f_start=item.GetStartFrame();
                 int framespan=item.GetEndFrame()-item.GetStartFrame();
@@ -233,8 +234,17 @@ void CAnimationManager::AddAnimateItem(CAnimationItem item)
             CSpriteGameObject* obj=item.GetObject();
             int x=obj->GetX();
             int y=obj->GetY();
-            item.SetStartLoc(ge_common_struct::ge_point(x,y));
-            item.SetEndLoc(ge_common_struct::ge_point(x,y));
+            int w=obj->GetObjectWidth();
+            int h=obj->GetObjectHeight();
+            int scale=obj->GetRenderScale();
+            //TODO
+            int effect_scale=2;
+            int sw=sprite->GetSpriteSheet()->GetSpriteWidth();
+            int sh=sprite->GetSpriteSheet()->GetSpriteHeight();
+            int efx=x+w/2*scale-sw/2*effect_scale;
+            int efy=y+h/2*scale-sh/2*effect_scale;
+            item.SetStartLoc(ge_common_struct::ge_point(efx,efy));
+            item.SetEndLoc(ge_common_struct::ge_point(efx,efy));
         }
     }
     else if(item.GetAnimateType()==CAnimationItem::AnimateType::MOVE_SPRITE)
@@ -245,6 +255,11 @@ void CAnimationManager::AddAnimateItem(CAnimationItem item)
             int x=obj->GetX();
             int y=obj->GetY();
             item.SetStartLoc(ge_common_struct::ge_point(x,y));
+            std::string action_name=obj->GetCurrentAction();
+            obj->ResetStep();
+            obj->UpdateDirection(item.GetActionName());
+
+            item.SetActionName(action_name);
         }
         CSpriteGameObject* target=item.GetTargetObject();
         if(target!=nullptr)
@@ -369,7 +384,20 @@ void CAnimationManager::Draw()
             int framespan=item.GetEndFrame()-item.GetStartFrame();
             if(frame>=item.GetStartFrame() && frame<=item.GetEndFrame())
             {
-                int idx=item.GetVfxSprite()->PlayAction(action_name,frame);
+
+                int step=frame/item.GetFrameRate();
+                CSprite* vfxsprite=item.GetVfxSprite();
+                int cnt=vfxsprite->ActionStepCnt(action_name);
+                if(!item.IsLoop())
+                {
+
+                    if(step>=cnt)
+                    {
+                        step=cnt-1;
+                    }
+                }
+                int idx=vfxsprite->PlayAction(action_name,step);
+
                 int start_loc_x=item.GetStartLoc().x;
                 int start_loc_y=item.GetStartLoc().y;
                 int end_loc_x=item.GetEndLoc().x;
@@ -383,7 +411,7 @@ void CAnimationManager::Draw()
                     cur_loc_x+=dx;
                     cur_loc_y+=dy;
                 }
-                sdlutil2::RenderSprite(m_context,item.GetVfxSprite(),
+                sdlutil2::RenderSprite(m_context,vfxsprite,
                                        cur_loc_x,cur_loc_y,idx,2);
             }
 

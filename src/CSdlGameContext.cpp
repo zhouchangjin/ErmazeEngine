@@ -15,6 +15,10 @@ SDL_Renderer* CSdlGameContext::GetRenderer()
     return m_renderer;
 }
 
+SDL_Window* CSdlGameContext::GetWindow(){
+    return m_window;
+}
+
 ge_common_struct::input_event CSdlGameContext::EventCatch()
 {
 

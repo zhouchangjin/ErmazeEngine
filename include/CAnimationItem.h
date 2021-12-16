@@ -40,6 +40,8 @@ class CAnimationItem
         void SetText(std::string text){m_text=text;};
         void SetFontSize(int fsize){m_font_size=fsize;};
         void SetFontColor(ge_common_struct::ge_color color){m_font_color=color;};
+        void SetFrameRate(int frame){m_frames_rate=frame;};
+        void SetLoop(bool loop){m_loop_action=loop;};
 
         std::string GetAnimationName()const{return m_animation_name;};
         CSpriteGameObject* GetObject(){return m_object;};
@@ -59,6 +61,8 @@ class CAnimationItem
         std::string GetText()const{return m_text;};
         int GetFontSize()const{return m_font_size;};
         ge_common_struct::ge_color GetFontColor(){return m_font_color;};
+        int GetFrameRate()const{return m_frames_rate;};
+        bool IsLoop()const{return m_loop_action;};
 
     protected:
         int m_global_frame;
@@ -74,8 +78,10 @@ class CAnimationItem
         ge_common_struct::ge_point m_end_location;
         int m_start_frame;
         int m_end_frame;
+        int m_frames_rate=1;
         bool m_show_ghost=false;
         bool m_reset_position=false;
+        bool m_loop_action=true;
         std::string m_text;
         int m_font_size;
         ge_common_struct::ge_color m_font_color;

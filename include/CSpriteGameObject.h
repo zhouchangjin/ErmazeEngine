@@ -50,6 +50,8 @@ class CSpriteGameObject  : public CGameObject
         void ClearActionLog();
         void ClearMove(){m_move_x=0;m_move_y=0;};
         void Step(){m_step++;};
+        int GetStep(){return m_step;};
+        void ResetStep(){m_step=0;};
         bool CheckCollision(const CSpriteGameObject& other);
         std::string GetCurrentAction()const{return m_current_action;};
         int GetCurrentOrientation()const;

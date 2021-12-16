@@ -5,7 +5,7 @@
 1605575700 c:\work\cplusworkspace\ermazeengine\include\cgamecontext.h
 	"common_struct.h"
 
-1629973125 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
+1637735835 c:\work\cplusworkspace\ermazeengine\include\common_struct.h
 	<map>
 	<vector>
 	<string>
@@ -409,7 +409,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1628777372 c:\work\cplusworkspace\ermazeengine\include\sdl_utilities.h
+1636716360 c:\work\cplusworkspace\ermazeengine\include\sdl_utilities.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -427,7 +427,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1607508640 c:\work\cplusworkspace\ermazeengine\include\csdlgamecontext.h
+1636715765 c:\work\cplusworkspace\ermazeengine\include\csdlgamecontext.h
 	<SDL.h>
 	<SDL_ttf.h>
 	<SDL_image.h>
@@ -457,10 +457,10 @@
 1629457298 source:c:\work\cplusworkspace\ermazeengine\src\corthotilestate.cpp
 	"COrthoTileState.h"
 
-1607513094 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
+1636715791 source:c:\work\cplusworkspace\ermazeengine\src\csdlgamecontext.cpp
 	"CSdlGameContext.h"
 
-1628777449 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
+1636716121 source:c:\work\cplusworkspace\ermazeengine\src\sdl_utilities.cpp
 	"SDL_Utilities.h"
 
 1629950325 source:c:\work\cplusworkspace\ermazeengine\src\main.cpp
@@ -497,11 +497,11 @@
 	"SDL_Utilities.h"
 	"common_struct.h"
 
-1629368213 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
+1637767926 source:c:\work\cplusworkspace\ermazeengine\src\render_util.cpp
 	"Render_Util.h"
 	"CSdlGameContext.h"
 
-1628773616 c:\work\cplusworkspace\ermazeengine\include\render_util.h
+1637661721 c:\work\cplusworkspace\ermazeengine\include\render_util.h
 	<string>
 	"SDL_Utilities.h"
 	"Str_Utilities.h"
@@ -515,7 +515,7 @@
 	"CImageDB.h"
 	"CGameDatabase.h"
 
-1603709491 c:\work\cplusworkspace\ermazeengine\include\cspritesheet.h
+1636715187 c:\work\cplusworkspace\ermazeengine\include\cspritesheet.h
 	<string>
 	<vector>
 	<map>
@@ -587,7 +587,7 @@
 1605949120 source:c:\work\cplusworkspace\ermazeengine\src\cspritegameobject.cpp
 	"CSpriteGameObject.h"
 
-1630149648 c:\work\cplusworkspace\ermazeengine\include\cspritegameobject.h
+1637806634 c:\work\cplusworkspace\ermazeengine\include\cspritegameobject.h
 	<CGameObject.h>
 	<CSprite.h>
 	<CCamera2D.h>
@@ -778,7 +778,7 @@
 1629963358 c:\work\cplusworkspace\ermazeengine\include\cservicelocator.h
 	<map>
 
-1629348303 source:c:\work\cplusworkspace\ermazeengine\src\gamefileloader.cpp
+1637764116 source:c:\work\cplusworkspace\ermazeengine\src\gamefileloader.cpp
 	"GameFileLoader.h"
 
 1626668499 c:\work\cplusworkspace\ermazeengine\include\gamefileloader.h
@@ -847,10 +847,10 @@
 	<common_struct.h>
 	<IMenuProcess.h>
 
-1630148410 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
+1638364649 source:c:\work\cplusworkspace\ermazeengine\src\csideturnbasebattlestate.cpp
 	"CSideTurnBaseBattleState.h"
 
-1630125117 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
+1638369415 c:\work\cplusworkspace\ermazeengine\include\csideturnbasebattlestate.h
 	<EngineHelper.h>
 	<XML_Utilities.h>
 	<GameFileLoader.h>
@@ -998,7 +998,7 @@
 	<CSpriteGameObject.h>
 	<IEmitter.h>
 
-1630149978 source:c:\work\cplusworkspace\ermazeengine\src\canimationmanager.cpp
+1637840810 source:c:\work\cplusworkspace\ermazeengine\src\canimationmanager.cpp
 	"CAnimationManager.h"
 
 1627288464 c:\work\cplusworkspace\ermazeengine\include\canimationmanager.h
@@ -1040,7 +1040,7 @@
 1627288416 source:c:\work\cplusworkspace\ermazeengine\src\canimationitem.cpp
 	"CAnimationItem.h"
 
-1630148265 c:\work\cplusworkspace\ermazeengine\include\canimationitem.h
+1637839866 c:\work\cplusworkspace\ermazeengine\include\canimationitem.h
 	<common_struct.h>
 	<CSpriteGameObject.h>
 	<IEmitter.h>
@@ -1068,7 +1068,7 @@
 1629210054 source:c:\work\cplusworkspace\ermazeengine\src\cobjectdata.cpp
 	"CObjectData.h"
 
-1629972310 source:c:\work\cplusworkspace\ermazeengine\src\crandomgenerator.cpp
+1638178087 source:c:\work\cplusworkspace\ermazeengine\src\crandomgenerator.cpp
 	"CRandomGenerator.h"
 
 1629972301 c:\work\cplusworkspace\ermazeengine\include\crandomgenerator.h

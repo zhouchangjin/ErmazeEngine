@@ -128,6 +128,12 @@ SDL_Renderer* GetRenderer(CGameContext* p_context)
     return renderer;
 }
 
+ SDL_Window* GetWindow(CGameContext* p_context){
+    CSdlGameContext* context=(CSdlGameContext*)p_context;
+    SDL_Window* window=context->GetWindow();
+    return window;
+ }
+
 
 void* LoadPngTexture(std::string path,CGameContext* p_context)
 {
@@ -192,6 +198,72 @@ void SetAlphaMode(C2DGameScene& scene,int alpha)
     sdlutil::SetTextureAlpha(sdl_texture,alpha);
 }
 
+void MaskSprite(CGameContext* p_context,CSprite* sprite,int screenx,
+                int screeny,int sprite_idx,int scale
+                ,ge_common_struct::ge_adv_color mask_color,ge_common_struct::ge_color ignore_color){
+
+    CSpriteSheet* spritesheet=sprite->GetSpriteSheet();
+    SDL_Window* window=GetWindow(p_context);
+    SDL_Renderer* renderer=GetRenderer(p_context);
+
+    void *surface=spritesheet->GetSurface();
+
+    int sprite_w=spritesheet->GetSpriteWidth();
+    int sprite_h=spritesheet->GetSpriteHeight();
+
+    if(!surface){
+        std::string path=spritesheet->GetSpritePath();
+        SDL_Surface* sdlsurface=sdlutil::LoadFormatSurface(path,window);
+        spritesheet->SetSurface(sdlsurface);
+        surface=spritesheet->GetSurface();
+    }
+
+    SDL_Surface* fsurface=(SDL_Surface*)surface;
+    SDL_Texture* msktexture = SDL_CreateTexture(renderer,
+                                SDL_GetWindowPixelFormat(window),
+                            SDL_TEXTUREACCESS_STREAMING,
+                            sprite_w, sprite_h);
+    int pitch;
+    void * pixels;
+    SDL_LockTexture(msktexture,NULL,&pixels, &pitch );
+    ge_common_struct::ge_rect rect=sprite->GetRectByIdx(sprite_idx);
+
+    uint8_t* surface_pixels=(uint8_t*)fsurface->pixels;
+    uint8_t* texture_pixels=(uint8_t*)pixels;
+    int surface_pitch=fsurface->pitch;
+    SDL_Rect sdlrect;
+    sdlrect.x=0;
+    sdlrect.y=0;
+    sdlrect.w=sprite_w;
+    sdlrect.h=sprite_h;
+    int base_x=rect.x;
+    int base_y=rect.y;
+    for(int i=0;i<sprite_h;i++){
+        for(int j=0;j<sprite_w;j++){
+            int y=i+base_y;
+            int x=j+base_x;
+            int b=surface_pixels[y*surface_pitch+x*4];
+            int g=surface_pixels[y*surface_pitch+x*4+1];
+            int r=surface_pixels[y*surface_pitch+x*4+2];
+            int a=surface_pixels[y*surface_pitch+x*4+3];
+            if(ignore_color.r==r && ignore_color.g==g && ignore_color.b==b){
+                texture_pixels[i*pitch+j*4]=b;
+                texture_pixels[i*pitch+j*4+1]=g;
+                texture_pixels[i*pitch+j*4+2]=r;
+                texture_pixels[i*pitch+j*4+3]=a;
+            }else{
+                texture_pixels[i*pitch+j*4]=b+mask_color.b;
+                texture_pixels[i*pitch+j*4+1]=g+mask_color.g;
+                texture_pixels[i*pitch+j*4+2]=r+mask_color.r;
+                texture_pixels[i*pitch+j*4+3]=a+mask_color.a;
+            }
+        }
+    }
+
+    SDL_UnlockTexture(msktexture);
+    sdlutil::RenderTexture(screenx,screeny,&sdlrect,msktexture,renderer,scale);
+    SDL_DestroyTexture(msktexture);
+}
 
 void RenderSprite(CGameContext* p_context,CSprite* sprite,int screenx,
                   int screeny,int sprite_idx,int scale,int alpha)

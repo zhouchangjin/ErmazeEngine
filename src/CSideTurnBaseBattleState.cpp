@@ -44,7 +44,7 @@ void CSideTurnBaseBattleState::TranslateCommand(std::vector<ge_common_struct
         ge_common_struct::command_item item;
         int player_order=m_current_command_player;
         int player_id=m_player_data[player_order].GetObjectId();
-
+        item.source_obj_no=player_order;
         item.source_obj_id=player_id; //1
         item.sort_num=m_player_data[player_order].GetSpeed();
         for(size_t i=0; i<cmd_list.size(); i++)
@@ -379,12 +379,24 @@ void CSideTurnBaseBattleState::LoadUIDef()
 void CSideTurnBaseBattleState::InitMenu(ge_common_struct::input_event& event)
 {
     GE_LOG("player %d\n",m_current_command_player);
-    CMenuInputEvent inputevent;
-    inputevent.SetInputEvent(event);
-    inputevent.SetCurrentSubState(0);
-    inputevent.setMenuInitPanel("battle_command");
-    m_event_manager.EventPublish(inputevent);
-    m_substate=substate::COMMAND_STATE;
+
+    bool alive=m_player_data[m_current_command_player].IsAlive();
+    if(alive)
+    {
+
+        CMenuInputEvent inputevent;
+        inputevent.SetInputEvent(event);
+        inputevent.SetCurrentSubState(0);
+        inputevent.setMenuInitPanel("battle_command");
+        m_event_manager.EventPublish(inputevent);
+        m_substate=substate::COMMAND_STATE;
+
+    }
+    else
+    {
+        m_current_command_player++;
+    }
+
 }
 
 void CSideTurnBaseBattleState::DrawEnemy()
@@ -400,8 +412,26 @@ void CSideTurnBaseBattleState::DrawEnemy()
             int frameidx=obj.GetFrameIdx();
             float alpha=obj.GetAlpha();
             int iAlpha=std::round(alpha*255.0f);
-            sdlutil2::RenderSprite(m_context,obj.GetSprite(),screenx,
-                                   screeny,frameidx,obj.GetRenderScale(),iAlpha);
+            ge_common_struct::ge_color black;
+            black.r=0;
+            black.g=0;
+            black.b=0;
+            if(obj.IsEnableMask())
+            {
+                sdlutil2::MaskSprite(m_context,
+                                     obj.GetSprite(),
+                                     screenx,
+                                     screeny,
+                                     frameidx,
+                                     obj.GetRenderScale(),
+                                     obj.GetMaskColor(),black);
+            }
+            else
+            {
+                sdlutil2::RenderSprite(m_context,obj.GetSprite(),screenx,
+                                       screeny,frameidx,obj.GetRenderScale(),iAlpha);
+            }
+
         }
         else
         {
@@ -438,8 +468,17 @@ void CSideTurnBaseBattleState::UpdatePlayer()
         for(size_t i=0; i<m_players.size(); i++)
         {
             m_players[i].Step();
+            CRPGPlayerData &player=m_player_data[i];
+            int hp=player.GetHp();
+            int id=player.GetObjectId();
+            if(!player.IsAlive())
+            {
+                m_players[i].UpdateDirection("dead");
+            }
+            m_database->SetObjectData(id,"hp",hp);
         }
     }
+
 }
 
 
@@ -570,31 +609,43 @@ void CSideTurnBaseBattleState::SortCommand()
 
 }
 
-void CSideTurnBaseBattleState::AddEnemyCommand(){
-
-    std::vector<int> alive_players;
-
-    for(size_t i=0;i<m_player_data.size();i++){
-        if(m_player_data[i].IsAlive()){
+void CSideTurnBaseBattleState::GetAlivePlayer(std::vector<int>& alive_players)
+{
+    for(size_t i=0; i<m_player_data.size(); i++)
+    {
+        if(m_player_data[i].IsAlive())
+        {
             alive_players.push_back(i);
         }
     }
+
+}
+
+void CSideTurnBaseBattleState::AddEnemyCommand()
+{
+
+    std::vector<int> alive_players;
+    GetAlivePlayer(alive_players);
     int alive_size=alive_players.size();
     auto roll=ge_helper::GetDiceRoller(0,alive_size-1);
-    for(size_t i=0;i<m_enemy_data.size();i++){
-        if(m_enemy_data[i].IsAlive()){
+    for(size_t i=0; i<m_enemy_data.size(); i++)
+    {
+        if(m_enemy_data[i].IsAlive())
+        {
             ge_common_struct::command_item item;
             CRPGEnemyData& data=m_enemy_data[i];
             int spd=data.GetSpeed();
             item.sort_num=spd+rand()%(spd+1);
             item.command_name="attack";
-            item.source_obj_id=i;
+            item.source_obj_no=i;
+            item.source_obj_id=m_enemy_data[i].GetObjectId();
             item.using_obj_id=-1;
 
             int roll_result=roll();
-            GE_LOG("===auto attack= player=%d  initiaty %d\n",roll_result,item.sort_num);
+            //GE_LOG("===auto attack= player=%d  initiaty %d\n",roll_result,item.sort_num);
             int player_no=alive_players[roll_result];
-            item.center_target_obj_id=player_no;
+            item.center_target_obj_id=-1;
+            item.center_target_no=player_no;
             m_seq_command_list.push_back(item);
         }
     }
@@ -669,7 +720,8 @@ void CSideTurnBaseBattleState::UpdateBattle()
         }
         int gold=0;
         int exp=0;
-        for(size_t i=0;i<m_defeat_enemies.size();i++){
+        for(size_t i=0; i<m_defeat_enemies.size(); i++)
+        {
             gold+=m_defeat_enemies[i].GetGold();
             exp+=m_defeat_enemies[i].GetExp();
         }
@@ -702,20 +754,13 @@ void CSideTurnBaseBattleState::UpdateBattle()
             //Calculate damage only once
             //添加动画
             int obj_id=item.source_obj_id;
+            int obj_no=item.source_obj_no;
+            int tar_no=item.center_target_no;
             object_type obj_type=GetObjectType(obj_id);
             if(obj_type==object_type::PLAYER)
             {
-                int player_no=0;
-                for(size_t i=0; i<m_player_data.size(); i++)
-                {
-                    if(obj_id==m_player_data[i].GetObjectId())
-                    {
-                        player_no=i;
-                        break;
-                    }
-
-                }
-                MoveForwardPlayer(player_no);
+                //int player_no=item.source_obj_no;
+                MoveForwardPlayer(obj_no);
                 if(item.group_target)
                 {
                     //群体攻击
@@ -741,7 +786,7 @@ void CSideTurnBaseBattleState::UpdateBattle()
                                     break;
                                 }
                             }
-                            HitEnemy(player_no,enemy_seq,item.using_obj_id);
+                            HitEnemy(obj_no,enemy_seq,item.using_obj_id);
                         }
                     }
                 }
@@ -752,7 +797,8 @@ void CSideTurnBaseBattleState::UpdateBattle()
             }
             else if(obj_type==object_type::ENEMY)
             {
-                FlashEnemy(obj_id);
+                FlashEnemy(obj_no);
+                HitPlayer(obj_no,tar_no);
                 item.end_frame=m_frame+30;
             }
         }
@@ -766,11 +812,13 @@ void CSideTurnBaseBattleState::UpdateBattle()
 
 }
 
-void CSideTurnBaseBattleState::FlashEnemy(int enemy_no){
+void CSideTurnBaseBattleState::FlashEnemy(int enemy_no)
+{
     CSpriteGameObject* object=&m_enemies[enemy_no];
     CAnimationItem flash_enemy;
     flash_enemy.SetAnimateType(CAnimationItem::AnimateType::SHINE_SPRITE);
-    flash_enemy.SetAnimateName("stand");
+    flash_enemy.SetAnimateName("flash_enemy");
+    flash_enemy.SetActionName("stand");
     flash_enemy.SetStartFrame(0);
     flash_enemy.SetEndFrame(10);
     flash_enemy.SetObject(object);
@@ -861,7 +909,7 @@ void CSideTurnBaseBattleState::HitEnemy(int player_no,int enemy_no
             for(size_t i=0; i<m_enemy_data.size(); i++)
             {
                 if(m_enemy_data[i].GetHp()>0 &&
-                   e_id==m_enemy_data[i].GetObjectId())
+                        e_id==m_enemy_data[i].GetObjectId())
                 {
                     HitEnemy(player_no,i,with_object);
                     return;
@@ -897,6 +945,26 @@ void CSideTurnBaseBattleState::HitEnemy(int player_no,int enemy_no
 
             }
         }
+        else
+        {
+
+        }
+    }
+    else
+    {
+
+        CAnimationItem slash;
+        slash.SetActionName("slash");
+        slash.SetActionName("slash");
+        slash.SetAnimateType(CAnimationItem::AnimateType::SHOW_VFX);
+        slash.SetStartFrame(6);
+        slash.SetEndFrame(16);
+        slash.SetSpriteName("vfx_slash_sword");
+        slash.SetObject(&m_enemies[enemy_no]);
+        slash.SetFrameRate(3);
+        slash.SetLoop(false);
+        m_animation_manager.AddAnimateItem(slash);
+
     }
 
 
@@ -953,6 +1021,10 @@ void CSideTurnBaseBattleState::ProcessTimerEvent(CSideTurnBaseBattleState
         //quit state
         this->m_state_value=2;
     }
+    else if(event.event_type==CSideTurnBaseBattleState::event_type::PLAYER_DIED)
+    {
+        m_player_data[event.object_no].SetAlive(false);
+    }
 }
 
 void CSideTurnBaseBattleState::Accounting()
@@ -981,6 +1053,21 @@ void CSideTurnBaseBattleState::Accounting()
 
 }
 
+int CSideTurnBaseBattleState::CalcEnemyDamage(int ene_no,int play_no)
+{
+    CRPGEnemyData edata=m_enemy_data[ene_no];
+    CRPGPlayerData pdata=m_player_data[play_no];
+    int strength=edata.GetStrength();
+    int defence=pdata.GetConstitution();
+    int damage=strength/2-defence/2;
+    if(damage<=0)
+    {
+        damage=1;
+    }
+    return damage;
+
+}
+
 int CSideTurnBaseBattleState::CalcDamage(int player_no,
         int enemy_no,int with_obj)
 {
@@ -991,13 +1078,88 @@ int CSideTurnBaseBattleState::CalcDamage(int player_no,
     int strength=m_player_data[player_no].GetStrength();
     int defence=m_enemy_data[enemy_no].GetConstitution();
     int attack_point=0;
-    if(with_obj>-1){
+    if(with_obj>-1)
+    {
         attack_point+=m_database->GetObjectData(with_obj,"attack");
     }
 
     int damage=attack_point+strength/2-defence/2;
-    if(damage<0){
+    if(damage<=0)
+    {
         damage=1;
     }
     return damage+10;
+}
+
+int CSideTurnBaseBattleState::ChangeTargetofEnemy(){
+    std::vector<int> alive_players;
+    GetAlivePlayer(alive_players);
+    int size_of_player=alive_players.size();
+    auto roll=ge_helper::GetDiceRoller(0,size_of_player-1);
+    int pos=roll();
+    int target=alive_players[pos];
+    return target;
+}
+
+
+void CSideTurnBaseBattleState::HitPlayer(int enemy_no,int player_no)
+{
+    //CRPGEnemyData& enemy_data=m_enemy_data[enemy_no];
+    //CRPGPlayerData& player_data=m_player_data[player_no];
+    //int ene_id=enemy_data.GetObjectId();
+    //int player_id=player_data.GetObjectId();
+    int target=player_no;
+    int hp=m_player_data[target].GetHp();
+
+    if(hp<=0)
+    {
+        target=ChangeTargetofEnemy();
+        GE_LOG("target changes from %d to %d\n",player_no,target);
+    }
+    CSpriteGameObject* player_sprite=&m_players[target];
+    int curx=player_sprite->GetX();
+    int cury=player_sprite->GetY();
+    ge_common_struct::ge_point p(curx+20,cury);
+    CAnimationItem item;
+    item.SetAnimateType(CAnimationItem::AnimateType::MOVE_SPRITE);
+    item.SetStartFrame(5);
+    item.SetEndFrame(9);
+    item.SetObject(player_sprite);
+    item.SetActionName("hit");
+    item.SetResetPosition(true);
+    item.SetAnimateName("hitplayer");
+    item.SetEndLoc(p);
+    m_animation_manager.AddAnimateItem(item);
+
+
+    int damage=CalcEnemyDamage(enemy_no,target);
+    CAnimationItem text_item;
+    text_item.SetAnimateType(CAnimationItem::AnimateType::TEXT_MOTION);
+    text_item.SetStartFrame(7);
+    text_item.SetEndFrame(14);
+    text_item.SetObject(player_sprite);
+    text_item.SetText(std::to_string(damage));
+
+    ge_common_struct::ge_color color;
+    color.r=255;
+    color.g=255;
+    color.b=255;
+    text_item.SetFontColor(color);
+    m_animation_manager.AddAnimateItem(text_item);
+
+
+    int hpnew=hp-damage-5;
+    m_player_data[target].SetHp(hpnew);
+
+
+    if(hpnew<=0)
+    {
+        timer_event event;
+        event.object_no=target;
+        event.event_type=event_type::PLAYER_DIED;
+        event.frame=m_frame+7;
+        event.object_type=object_type::PLAYER;
+        m_timer_event.push_back(event);
+    }
+
 }

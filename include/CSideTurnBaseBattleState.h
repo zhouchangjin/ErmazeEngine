@@ -43,6 +43,7 @@ class CSideTurnBaseBattleState: public CGameState
 
         enum event_type{
             ENEMY_DIED,
+            PLAYER_DIED,
             ACCOUNT_END
         };
 
@@ -152,12 +153,18 @@ class CSideTurnBaseBattleState: public CGameState
         void FlashEnemy(int enemy_no);
         void MoveForwardPlayer(int player_no);
         void HitEnemy(int player_no,int enemy_no,int with_obj=-1);
+        void HitPlayer(int enemy_no,int player_no);
         void DisappearEnemy(int enemy_no);
 
         void CheckEvent();
         void ProcessTimerEvent(timer_event event);
 
         int CalcDamage(int player_no,int enemy_no,int with_object);
+        int CalcEnemyDamage(int ene_no,int play_no);
+
+
+        void GetAlivePlayer(std::vector<int>& alive_players);
+        int ChangeTargetofEnemy();
 };
 
 #endif // CSIDETURNBASEBATTLESTATE_H
