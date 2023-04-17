@@ -27,7 +27,8 @@ class CSideTurnBaseBattleState: public CGameState
             BATTLE_INIT_STATE,
             BATTLE_COMMAND_PREPARE_STATE,
             ENDING_STATE,
-            EXIT_STATE
+            EXIT_STATE,
+            FAIL_STATE
         };
         enum battletype{
             PARTY_TURN_BASED,
@@ -165,6 +166,10 @@ class CSideTurnBaseBattleState: public CGameState
 
         void GetAlivePlayer(std::vector<int>& alive_players);
         int ChangeTargetofEnemy();
+
+        void FirstFunctionalPlayer();
+        void NextFunctionalPlayer();
+        void PreviousCommandPlayer();
 };
 
 #endif // CSIDETURNBASEBATTLESTATE_H

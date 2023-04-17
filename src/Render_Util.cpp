@@ -626,7 +626,8 @@ void DrawDomNode(CGameContext* p_context,ge_common_struct::dom_node* node,CImage
         if(node->style.background_texture)
         {
             std::string texture_name=node->style.texture_name;
-            FillRectTexture(p_context,rect,imagedb->GetTiledTexture(texture_name),texture_name,2);
+            int scale=node->style.texture_scale;
+            FillRectTexture(p_context,rect,imagedb->GetTiledTexture(texture_name),texture_name,scale);
         }
     }
     if(child_cnt>0)

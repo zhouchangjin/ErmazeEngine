@@ -1,0 +1,10 @@
+<ui>
+<hud>
+<panel id="background">
+<rect x="0" y="0" w="100" h="100" num_type="percentage" radius="1">
+<background texture="die" repeat="0" />
+
+</rect>
+</panel>
+</hud>
+</ui>

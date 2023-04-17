@@ -71,6 +71,7 @@
 		<Unit filename="include/CDomWindow.h" />
 		<Unit filename="include/CEquipMenu.h" />
 		<Unit filename="include/CEventManager.h" />
+		<Unit filename="include/CFailSceneState.h" />
 		<Unit filename="include/CGame.h" />
 		<Unit filename="include/CGameContext.h" />
 		<Unit filename="include/CGameData.h" />
@@ -132,7 +133,6 @@
 		<Unit filename="include/IMenuProcess.h" />
 		<Unit filename="include/ISpriteDB.h" />
 		<Unit filename="include/ITextureDB.h" />
-		<Unit filename="include/Random_Util.h" />
 		<Unit filename="include/Render_Util.h" />
 		<Unit filename="include/SDL_Utilities.h" />
 		<Unit filename="include/Str_Utilities.h" />
@@ -153,6 +153,7 @@
 		<Unit filename="src/CDatabaseLoader.cpp" />
 		<Unit filename="src/CDomWindow.cpp" />
 		<Unit filename="src/CEquipMenu.cpp" />
+		<Unit filename="src/CFailSceneState.cpp" />
 		<Unit filename="src/CGame.cpp" />
 		<Unit filename="src/CGameContext.cpp" />
 		<Unit filename="src/CGameData.cpp" />

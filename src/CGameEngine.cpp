@@ -62,7 +62,14 @@ void CGameEngine::Init()
     btt_state->SetGameData(m_gamedata);
     btt_state->PrepareData();
 
-    m_states[3]=btt_state;
+    m_states[3]=btt_state; //map的插入方式
+
+    CFailSceneState *fail_state=new CFailSceneState(m_game_context);
+    fail_state->Init();
+    fail_state->SetGameData(m_gamedata);
+    fail_state->PrepareData();
+
+    m_states.insert(std::pair<int,CGameState*>(4,fail_state));
 
 }
 

@@ -35,6 +35,34 @@ void CSideTurnBaseBattleState::LogCommand(std::vector<ge_common_struct
     GE_LOG("\n");
 }
 
+void CSideTurnBaseBattleState::PreviousCommandPlayer(){
+   //找前一个命令不能用-1的办法,存在前面所有人员都失能
+   //所以得从命令栈里出栈
+   if(m_seq_command_list.size()>0){
+        ge_common_struct::command_item item=m_seq_command_list.back();
+        m_current_command_player=item.source_obj_id;
+        m_seq_command_list.pop_back();
+   }
+}
+
+void CSideTurnBaseBattleState::FirstFunctionalPlayer(){
+    if(m_player_data.size()>0 && m_player_data[0].IsAlive()){
+        m_current_command_player=0;
+    }else{
+        m_current_command_player=0;
+        NextFunctionalPlayer();
+    }
+}
+
+void CSideTurnBaseBattleState::NextFunctionalPlayer(){
+    m_current_command_player++;
+    if(m_current_command_player==m_player_data.size()){
+        //do nothing
+    }else if(!m_player_data[m_current_command_player].IsAlive()){
+        NextFunctionalPlayer();
+    }
+}
+
 void CSideTurnBaseBattleState::TranslateCommand(std::vector<ge_common_struct
         ::menu_command> &cmd_list)
 {
@@ -86,14 +114,13 @@ void CSideTurnBaseBattleState::TranslateCommand(std::vector<ge_common_struct
             }
         }
         m_seq_command_list.push_back(item);
-        m_current_command_player++;
+        NextFunctionalPlayer();
     }
     else
     {
         if(m_seq_command_list.size()>0)
         {
-            m_current_command_player--;
-            m_seq_command_list.pop_back();
+            PreviousCommandPlayer();
         }
     }
 
@@ -171,6 +198,7 @@ void CSideTurnBaseBattleState::Resume()
     m_state_value=0;
     ResetBattle();
     LoadSprites();
+    FirstFunctionalPlayer();
 }
 
 void CSideTurnBaseBattleState::HandleEvent(ge_common_struct::input_event event)
@@ -247,19 +275,19 @@ void CSideTurnBaseBattleState::Update()
         //检查命令是否完备，如果完备则转下一个状态
         if(m_ui_manager.IsPopPanelHidden())
         {
-            std::vector<ge_common_struct::menu_command> clist
-                =m_ui_manager.GetCommand();
-            //LogCommand(clist);
-            TranslateCommand(clist);
-            if(m_current_command_player>3)
-            {
-                //全部完毕
+            if(m_current_command_player>=m_player_data.size()){
+                //开始战斗
                 m_substate=substate::BATTLE_COMMAND_PREPARE_STATE;
                 m_last_timer=m_frame;
             }
-            else
-            {
+            else if(m_player_data[m_current_command_player].IsAlive()){
+                 //当前玩家还活着
+                 std::vector<ge_common_struct::menu_command> clist
+                =m_ui_manager.GetCommand();
+                TranslateCommand(clist);
                 m_substate=substate::COMMAND_INIT_STATE;
+            }else{
+
             }
         }
     }
@@ -282,6 +310,9 @@ void CSideTurnBaseBattleState::Update()
     else if(m_substate==substate::ENDING_STATE)
     {
         Accounting();
+    }
+    else if(m_substate==substate::FAIL_STATE){
+        this->m_state_value=4;
     }
     else if(m_substate==substate::EXIT_STATE)
     {
@@ -379,23 +410,30 @@ void CSideTurnBaseBattleState::LoadUIDef()
 void CSideTurnBaseBattleState::InitMenu(ge_common_struct::input_event& event)
 {
     GE_LOG("player %d\n",m_current_command_player);
-
-    bool alive=m_player_data[m_current_command_player].IsAlive();
-    if(alive)
+    //std::vector 不会检查数组越界当数组越界时返回结果未知。
+    if(m_current_command_player>=m_player_data.size())
     {
-
-        CMenuInputEvent inputevent;
-        inputevent.SetInputEvent(event);
-        inputevent.SetCurrentSubState(0);
-        inputevent.setMenuInitPanel("battle_command");
-        m_event_manager.EventPublish(inputevent);
-        m_substate=substate::COMMAND_STATE;
-
+        //数组越界代表所有人都命令执行完毕
     }
     else
     {
-        m_current_command_player++;
+        bool alive=m_player_data[m_current_command_player].IsAlive();
+        if(alive)
+        {
+            CMenuInputEvent inputevent;
+            inputevent.SetInputEvent(event);
+            inputevent.SetCurrentSubState(0);
+            inputevent.setMenuInitPanel("battle_command");
+            m_event_manager.EventPublish(inputevent);
+
+        }
+        else
+        {
+            GE_LOG("EXCEPTION dead command occurs\n");
+        }
     }
+    //不论什么情况都进入command translation
+    m_substate=substate::COMMAND_STATE;
 
 }
 
@@ -702,13 +740,29 @@ void CSideTurnBaseBattleState::UpdateBattle()
     //结束战斗
     //if enemy is dead into ending phase
     bool flag=true;
+    bool playerfail_flag=true;
     for(size_t i=0; i<m_enemy_data.size(); i++)
     {
         if(m_enemy_data[i].IsAlive())
         {
             flag=false;
+            break;
         }
     }
+
+    for(size_t i=0;i<m_player_data.size();i++){
+        if(m_player_data[i].IsAlive()){
+            playerfail_flag=false;
+            break;
+        }
+    }
+
+    if(playerfail_flag){
+        //玩家战场全部阵亡
+        m_substate=substate::FAIL_STATE;
+        return;
+    }
+
     if(flag)
     {
         //没有活着的敌人
@@ -807,7 +861,7 @@ void CSideTurnBaseBattleState::UpdateBattle()
     {
 
         m_substate=substate::COMMAND_INIT_STATE;
-        m_current_command_player=0;
+        FirstFunctionalPlayer();
     }
 
 }
@@ -1091,14 +1145,23 @@ int CSideTurnBaseBattleState::CalcDamage(int player_no,
     return damage+10;
 }
 
-int CSideTurnBaseBattleState::ChangeTargetofEnemy(){
+int CSideTurnBaseBattleState::ChangeTargetofEnemy()
+{
     std::vector<int> alive_players;
     GetAlivePlayer(alive_players);
     int size_of_player=alive_players.size();
-    auto roll=ge_helper::GetDiceRoller(0,size_of_player-1);
-    int pos=roll();
-    int target=alive_players[pos];
-    return target;
+    if(size_of_player>0)
+    {
+        auto roll=ge_helper::GetDiceRoller(0,size_of_player-1);
+        int pos=roll();
+        int target=alive_players[pos];
+        return target;
+    }
+    else
+    {
+        return -1;
+    }
+
 }
 
 
@@ -1115,7 +1178,16 @@ void CSideTurnBaseBattleState::HitPlayer(int enemy_no,int player_no)
     {
         target=ChangeTargetofEnemy();
         GE_LOG("target changes from %d to %d\n",player_no,target);
+        //update target hp because target has changed;
+        hp=m_player_data[target].GetHp();
     }
+    if(target<0)
+    {
+        return;
+    }
+    //target=3;//hard coding
+    //hp=m_player_data[target].GetHp();//add
+
     CSpriteGameObject* player_sprite=&m_players[target];
     int curx=player_sprite->GetX();
     int cury=player_sprite->GetY();
@@ -1148,7 +1220,7 @@ void CSideTurnBaseBattleState::HitPlayer(int enemy_no,int player_no)
     m_animation_manager.AddAnimateItem(text_item);
 
 
-    int hpnew=hp-damage-5;
+    int hpnew=hp-damage-35;
     m_player_data[target].SetHp(hpnew);
 
 

@@ -345,6 +345,7 @@ struct box_style
     int line_height=26;
     text_align align=text_align::LEFT;
     std::string texture_name;
+    int texture_scale=1;
     bool scroll_x_enabled=false; //暂时不用scroll的方式载入全部数据
     bool scroll_y_enabled=false; //暂时不用的属性，采用伪scroll
     int  scroll_x=0;             // 即使不启用scroll，该属性也可以显示scroll位置

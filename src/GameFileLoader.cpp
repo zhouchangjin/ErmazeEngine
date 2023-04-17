@@ -308,6 +308,11 @@ ge_common_struct::box_style parse_window_style(xmlutils::MyXMLNode
                 window_style.background_texture=true;
                 std::string name=background_node.StrAttribute("texture");
                 window_style.texture_name=name;
+                if(background_node.HasAttribute("scale"))
+                {
+                    window_style.texture_scale=
+                        background_node.IntAttribute("scale");
+                }
             }
         }
         if(border_node)
@@ -436,10 +441,12 @@ void parse_sheets(xmlutils::MyXMLNode xml_node,
 }
 
 void parse_attributes(xmlutils::MyXMLNode xml_node,
-                      ge_common_struct::dom_node* node){
+                      ge_common_struct::dom_node* node)
+{
 
-   xmlutils::MyXMLAttribute attr= xml_node.FirstAttribute();
-   for(;attr;attr=attr.NextAttribute()){
+    xmlutils::MyXMLAttribute attr= xml_node.FirstAttribute();
+    for(; attr; attr=attr.NextAttribute())
+    {
 
         std::string name=attr.Name();
         std::string value=attr.StrValue();
@@ -450,7 +457,7 @@ void parse_attributes(xmlutils::MyXMLNode xml_node,
         //TODO int double float etc
         node->attributes[name]=geAttr;
         //printf("load parsing attribute %s =  %s \n",name.c_str(),value.c_str());
-   }
+    }
 
 }
 
@@ -469,7 +476,8 @@ ge_common_struct::dom_node* parse_dom(xmlutils::MyXMLNode xml_node,
     {
         node->action_name=xml_node.StrAttribute("action");
     }
-    if(xml_node.HasAttribute("action_type")){
+    if(xml_node.HasAttribute("action_type"))
+    {
         node->action_type_name=xml_node.StrAttribute("action_type");
     }
     if(xml_node.HasAttribute("type"))
@@ -719,17 +727,17 @@ void parse_chunk(xmlutils::MyXMLNode xml_node,chunk& chunk)
     }
     else if(chktype==chunk_type::UNKNOWN_CHUNK)
     {
-            xmlutils::MyXMLNode childrule_node=xml_node.Child("rule");
-            for(; childrule_node;
-                    childrule_node=childrule_node.NextSlibing("rule"))
-            {
-                std::string valueStr=childrule_node.StrAttribute("value");
-                std::string datatype=childrule_node.StrAttribute("datatype");
-                int nsize=childrule_node.IntAttribute("size");
-                ge_fileutil::chunk_type type=translate_datatype(datatype);
-                chunk.rule[valueStr]=type;
-                chunk.chunk_size_rule[valueStr]=nsize;
-            }
+        xmlutils::MyXMLNode childrule_node=xml_node.Child("rule");
+        for(; childrule_node;
+                childrule_node=childrule_node.NextSlibing("rule"))
+        {
+            std::string valueStr=childrule_node.StrAttribute("value");
+            std::string datatype=childrule_node.StrAttribute("datatype");
+            int nsize=childrule_node.IntAttribute("size");
+            ge_fileutil::chunk_type type=translate_datatype(datatype);
+            chunk.rule[valueStr]=type;
+            chunk.chunk_size_rule[valueStr]=nsize;
+        }
 
     }
 
